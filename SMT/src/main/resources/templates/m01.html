@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
+<head>
+	<meta charset="utf-8" />
+	
+</head>
+<body>
+	<div layout:fragment="content">
+		<ol class="breadcrumb">
+		  <li><a href="/" th:href="@{/}"> <i class="fa fa-home"></i> Home</a></li>
+		  <li>m01: ข้อมูลเครือข่ายที่ทางานเกี่ยวกับเด็กและวัยรุ่น</li>
+		</ol>
+		
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+    			<h4 class="panel-title">ค้นหาข้อมูลเครือข่ายที่ทางานเกี่ยวกับเด็กและวัยรุ่น</h4>
+  			</div>
+  			<div class="panel-body">
+				<form class="form-horizontal" role="form">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+							    <label for="inputEmail3" class="col-md-4 control-label">เขตบริการสุขภาพ</label>
+							    <div class="col-md-8">
+							      <input type="email" class="form-control" id="inputEmail3" placeholder="Email"/>
+							    </div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+						    	<label for="inputEmail3" class="col-md-4 control-label">จังหวัด</label>
+						    	<div class="col-md-8">
+						      		<input type="email" class="form-control" id="inputEmail3" placeholder="Email"/>
+						    	</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+							    <label for="inputEmail3" class="col-md-4 control-label">ประเภทเครือข่าย</label>
+							    <div class="col-md-8">
+							      <input type="email" class="form-control" id="inputEmail3" placeholder="Email"/>
+							    </div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+						    	<label for="inputEmail3" class="col-md-4 control-label">ประเภทหน่วยงาน</label>
+						    	<div class="col-md-8">
+						      		<input type="email" class="form-control" id="inputEmail3" placeholder="Email"/>
+						    	</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+							    <label for="inputEmail3" class="col-sm-2 control-label">ชื่อหน่วยงาน</label>
+							    <div class="col-sm-10">
+							      <input type="email" class="form-control" id="inputEmail3" placeholder="Email"/>
+							    </div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12" style="text-align: center;">
+							<button type="button" class="btn btn-default">
+								<i class="fa fa-plus"></i> เพิ่มข้อมูลเครือข่าย</button>
+							<button type="button" class="btn btn-default">
+								<i class="fa fa-search"></i> ค้นหา</button>
+							<button type="button" class="btn btn-default">
+								<i class="fa fa-times-circle"></i> ล้างข้อมูลค้นหา</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		
+		<div class="table-result">
+		<table class="table table-bordered">
+			<thead>
+				<tr class="info">
+					<td style="width: 25px;">แก้ไข</td>
+					<td style="width: 25px;">ลบ</td>
+					<td style="width: 25px;">รายละเอียด</td>
+					<td>ประเภทเครือข่าย</td>
+					<td>ประเภทหน่วยงาน</td>
+					<td>ชื่อหน่วยงาน</td>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		</div>
+	</div>
+</body>
+</html>
