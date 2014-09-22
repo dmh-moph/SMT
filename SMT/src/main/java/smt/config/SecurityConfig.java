@@ -1,6 +1,5 @@
 package smt.config;
 
-import org.apache.activemq.filter.function.makeListFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
