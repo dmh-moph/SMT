@@ -3,8 +3,9 @@
 <head>
     <title>Asset Tracking - Login</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" type="text/css" media="all" href="../../static/css/bootstrap.css" th:href="@{/static/css/bootstrap.css}" />
-    <link th:href="@{/static/css/font-awesome.css}" rel="stylesheet" />
+    <link th:href="@{/static/css/font-awesome.css}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/static/css/bootstrap.css}" />
+ 
     
     <script type="text/javascript" src="../../static/js/jquery-1.11.0.js" th:src="@{/static/js/jquery-1.11.0.js}"></script>
     <script type="text/javascript" src="../../static/js/bootstrap.js" th:src="@{/static/js/bootstrap.js}"></script>
@@ -16,7 +17,7 @@
 		  <div class="modal-dialog" style="margin: 100px auto; width: 550px;">
 		  <div class="modal-content">
 		      <div class="modal-header">
-		          <h1 class="text-center"><i class="fa fa-binoculars"></i>SMARTTEEN Login</h1>
+		          <h1 class="text-center"><i class="fa fa-home"></i>SMARTTEEN Login</h1>
 		      </div>
 		      <div class="modal-body">
 		          <form class="form col-md-12 center-block" th:action="@{/login}" method="POST">
