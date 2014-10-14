@@ -11,12 +11,12 @@
 	<div layout:fragment="content">
 		<ol class="breadcrumb">
 		  <li><a href="/" th:href="@{/}"> <i class="fa fa-home"></i> Home</a></li>
-		  <li>m01: ข้อมูลเครือข่ายที่ทางานเกี่ยวกับเด็กและวัยรุ่น</li>
+		  <li>m01: ข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น</li>
 		</ol>
 		
 		<div class="panel panel-primary">
 			<div class="panel-heading">
-    			<h4 class="panel-title">ค้นหาข้อมูลเครือข่ายที่ทางานเกี่ยวกับเด็กและวัยรุ่น</h4>
+    			<h4 class="panel-title">ค้นหาข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น</h4>
   			</div>
   			<div class="panel-body">
 				<form class="form-horizontal" role="form">
@@ -97,5 +97,11 @@
 		</table>
 		</div>
 	</div>
+	
+<div layout:fragment="pageScript">
+	
+<script type="text/javascript" src="../../static/pagejs/m01.js"
+			th:src="@{/static/pagejs/m01.js}"></script>
+</div>	
 </body>
 </html>

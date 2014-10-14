@@ -4,20 +4,47 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+@Entity
+@Table(name="SEC_USER")
+@SequenceGenerator(name="SEC_USER_SEQ", sequenceName="SEC_USER_SEQ", allocationSize=1)
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class SecurityUser implements User, UserDetails {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE ,generator="SEC_USER_SEQ")
+	@Column(name="ID")
 	private Long id;
+	
+	@Basic
+	@Column(name="USERNAME")
 	private String username;
+
+	@Basic
+	@Column(name="PASSWORD")
 	private String password;
+	
+	@Transient
 	private Set<Role> roles;
 	
 	
