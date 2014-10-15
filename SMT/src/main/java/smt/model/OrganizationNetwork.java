@@ -2,6 +2,7 @@ package smt.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -11,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -86,8 +89,8 @@ public class OrganizationNetwork implements Serializable {
 	private String telephone;
 	
 	@Basic
-	@Column(name="FAX")
-	private String fax;
+	@Column(name="CONTACT_PERSON")
+	private String contactPerson;
 	
 	@Basic
 	@Column(name="EMAIL")
@@ -96,6 +99,10 @@ public class OrganizationNetwork implements Serializable {
 	@Basic
 	@Column(name="WEBSITE")
 	private String website;
+	
+	 @OneToMany(mappedBy="organizationNetwork")
+	 @OrderColumn(name="organizationNetwork_index")
+	 List<OrganizationPerson> medicalStaffs;
 	
 	@ManyToOne
 	@JoinColumn(name="CREATE_BY")
@@ -201,12 +208,12 @@ public class OrganizationNetwork implements Serializable {
 		this.telephone = telephone;
 	}
 
-	public String getFax() {
-		return fax;
+	public String getContactPerson() {
+		return contactPerson;
 	}
 
-	public void setFax(String fax) {
-		this.fax = fax;
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
 	}
 
 	public String getEmail() {
@@ -257,4 +264,11 @@ public class OrganizationNetwork implements Serializable {
 		this.lastUpdateDate = lastUpdateDate;
 	}
 
+	public List<OrganizationPerson> getMedicalStaffs() {
+		return medicalStaffs;
+	}
+
+	public void setMedicalStaffs(List<OrganizationPerson> medicalStaffs) {
+		this.medicalStaffs = medicalStaffs;
+	}
 }

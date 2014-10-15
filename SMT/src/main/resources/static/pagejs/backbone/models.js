@@ -81,10 +81,21 @@ smt.Model.OrganizationNetwork = Backbone.RelationalModel.extend({
 		type: Backbone.HasOne,
 		key: 'orgType',
 		relatedModel: 'smt.Model.DV_OrgType'
+	},{
+		type: Backbone.HasMany,
+		key: 'medicalStaffs',
+		relatedModel: 'smt.Model.OrganizationPerson'
 	}],
 	urlRoot: appUrl('OrganizationNetwork')
 });
 
+smt.Model.OrganizationPerson = Backbone.RelationalModel.extend({
+	relations: [{
+		type: Backbone.HasOne,
+		key: 'organizationNetwork',
+		relatedModel: 'smt.Model.OrganizationNetwork'
+	}]
+});
 
 smt.Collection.HealthZones = Backbone.Collection.extend({
 	model: smt.Model.HealthZone,

@@ -47,6 +47,9 @@ public class SecurityUser implements User, UserDetails {
 	@Transient
 	private Set<Role> roles;
 	
+	public SecurityUser() {
+		
+	}
 	
 	public SecurityUser(Long id, String username, String password, Set<Role> roles) {
 		this.setId(id);

@@ -4,7 +4,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("NETWORK_TYPE")
+@DiscriminatorValue("ORG_TYPE")
 public class OrgType extends DomainVariable {
 
 	/**

@@ -23,6 +23,26 @@
 		
 			</div>
 		</div>
+		
+		<div id="personModal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<span style="font-weight: bold;"></span>
+				</div>
+				<div class="modal-body">
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" id="personModalCloseBtn"><i class="fa fa-times"></i>
+					ปิดหน้าต่าง</button>
+					<button type="button" class="btn btn-info pull-left" id="personModalSaveBtn"> <i class="fa fa-floppy-o"></i>
+					บันทึกรายละเอียด</button>  
+				</div>
+				</div>
+			</div>
+		</div>		
 	</div>
 	
 <div layout:fragment="pageScript">
@@ -54,8 +74,29 @@
 {{/each}}
 </script>
 
-<script  id="formViewTemplate" type="text/x-handlebars-template">
+<script  id="amphurSltTemplate" type="text/x-handlebars-template">
+<option value="0">กรุณาเลือกอำเภอ</option>
+{{#each this}}
+	<option value="{{id}}">{{name}}</option>
+{{/each}}
+</script>
 
+
+
+<script  id="personModalBodyTemplate" type="text/x-handlebars-template">
+<form role="form">
+	<div class="form-group">
+		<label for="firstName">ชื่อ - นามสกุล</label>
+		<input type="text" class="form-control txtForm" id="name" data-field="name" placeholder="..." value="{{name}}"/>
+	</div>
+	<div class="form-group">
+		<label for="lastName">ประเภท</label>
+		<input type="text" class="form-control txtForm" id="type" data-field="type" placeholder="..." value="{{type}}"/>
+	</div>
+</form>
+</script>
+
+<script  id="formViewTemplate" type="text/x-handlebars-template">
 <div class="col-md-12">
 	<form class="form-horizontal" role="form">
 	<div class="panel panel-default">
@@ -69,9 +110,8 @@
 					    <label for="inputEmail3" class="col-md-4 control-label">ประเภทเครือข่าย</label>
 					    <div class="col-md-8">
 					      <select class="form-control formSlt" id="networkTypeSlt" data-field="networkType">
-								<option value="0">กรุณาเลือก</option>
 								{{#each this.networkTypes}}
-									<option value="{{id}}">{{description}}</option>
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
 								{{/each}}
 							</select>	
 					    </div>
@@ -82,9 +122,8 @@
 				    	<label for="inputEmail3" class="col-md-4 control-label">ประเภทหน่วยงาน</label>
 				    	<div class="col-md-8">
 				      		 <select class="form-control formSlt" id="orgTypeSlt"  data-field="orgType">
-								<option value="0">กรุณาเลือก</option>
-								{{#each this.orgTypes}}
-									<option value="{{id}}">{{description}}</option>
+								{{#each this.orgTypes}}								
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
 								{{/each}}
 							</select>	
 				    	</div>
@@ -97,9 +136,8 @@
 					    <label for="inputEmail3" class="col-md-4 control-label">เขตบริการสุขภาพ</label>
 					    <div class="col-md-8">
 							<select class="form-control formSlt" id="healthZoneSlt" data-field="zone">
-								<option value="0">กรุณาเลือก</option>
 								{{#each this.healthZones}}
-									<option value="{{id}}">{{name}}</option>
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}</option>
 								{{/each}}
 							</select>				      
 					    </div>
@@ -110,7 +148,9 @@
 				    	<label for="inputEmail3" class="col-md-4 control-label">จังหวัด</label>
 				    	<div class="col-md-8">
 							<select class="form-control formSlt" id="provinceSlt" data-field="province">
-								<option value="0">กรุณาเลือกเขตบริการสุขภาพ</option>
+								{{#each this.provinces}}
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}</option>
+								{{/each}}
 							</select>				      
 				    	</div>
 					</div>
@@ -121,7 +161,7 @@
 					<div class="form-group">
 					    <label for="inputEmail3" class="col-md-4 control-label">ชื่อหน่วยงาน</label>
 					    <div class="col-md-8">
-					      <input type="text" class="form-conntrol" id="orgNameTxt" data-field="orgName"></input>
+					      <input type="text" class="form-control formTxt" id="orgNameTxt" data-field="orgName" value="{{orgName}}"></input>
 					    </div>
 					</div>
 				</div>
@@ -130,9 +170,8 @@
 				    	<label for="inputEmail3" class="col-md-4 control-label">อำเภอ</label>
 				    	<div class="col-md-8">
 				      		 <select class="form-control formSlt" id="amphurSlt"  data-field="amphur">
-								<option value="0">กรุณาเลือก</option>
-								{{#each this.amphur}}
-									<option value="{{id}}">{{name}}</option>
+								{{#each this.amphurs}}
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}</option>
 								{{/each}}
 							</select>	
 				    	</div>
@@ -144,7 +183,7 @@
 					<div class="form-group">
 					    <label for="inputEmail3" class="col-md-4 control-label">รหัส 9 หลัก</label>
 					    <div class="col-md-8">
-					      <input type="text" class="form-control" id="orgCode1Txt" data-field="orgCode1"></input>
+					      <input type="text" class="form-control formTxt" id="orgCode1Txt" data-field="orgCode1" value="{{orgCode1}}"></input>
 					    </div>
 					</div>
 				</div>
@@ -152,7 +191,7 @@
 					<div class="form-group">
 				    	<label for="inputEmail3" class="col-md-4 control-label">รหัส 5 หลัก</label>
 				    	<div class="col-md-8">
-				      		  <input type="text" class="form-control" id="orgCode2Txt" data-field="orgCode2"></input>
+				      		  <input type="text" class="form-control formTxt" id="orgCode2Txt" data-field="orgCode2" value="{{orgCode2}}"></input>
 				    	</div>
 					</div>
 				</div>
@@ -162,7 +201,7 @@
 					<div class="form-group">
 					    <label for="inputEmail3" class="col-md-2 control-label">สถานที่ตั้ง</label>
 					    <div class="col-md-10">
-					      <input type="text" class="form-control" id="addressTxt" data-field="address"></input>
+					      <input type="text" class="form-control formTxt" id="addressTxt" data-field="address" value="{{address}}"></input>
 					    </div>
 					</div>
 				</div>
@@ -174,11 +213,79 @@
 							<b><i class="fa fa-pencil-square-o"></i> ข้อมูลเพื่อการติดต่อ</b>
 						</div>
 						<div class="panel-body">
-							สสสสสส
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+					    				<label for="inputEmail3" class="col-md-4 control-label">ชื่อผู้ประสานงาน</label>
+					    				<div class="col-md-8">
+					      					<input type="text" class="form-control formTxt" id="contactPersonTxt" data-field="contactPerson" value="{{contactPerson}}"></input>
+					    				</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+				    					<label for="inputEmail3" class="col-md-4 control-label">เบอร์โทรศัพท์</label>
+				    					<div class="col-md-8">
+				      		  				<input type="text" class="form-control formTxt" id="telephoneTxt" data-field="telephone" value="{{telephone}}"></input>
+				      		  			</div>
+				    				</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+					    				<label for="inputEmail3" class="col-md-4 control-label">อีเมล์</label>
+					    				<div class="col-md-8">
+					      					<input type="text" class="form-control formTxt" id="emailTxt" data-field="email" value="{{email}}"></input>
+					    				</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+				    					<label for="inputEmail3" class="col-md-4 control-label">เว็บไซต์</label>
+				    					<div class="col-md-8">
+				      		  				<input type="text" class="form-control formTxt" id="websiteTxt" data-field="website" value="{{website}}"></input>
+				      		  			</div>
+				    				</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<b><i class="fa fa-pencil-square-o"></i> ข้อมูลบุคลากรทางการแพทย์</b> 
+							
+						</div>
+						<div class="panel-body">
+							<div class="row" style="margin-bottom: 8px">
+								<div class="col-md-12">
+									<button id="newPersonBtn" type="button" class="btn btn-primary btn-xs"><i class="fa fa-plus-circle"></i> เพิ่มรายชื่อ</button>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<td style="width:64px;"> </td>
+												<td>รายชื่อบุคลากร</td>
+												<td>ประเภทของบุคคล</td>
+
+											</tr>
+										</thead>
+										<tbody id="medicalStaffsTbody">
+										<tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>			
 		</div>
 		<div class="panel-footer">
 			<button id="backBtn" type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i> กลับหน้าเดิม</button>
@@ -188,6 +295,19 @@
 	</div>
 	</form>
 </div>
+</script>
+
+<script  id="medicalStaffsTbodyTemplate" type="text/x-handlebars-template">
+{{#each this}}
+<tr data-id="{{id}}" data-index="{{@index}}">
+	<td><button type="button" class="btn btn-danger btn-xs removePersonBtn"><i class="fa fa-trash"> </i></button> 
+		<button type="button" class="btn btn-info btn-xs editPersonBtn"><i class="fa fa-edit"> </i></button>
+	</td>
+	<td>{{name}}</td>
+	<td>{{type}}</td>
+
+</tr>
+{{/each}}
 </script>
 
 <script  id="searchViewTemplate" type="text/x-handlebars-template">
@@ -301,6 +421,9 @@ $( document ).ready(function() {
 		});
 		
 		formView = new FormView({
+			networkTypes: networkTypes,
+			orgTypes: orgTypes,
+			healthZones: healthZones,
 			el: "#formView"
 		})
 		
