@@ -103,6 +103,13 @@
 				</includes>
 				<filtering>true</filtering>
 			</resource>
+			<resource>
+				<directory>src/main/resources/</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
 	    </resources>
 		<filters>
 	    	<filter>src/main/resources/config/${env}.properties</filter>
