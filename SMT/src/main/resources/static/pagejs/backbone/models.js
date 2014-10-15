@@ -4,11 +4,11 @@ function appUrl(url) {
 
 (function(){
 
-window.App = {
-  Models: {},
-  Collections: {},
-  Pages: {},
-  Views: {}
+window.smt = {
+  Model: {},
+  Collection: {},
+  Page: {},
+  View: {}
 };
 
 Backbone.PageCollection = Backbone.Collection.extend({
@@ -32,6 +32,81 @@ Backbone.PageCollection = Backbone.Collection.extend({
 		}
 		return null;
 	}
+});
+
+smt.Model.DomainVariable = Backbone.RelationalModel.extend();
+
+smt.Model.DV_NetworkType = Backbone.RelationalModel.extend({
+});
+smt.Model.DV_OrgType = Backbone.RelationalModel.extend({
+});
+
+smt.Model.HealthZone = Backbone.RelationalModel.extend();
+ 
+smt.Model.Amphur = Backbone.RelationalModel.extend({
+	relations: [{
+		type: Backbone.HasOne,
+		key: 'province',
+		relatedModel: 'smt.Model.Province'
+	}]
+});
+
+smt.Model.Province = Backbone.RelationalModel.extend({
+	relations: [{
+		type: Backbone.HasOne,
+		key: 'zone',
+		relatedModel: 'smt.Model.HealthZone'
+	}],
+	urlRoot: appUrl('Province')
+});
+
+smt.Model.OrganizationNetwork = Backbone.RelationalModel.extend({
+	relations: [{
+		type: Backbone.HasOne,
+		key: 'zone',
+		relatedModel: 'smt.Model.HealthZone'
+	}, {
+		type: Backbone.HasOne,
+		key: 'province',
+		relatedModel: 'smt.Model.Province'
+	},{
+		type: Backbone.HasOne,
+		key: 'amphur',
+		relatedModel: 'smt.Model.Amphur'
+	}, {
+		type: Backbone.HasOne,
+		key: 'networkType',
+		relatedModel: 'smt.Model.DV_NetworkType'
+	}, {
+		type: Backbone.HasOne,
+		key: 'orgType',
+		relatedModel: 'smt.Model.DV_OrgType'
+	}],
+	urlRoot: appUrl('OrganizationNetwork')
+});
+
+
+smt.Collection.HealthZones = Backbone.Collection.extend({
+	model: smt.Model.HealthZone,
+	url: appUrl('Province/findAllZone')
+});
+
+smt.Collection.Provinces = Backbone.Collection.extend({
+	model: smt.Model.Province
+});
+
+smt.Collection.Amphurs = Backbone.Collection.extend({
+	model: smt.Model.Amphur
+});
+
+smt.Collection.NetworkTypes = Backbone.Collection.extend({
+	model: smt.Model.DV_NetworkType,
+	url: appUrl('DomainVariable/NETWORK_TYPE')
+});
+
+smt.Collection.OrgTypes = Backbone.Collection.extend({
+	model: smt.Model.DV_OrgType,
+	url: appUrl('DomainVariable/ORG_TYPE')
 });
 
 })();

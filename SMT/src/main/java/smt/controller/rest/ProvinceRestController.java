@@ -39,6 +39,6 @@ public class ProvinceRestController {
 	public List<Province> findAllByZoneId(@PathVariable Long zoneId) {
 		return entityService.findAllProvinceByHealthZoneId(zoneId);
 	}
-	
-
 }
+
+

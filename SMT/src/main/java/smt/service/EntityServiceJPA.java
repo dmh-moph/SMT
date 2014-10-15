@@ -46,6 +46,12 @@ public class EntityServiceJPA implements EntityService {
 		return domainVariableRepo.findAllByDomainName(domainName);
 	}
 
+	@Override
+	public DomainVariable findDomainVariableByDomainNameAndId(
+			String domainName, Long id) {
+		return domainVariableRepo.findOne(id);
+	}
+
 	
 	
 }

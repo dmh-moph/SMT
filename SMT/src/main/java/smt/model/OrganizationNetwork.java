@@ -21,6 +21,8 @@ import smt.auth.model.User;
 import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
 import smt.model.glb.HealthZone;
+import smt.model.glb.NetworkType;
+import smt.model.glb.OrgType;
 import smt.model.glb.Province;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -45,11 +47,11 @@ public class OrganizationNetwork implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name="DV_ORG_TYPE")
-	private DomainVariable orgType;
+	private OrgType orgType;
 	
 	@ManyToOne
 	@JoinColumn(name="DV_NETWORK_TYPE")
-	private DomainVariable networkType;
+	private NetworkType networkType;
 	
 	@ManyToOne
 	@JoinColumn(name="AMPHUR_ID")
@@ -119,19 +121,19 @@ public class OrganizationNetwork implements Serializable {
 		this.id = id;
 	}
 
-	public DomainVariable getOrgType() {
+	public OrgType getOrgType() {
 		return orgType;
 	}
 
-	public void setOrgType(DomainVariable orgType) {
+	public void setOrgType(OrgType orgType) {
 		this.orgType = orgType;
 	}
 
-	public DomainVariable getNetworkType() {
+	public NetworkType getNetworkType() {
 		return networkType;
 	}
 
-	public void setNetworkType(DomainVariable networkType) {
+	public void setNetworkType(NetworkType networkType) {
 		this.networkType = networkType;
 	}
 

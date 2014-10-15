@@ -1,0 +1,190 @@
+/**
+ * 
+ */
+var AppRouter = Backbone.Router.extend({
+	initialize : function(options) {
+		this.defaultBreadCrumb = Handlebars.compile($("#defaultBreadCrumbTemplate").html());
+		this.newFormBreadCrumb = Handlebars.compile($("#newFormBreadCrumbTemplate").html());
+		this.editFormBreadCrumb = Handlebars.compile($("#editFormBreadCrumbTemplate").html());
+		this.$breadcrubmEl = $("#breadcrumb");
+		
+		console.log(options);
+		
+		if(options.formView != null) {
+			this.formView = options.formView;	
+		} 
+		if(options.searchView != null) {
+			this.searchView = options.searchView;
+		}
+		if(options.tableResultView != null) {
+			this.tableResultView = options.tableResultView;
+		}
+		
+	},
+	routes: {
+        "newNetworkOrgnazation" : "newForm",
+        "search" : "search",
+        "NetworkOrganization/:id" : "editForm",
+        "*actions": "defaultRoute" // Backbone will try match the route above first
+    },
+    
+    defaultRoute: function(action) {
+    	// set breadcrumb
+    	this.$breadcrubmEl.html(this.defaultBreadCrumb());
+    	
+    	// no table result
+    	this.tableResultView.$el.empty();
+    	
+    	// no form
+    	this.formView.$el.empty();
+
+    	// show search
+    	this.searchView.render();  	
+    },
+    
+    search: function() {
+    	// set breadcrumb
+    	this.$breadcrubmEl.html(this.defaultBreadCrumb());
+
+    	// show search
+    	this.searchView.render();
+
+    	
+    	// no table result
+    	this.tableResultView.render();
+    	
+    	// no form
+    	this.formView.$el.empty();
+    },
+    
+    newForm: function() {
+    	this.tableResultView.$el.empty();
+    	this.searchView.$el.empty();
+    	this.$breadcrubmEl.html(this.newFormBreadCrumb());
+    	
+    	this.formView.newForm();
+    },
+    
+    editForm: function(id){
+    	this.searchView.$el.empty();
+    	this.tableResultView.$el.empty();
+    	var json={};
+    	json.companyId=id;
+    	this.$breadcrubmEl.html(this.editFormBreadCrumb(json));
+    	
+    	this.formView.editForm(id);
+    }
+    
+    
+});
+
+
+var SearchView = Backbone.View.extend({
+    initialize: function(options){
+    	this.searchViewTemplate = Handlebars.compile($("#searchViewTemplate").html());
+    	this.provinceSltTemplate = Handlebars.compile($("#provinceSltTemplate").html());
+    	this.searchModel = new smt.Model.OrganizationNetwork();
+    	
+    	// the three must have option!
+    	this.networkTypes = options.networkTypes;
+    	this.orgTypes = options.orgTypes;
+    	this.heathZones = options.healthZones;
+    	
+
+    	this.provinces = new smt.Collection.Provinces();
+    },
+    
+    events: {
+    	"change #healthZoneSlt": "onChangeHealthZoneSlt",
+    	"change .formSlt": "onChangeFormSlt",
+    	
+    	"click #newFormBtn" : "onClicknewFormBtn"
+    		
+    },
+    
+    onClicknewFormBtn : function(e) {
+    	// we can simply navigate to newForm
+    	appRouter.navigate("newNetworkOrgnazation", {trigger: true});
+    	
+    },
+    onChangeFormSlt: function(e) {
+    	//get healthZone val
+    	var id=$(e.currentTarget).val();
+    	var field=$(e.currentTarget).attr('data-field'); 
+    	
+    	var model;
+    	
+    	if(field == 'zone') {
+    		model = smt.Model.HealthZone.findOrCreate({id:id});
+    		
+    		//update provinceSlt
+        	this.provinces.fetch({
+        		url: appUrl('Province/findAllByZone/'+id),
+        		success: _.bind(function(collection, response, options) {
+        			var json = this.provinces.toJSON();
+        			
+        			this.$el.find('#provinceSlt').html(this.provinceSltTemplate(json));
+        			
+        			//clear 
+        			this.searchModel.set('province', null);
+        			
+        		}, this)
+        	})
+    		
+    	} else if(field == 'province') {
+    		model = smt.Model.Province.findOrCreate({id:id});
+    	} else if(field == 'networkType') {
+    		model = smt.Model.DV_NetworkType.findOrCreate({id:id});
+    	} else if(field == 'orgType') {
+    		model = smt.Model.DV_OrgType.findOrCreate({id:id});
+    	} else {
+    		model = null;
+    		return;
+    	}
+    	this.searchModel.set(field, model);
+    	
+    },
+    
+    
+    render: function() {
+    	var json = {};
+    	json.searchModel = this.searchModel.toJSON();
+    	
+    	json.networkTypes = this.networkTypes.toJSON();
+    	json.orgTypes = this.orgTypes.toJSON();
+    	json.healthZones = this.heathZones.toJSON();
+    	
+    	this.$el.html(this.searchViewTemplate(json));
+    	
+    	return this;
+	}	
+
+});
+
+var TableResultView = Backbone.View.extend({
+	render: function() {
+		return this;
+	}
+});
+
+var FormView = Backbone.View.extend({
+	 initialize: function(options){
+		 this.formViewTemplate = Handlebars.compile($("#formViewTemplate").html());
+	 },
+	newForm: function() {
+		this.render();
+	},
+	editForm: function(id) {
+		
+	},
+	
+	render: function(model) {
+		var json={};
+		if(model != null) {
+			json.model = model.toJSON();
+		}
+		
+		this.$el.html(this.formViewTemplate(json));
+		return this;
+	}
+});

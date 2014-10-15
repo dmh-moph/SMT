@@ -27,5 +27,11 @@ public class DomainVariableRestController {
 		return entityService.findAllDomainVariableByDomainName(domainName);
 	}
 	
+	@RequestMapping("/{domainName}/{id}")
+	public DomainVariable findByDomanNameAndId(@PathVariable String domainName, @PathVariable Long id) {
+		logger.debug("domainName: " + domainName + " id: " + id);
+		return entityService.findDomainVariableByDomainNameAndId(domainName,id);
+	}
+	
 
 }

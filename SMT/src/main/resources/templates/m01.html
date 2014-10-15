@@ -9,92 +9,19 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<ol class="breadcrumb">
-		  <li><a href="/" th:href="@{/}"> <i class="fa fa-home"></i> Home</a></li>
-		  <li>m01: ข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น</li>
+		<ol id="breadcrumb" class="breadcrumb">
 		</ol>
 		
-		<div class="panel panel-primary">
-			<div class="panel-heading">
-    			<h4 class="panel-title">ค้นหาข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น</h4>
-  			</div>
-  			<div class="panel-body">
-				<form class="form-horizontal" role="form">
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-							    <label for="inputEmail3" class="col-md-4 control-label">เขตบริการสุขภาพ</label>
-							    <div class="col-md-8">
-							      <input type="email" class="form-control" id="inputEmail3" placeholder="Email"/>
-							    </div>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-						    	<label for="inputEmail3" class="col-md-4 control-label">จังหวัด</label>
-						    	<div class="col-md-8">
-						      		<input type="email" class="form-control" id="inputEmail3" placeholder="Email"/>
-						    	</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-							    <label for="inputEmail3" class="col-md-4 control-label">ประเภทเครือข่าย</label>
-							    <div class="col-md-8">
-							      <input type="email" class="form-control" id="inputEmail3" placeholder="Email"/>
-							    </div>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-						    	<label for="inputEmail3" class="col-md-4 control-label">ประเภทหน่วยงาน</label>
-						    	<div class="col-md-8">
-						      		<input type="email" class="form-control" id="inputEmail3" placeholder="Email"/>
-						    	</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-							<div class="form-group">
-							    <label for="inputEmail3" class="col-sm-2 control-label">ชื่อหน่วยงาน</label>
-							    <div class="col-sm-10">
-							      <input type="email" class="form-control" id="inputEmail3" placeholder="Email"/>
-							    </div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12" style="text-align: center;">
-							<button type="button" class="btn btn-default">
-								<i class="fa fa-plus"></i> เพิ่มข้อมูลเครือข่าย</button>
-							<button type="button" class="btn btn-default">
-								<span class="glyphicon glyphicon-search"></span> ค้นหา</button>
-							<button type="button" class="btn btn-default">
-								<i class="fa fa-times-circle"></i> ล้างข้อมูลค้นหา</button>
-						</div>
-					</div>
-				</form>
+		<div id="mainContent">
+			<div id="searchView">
 			</div>
-		</div>
+			
+			<div class="row" id="tableResultView">
+
+			</div>
+			<div class="row" id="formView">
 		
-		<div class="table-result">
-		<table class="table table-bordered">
-			<thead>
-				<tr class="info">
-					<td style="width: 25px;">แก้ไข</td>
-					<td style="width: 25px;">ลบ</td>
-					<td style="width: 25px;">รายละเอียด</td>
-					<td>ประเภทเครือข่าย</td>
-					<td>ประเภทหน่วยงาน</td>
-					<td>ชื่อหน่วยงาน</td>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
+			</div>
 		</div>
 	</div>
 	
@@ -102,6 +29,298 @@
 	
 <script type="text/javascript" src="../../static/pagejs/m01.js"
 			th:src="@{/static/pagejs/m01.js}"></script>
+
+<script id="defaultBreadCrumbTemplate" type="text/x-handlebars-template">
+<li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
+<li id="rootBreadcrumb" class="active">m01: ข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น</li>
+</script>
+
+<script id="newFormBreadCrumbTemplate" type="text/x-handlebars-template">
+<li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
+<li id="rootBreadcrumb"><a href="#">m01: ข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น</a></li>
+<li class="active">สร้างทะเบียนเครือข่ายใหม่</li>
+</script>
+
+<script id="editFormBreadCrumbTemplate" type="text/x-handlebars-template">
+<li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
+<li id="rootBreadcrumb"><a href="#">m01: ข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น</a></li>
+<li class="active">แก้ไขเครือข่าย (#{{companyId}})</li>
+</script>			
+
+<script  id="provinceSltTemplate" type="text/x-handlebars-template">
+<option value="0">กรุณาเลือกจังหวัด</option>
+{{#each this}}
+	<option value="{{id}}">{{name}}</option>
+{{/each}}
+</script>
+
+<script  id="formViewTemplate" type="text/x-handlebars-template">
+
+<div class="col-md-12">
+	<form class="form-horizontal" role="form">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<b><i class="fa fa-pencil-square-o"></i> กรุณาระบุข้อมูลด้านล่างให้ครบถ้วน</b>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-4 control-label">ประเภทเครือข่าย</label>
+					    <div class="col-md-8">
+					      <select class="form-control formSlt" id="networkTypeSlt" data-field="networkType">
+								<option value="0">กรุณาเลือก</option>
+								{{#each this.networkTypes}}
+									<option value="{{id}}">{{description}}</option>
+								{{/each}}
+							</select>	
+					    </div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+				    	<label for="inputEmail3" class="col-md-4 control-label">ประเภทหน่วยงาน</label>
+				    	<div class="col-md-8">
+				      		 <select class="form-control formSlt" id="orgTypeSlt"  data-field="orgType">
+								<option value="0">กรุณาเลือก</option>
+								{{#each this.orgTypes}}
+									<option value="{{id}}">{{description}}</option>
+								{{/each}}
+							</select>	
+				    	</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-4 control-label">เขตบริการสุขภาพ</label>
+					    <div class="col-md-8">
+							<select class="form-control formSlt" id="healthZoneSlt" data-field="zone">
+								<option value="0">กรุณาเลือก</option>
+								{{#each this.healthZones}}
+									<option value="{{id}}">{{name}}</option>
+								{{/each}}
+							</select>				      
+					    </div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+				    	<label for="inputEmail3" class="col-md-4 control-label">จังหวัด</label>
+				    	<div class="col-md-8">
+							<select class="form-control formSlt" id="provinceSlt" data-field="province">
+								<option value="0">กรุณาเลือกเขตบริการสุขภาพ</option>
+							</select>				      
+				    	</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-4 control-label">ชื่อหน่วยงาน</label>
+					    <div class="col-md-8">
+					      <input type="text" class="form-conntrol" id="orgNameTxt" data-field="orgName"></input>
+					    </div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+				    	<label for="inputEmail3" class="col-md-4 control-label">อำเภอ</label>
+				    	<div class="col-md-8">
+				      		 <select class="form-control formSlt" id="amphurSlt"  data-field="amphur">
+								<option value="0">กรุณาเลือก</option>
+								{{#each this.amphur}}
+									<option value="{{id}}">{{name}}</option>
+								{{/each}}
+							</select>	
+				    	</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-4 control-label">รหัส 9 หลัก</label>
+					    <div class="col-md-8">
+					      <input type="text" class="form-control" id="orgCode1Txt" data-field="orgCode1"></input>
+					    </div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+				    	<label for="inputEmail3" class="col-md-4 control-label">รหัส 5 หลัก</label>
+				    	<div class="col-md-8">
+				      		  <input type="text" class="form-control" id="orgCode2Txt" data-field="orgCode2"></input>
+				    	</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-2 control-label">สถานที่ตั้ง</label>
+					    <div class="col-md-10">
+					      <input type="text" class="form-control" id="addressTxt" data-field="address"></input>
+					    </div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<b><i class="fa fa-pencil-square-o"></i> ข้อมูลเพื่อการติดต่อ</b>
+						</div>
+						<div class="panel-body">
+							สสสสสส
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel-footer">
+			<button id="backBtn" type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i> กลับหน้าเดิม</button>
+			<button id="saveFormBtn" type="button" class="btn btn-default"><i class="fa fa-floppy-o"></i> บันทึกข้อมูล</button>
+			<button id="clearFormBtn" type="button" class="btn btn-default"><i class="fa fa-times-circle"></i> ล้างข้อมูล</button>
+		</div>
+	</div>
+	</form>
+</div>
+</script>
+
+<script  id="searchViewTemplate" type="text/x-handlebars-template">
+<div class="panel panel-primary">
+<div class="panel-heading">
+ 			<h4 class="panel-title">ค้นหาข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น</h4>
+		</div>
+		<div class="panel-body">
+	<form class="form-horizontal" role="form">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+				    <label for="inputEmail3" class="col-md-4 control-label">เขตบริการสุขภาพ</label>
+				    <div class="col-md-8">
+						<select class="form-control formSlt" id="healthZoneSlt" data-field="zone">
+							<option value="0">กรุณาเลือก</option>
+							{{#each this.healthZones}}
+								<option value="{{id}}">{{name}}</option>
+							{{/each}}
+						</select>				      
+				    </div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+			    	<label for="inputEmail3" class="col-md-4 control-label">จังหวัด</label>
+			    	<div class="col-md-8">
+						<select class="form-control formSlt" id="provinceSlt" data-field="province">
+							<option value="0">กรุณาเลือกเขตบริการสุขภาพ</option>
+						</select>				      
+			    	</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+				    <label for="inputEmail3" class="col-md-4 control-label">ประเภทเครือข่าย</label>
+				    <div class="col-md-8">
+				      <select class="form-control formSlt" id="networkTypeSlt" data-field="networkType">
+							<option value="0">กรุณาเลือก</option>
+							{{#each this.networkTypes}}
+								<option value="{{id}}">{{description}}</option>
+							{{/each}}
+						</select>	
+				    </div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+			    	<label for="inputEmail3" class="col-md-4 control-label">ประเภทหน่วยงาน</label>
+			    	<div class="col-md-8">
+			      		 <select class="form-control formSlt" id="orgTypeSlt"  data-field="orgType">
+							<option value="0">กรุณาเลือก</option>
+							{{#each this.orgTypes}}
+								<option value="{{id}}">{{description}}</option>
+							{{/each}}
+						</select>	
+			    	</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+				    <label for="inputEmail3" class="col-sm-2 control-label">ชื่อหน่วยงาน</label>
+				    <div class="col-sm-10">
+				      <input type="email" class="form-control" id="inputEmail3" placeholder="ระบุชื่อหน่วยงานที่ต้องการค้นหา..."/>
+				    </div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12" style="text-align: center;">
+					<button type="button" class="btn btn-default" id="newFormBtn">
+						<i class="fa fa-plus"></i> เพิ่มข้อมูลเครือข่าย</button>
+					<button type="button" class="btn btn-default" id="searchBtn">
+						<span class="glyphicon glyphicon-search"></span> ค้นหา</button>
+					<button type="button" class="btn btn-default" id="clearFormBtn">
+						<i class="fa fa-times-circle"></i> ล้างข้อมูลค้นหา</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</script>
+
+<script type="text/javascript" th:inline="javascript">
+//<!--
+
+var appRouter;
+
+$( document ).ready(function() {
+	
+	//initialize things
+	networkTypes = new smt.Collection.NetworkTypes();
+	orgTypes = new  smt.Collection.OrgTypes();
+	healthZones = new smt.Collection.HealthZones();
+	
+	$.when(networkTypes.fetch(), orgTypes.fetch(), healthZones.fetch()).done(function(x) {
+		
+		searchView = new SearchView({
+			networkTypes: networkTypes,
+			orgTypes: orgTypes,
+			healthZones: healthZones,
+			el: "#searchView"
+		});
+		
+		tableResultView = new TableResultView({
+			el: "#tableResultView"
+		});
+		
+		formView = new FormView({
+			el: "#formView"
+		})
+		
+		
+		
+		appRouter = new AppRouter({
+			searchView: searchView,
+			tableResultView: tableResultView,
+			formView: formView
+		});
+		Backbone.history.start();
+
+	});
+	
+	
+});
+
+
+//-->
+</script>			
 </div>	
 </body>
 </html>

@@ -20,4 +20,7 @@ public interface EntityService {
 	public List<DomainVariable> findAllDomainVariableByDomainName(
 			String domainName);
 
+	public DomainVariable findDomainVariableByDomainNameAndId(
+			String domainName, Long id);
+
 }
