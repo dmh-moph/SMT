@@ -3,10 +3,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>tho.go.dmh</groupId>
+	<groupId>th.go.dmh</groupId>
 	<artifactId>smt</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
+	<scm>
+		<connection>scm:git:https://github.com/dmh-moph/SMT.git</connection>
+    	<url>https://github.com/dmh-moph/SMT</url>
+	</scm>
 
 	<name>SMT</name>
 	<description>Smart Teen Project</description>
@@ -93,7 +97,8 @@
 		<java.version>1.7</java.version>
 	</properties>
 
-<build>
+	<build>
+		<finalName>${artifactId}</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
