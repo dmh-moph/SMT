@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.mysema.query.types.expr.BooleanExpression;
 
 import smt.auth.model.SecurityUser;
 import smt.auth.service.SecUserRepository;
@@ -34,6 +35,7 @@ import smt.repository.OrganizationNetworkRepo;
 import smt.repository.OrganizationPersonRepo;
 import smt.repository.PersonTypeRepo;
 import smt.repository.ProvinceRepo;
+import smt.webUI.DefaultProperty;
 import smt.webUI.ResponseJSend;
 import smt.webUI.ResponseStatus;
 
@@ -223,17 +225,45 @@ public class EntityServiceJPA implements EntityService {
 
 	@Override
 	public ResponseJSend<Page<OrganizationNetwork>> findOrganizationNetworkByExample(
-			JsonNode node) {
+			JsonNode node, Integer pageNum) {
 		
 		PageRequest pageRequest =
-	            new PageRequest(0, 25, Sort.Direction.DESC, "orgName");
+	            new PageRequest(pageNum -1, DefaultProperty.NUMBER_OF_ELEMENT_PER_PAGE, Sort.Direction.ASC, "orgName");
 		
 		QOrganizationNetwork q = QOrganizationNetwork.organizationNetwork;
 		
 		
-		q.orgName.like(node.get("orgName").asText());
+		String orgNameStr = "%";
+		if(node.get("orgName") != null) {
+			orgNameStr += node.get("orgName") + "%";
+		}
+		BooleanExpression p = q.orgName.like(orgNameStr);
 		
-		Page<OrganizationNetwork> orgs  = organizationNetworkRepo.findAll(q.orgName.like(node.get("orgName").asText()), pageRequest);
+		if(node.get("orgType") != null && node.get("orgType").get("id") !=null) {
+			Long orgTypeId = node.get("orgType").get("id").asLong();
+			p = p.and(q.orgType.id.eq(orgTypeId));
+		}
+		
+		if(node.get("networkType") != null && node.get("networkType").get("id") != null) {
+			Long networkTypeId = node.get("networkType").get("id").asLong();
+			p = p.and(q.networkType.id.eq(networkTypeId));
+		}
+ 		
+		if(node.get("zone") != null && node.get("zone").get("id") != null) {
+			Long zoneId = node.get("zone").get("id").asLong();
+			p = p.and(q.zone.id.eq(zoneId));
+		}
+		
+		if(node.get("province") != null && node.get("province").get("id") != null) {
+			Long provinceId = node.get("province").get("id").asLong();
+			p = p.and(q.province.id.eq(provinceId));
+		}
+		
+		Page<OrganizationNetwork> orgs  = organizationNetworkRepo.findAll(p, pageRequest);
+		
+		for(OrganizationNetwork org : orgs) {
+			org.getMedicalStaffs().size();
+		}
 		
 		ResponseJSend<Page<OrganizationNetwork>> response = new ResponseJSend<Page<OrganizationNetwork>>();
 		response.data=orgs;

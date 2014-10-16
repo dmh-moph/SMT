@@ -35,6 +35,6 @@ public interface EntityService {
 	public ResponseJSend<Long> saveOrganizationNetwork(JsonNode node, SecurityUser user);
 
 	public ResponseJSend<Page<OrganizationNetwork>> findOrganizationNetworkByExample(
-			JsonNode node);
+			JsonNode node, Integer pageNum);
 
 }

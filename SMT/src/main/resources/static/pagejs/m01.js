@@ -8,8 +8,6 @@ var AppRouter = Backbone.Router.extend({
 		this.editFormBreadCrumb = Handlebars.compile($("#editFormBreadCrumbTemplate").html());
 		this.$breadcrubmEl = $("#breadcrumb");
 		
-		console.log(options);
-		
 		if(options.formView != null) {
 			this.formView = options.formView;	
 		} 
@@ -22,9 +20,9 @@ var AppRouter = Backbone.Router.extend({
 		
 	},
 	routes: {
-        "newNetworkOrgnazation" : "newForm",
+        "newOrgnazationNetwork" : "newForm",
         "search" : "search",
-        "NetworkOrganization/:id" : "editForm",
+        "OrganizationNetwork/:id" : "editForm",
         "*actions": "defaultRoute" // Backbone will try match the route above first
     },
     
@@ -41,18 +39,18 @@ var AppRouter = Backbone.Router.extend({
     	// show search
     	this.searchView.render();  	
     },
-    
+    searchWithModelAndPage: function(model, pageNum) {
+    	// now table result
+    	this.tableResultView.renderWithSearchModel(model, pageNum);
+    },
     search: function() {
     	// set breadcrumb
     	this.$breadcrubmEl.html(this.defaultBreadCrumb());
 
     	// show search
     	this.searchView.render();
-
-    	
     	// no table result
-    	this.tableResultView.render();
-    	
+    	this.tableResultView.$el.empty();
     	// no form
     	this.formView.$el.empty();
     },
@@ -92,22 +90,39 @@ var SearchView = Backbone.View.extend({
     	
 
     	this.provinces = new smt.Collection.Provinces();
+    	
+    	
     },
     
     events: {
     	"change .formSlt": "onChangeFormSlt",
+    	"change .formTxt" : "onChangeFormTxt",
     	
     	"click #newFormBtn" : "onClicknewFormBtn",
-    	"click #searchBtn" : "onClickSearchBtn"
+    	"click #searchBtn" : "onClickSearchBtn",
+    	"click #clearFormBtn" : "onClickClearFormBtn",
+    	"submit #searchForm" : "onSubmitSearchForm"
     		
     },
-    
+    onClickClearFormBtn: function(e) {
+    	this.searchModel = new smt.Model.OrganizationNetwork();
+    	appRouter.search();
+    },
+    onSubmitSearchForm: function(e) {
+    	this.onClickSearchBtn(e);
+    	return false;
+    },
+    onChangeFormTxt: function(e) {
+    	var value = $(e.currentTarget).val();
+		var field=$(e.currentTarget).attr('data-field'); 
+		this.searchModel.set(field, value);
+    },
     onClickSearchBtn:function(e) {
-    	
+    	appRouter.searchWithModelAndPage(this.searchModel, 1);
     },
     onClicknewFormBtn : function(e) {
     	// we can simply navigate to newForm
-    	appRouter.navigate("newNetworkOrgnazation", {trigger: true});
+    	appRouter.navigate("newOrgnazationNetwork", {trigger: true});
     	
     },
     onChangeFormSlt: function(e) {
@@ -144,10 +159,17 @@ var SearchView = Backbone.View.extend({
     		model = null;
     		return;
     	}
-    	this.searchModel.set(field, model);
+    	if(id == 0) {
+    		this.searchModel.set(field, null);
+    	} else {
+    		this.searchModel.set(field, model);
+    	}
     	
     },
-    
+    resetForm: function() {
+    	this.searchModel = new smt.Model.OrganizationNewtork();
+    	this.render();
+    }, 
     
     render: function() {
     	var json = {};
@@ -164,8 +186,46 @@ var SearchView = Backbone.View.extend({
 
 });
 
-var TableResultView = Backbone.View.extend({
+var TableResultView = Backbone.View.extend({ 
+	initialize: function(options){
+		this.searchResults = new smt.Page.OrganizationNetworks();
+		this.tableResultViewTemplate = Handlebars.compile($("#tableResultViewTemplate").html());
+	},
+	events: {
+		"click .editOrganizationNetworkBtn" : "onClickEditOrganizationNetworkBtn"
+	},
+	
+	onClickEditOrganizationNetworkBtn: function(e) {
+		var organizationNetworkId = $(e.currentTarget).parents('tr').attr("data-id");
+		appRouter.navigate("OrganizationNetwork/"+organizationNetworkId, {trigger: true});
+	},
+	
+	renderWithSearchModel: function(searchModel, pageNum) {
+		this.searchModel = searchModel;
+		this.pageNum = pageNum
+		this.render();
+	},
+	
+	renderWithPage: function(pageNum) {
+		this.pageNum = pageNum
+		this.render();
+	},
+	
 	render: function() {
+		this.searchResults.fetch({
+			url: appUrl('OrganizationNetwork/search/page/' + this.pageNum),
+    		type: 'POST',
+    		data: JSON.stringify(this.searchModel.toJSON()),
+    		dataType: 'json',
+    		contentType: 'application/json',
+    		success: _.bind(function(collection, response, options) {
+    			
+			var json = {};
+			json.page = this.searchResults.page;
+			json.content = this.searchResults.toJSON();
+			this.$el.html(this.tableResultViewTemplate(json));
+    		}, this)
+    	});
 		return this;
 	}
 });
@@ -308,7 +368,15 @@ var FormView = Backbone.View.extend({
 	
 	
 	editForm: function(id) {
-		this.modelId=id;
+		this.model = smt.Model.OrganizationNetwork.findOrCreate({id: id});
+		var zoneId=this.model.get('zone').get('id');
+		var provinceId = this.model.get('province').get('id');
+		$.when(this.provinces.fetch({url: appUrl('Province/findAllByZone/'+zoneId)}),
+				this.amphurs.fetch({url: appUrl('Province/'+provinceId +'/Amphur')}))
+				.done(_.bind(function(x) {
+			this.render();	
+		},this));
+		
 	},
 	renderPersonTbl: function() {
 		var json = this.model.get('medicalStaffs').toJSON();
@@ -321,7 +389,7 @@ var FormView = Backbone.View.extend({
 		var json={};
 		json.model = this.model.toJSON();
 		
-		if(this.modelId == null) {
+		if(this.model.get('id') == null) {
 			json.networkTypes=new Array();
 			json.networkTypes.push({id:0,description: 'กรุณาเลือกประเภทเครือข่าย'});
 			$.merge(json.networkTypes, networkTypes.toJSON());
@@ -339,9 +407,29 @@ var FormView = Backbone.View.extend({
 			
 			json.amphurs=new Array();
 			json.amphurs.push({id:0,name: 'กรุณาเลือกอำเภอ'});
+		} else {
+			json.networkTypes=new Array();
+			$.merge(json.networkTypes, networkTypes.toJSON());
+			 __setSelect(json.networkTypes, this.model.get('networkType'));
+			
+			json.orgTypes=new Array();
+			$.merge(json.orgTypes, orgTypes.toJSON());
+			__setSelect(json.orgTypes, this.model.get('orgType'));
+			
+			json.healthZones=new Array();
+			$.merge(json.healthZones, healthZones.toJSON());
+			__setSelect(json.healthZones, this.model.get('zone'));
+			
+			json.provinces=new Array();
+			$.merge(json.provinces, this.provinces.toJSON());
+			__setSelect(json.provinces, this.model.get('province'));
+			
+			json.amphurs=new Array();
+			$.merge(json.amphurs, this.amphurs.toJSON());
+			__setSelect(json.amphurs, this.model.get('amphur'));
 		}
 		
-		
+		console.log(json);
 		this.$el.html(this.formViewTemplate(json));
 		
 		this.renderPersonTbl();
@@ -384,7 +472,6 @@ var PersonModalView = Backbone.View.extend({
     	}
     	this.currentPerson.set(field,model);
     	
-    	console.log(this.currentPerson.toJSON());
 	},
 	onClickSaveBtn: function(e) {
 		// validate input here...
@@ -416,7 +503,6 @@ var PersonModalView = Backbone.View.extend({
 		$.merge(json.personTypes, this.personTypes.toJSON());
 		__setSelect(json.personTypes, this.currentPerson.get('type'));
 		
-		console.log(json.personTypes);
 		
 		this.$el.find('.modal-body').html(this.personModalBodyTemplate(json));
 		

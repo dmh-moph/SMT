@@ -103,6 +103,12 @@ smt.Model.OrganizationPerson = Backbone.RelationalModel.extend({
 	}]
 });
 
+
+smt.Page.OrganizationNetworks = Backbone.PageCollection.extend({
+	model: smt.Model.OrganizationNetwork,
+	url: appUrl('OrganizationNetwork/search')
+});
+
 smt.Collection.HealthZones = Backbone.Collection.extend({
 	model: smt.Model.HealthZone,
 	url: appUrl('Province/findAllZone')

@@ -1,7 +1,5 @@
 package smt.controller.rest;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,9 +13,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import smt.auth.model.Activeuser;
 import smt.auth.model.SecurityUser;
 import smt.model.OrganizationNetwork;
-import smt.model.glb.Amphur;
-import smt.model.glb.HealthZone;
-import smt.model.glb.Province;
 import smt.service.EntityService;
 import smt.webUI.ResponseJSend;
 
@@ -28,14 +23,17 @@ public class OrganizationNetworkRestController {
 	@Autowired
 	private EntityService entityService;
 	
-	@RequestMapping("/{id}")
+	
+	
+	@RequestMapping(value = "/search/page/{pageNum}", method = {RequestMethod.POST}) 
+	public ResponseJSend<Page<OrganizationNetwork>> findOrganizationNetworkByExample(
+			@RequestBody JsonNode node, @Activeuser SecurityUser user, @PathVariable Integer pageNum) {
+		return entityService.findOrganizationNetworkByExample(node, pageNum);
+	}
+
+	@RequestMapping(value= "/{id}", method = {RequestMethod.GET})
 	public OrganizationNetwork findOrganizationNetworkById(@PathVariable Long id) {
 		return entityService.findOrganizationNetworkById(id);
-	}
-	
-	@RequestMapping(value = "/search", method = {RequestMethod.POST}) 
-	public ResponseJSend<Page<OrganizationNetwork>> findOrganizationNetworkByExample(@RequestBody JsonNode node) {
-		return entityService.findOrganizationNetworkByExample(node);
 	}
 	
 	@RequestMapping(value = "", method = {RequestMethod.POST}) 
