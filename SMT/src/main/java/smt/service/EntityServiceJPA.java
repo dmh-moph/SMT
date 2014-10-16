@@ -1,30 +1,46 @@
 package smt.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import smt.auth.model.SecurityUser;
 import smt.auth.service.SecUserRepository;
 import smt.model.OrganizationNetwork;
+import smt.model.OrganizationPerson;
+import smt.model.QOrganizationNetwork;
 import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
 import smt.model.glb.HealthZone;
 import smt.model.glb.NetworkType;
 import smt.model.glb.OrgType;
+import smt.model.glb.PersonType;
 import smt.model.glb.Province;
+import smt.repository.AmphurRepo;
 import smt.repository.DomainVariableRepo;
+import smt.repository.HealthZoneRepo;
+import smt.repository.NetworkTypeRepo;
+import smt.repository.OrgTypeRepo;
 import smt.repository.OrganizationNetworkRepo;
+import smt.repository.OrganizationPersonRepo;
+import smt.repository.PersonTypeRepo;
 import smt.repository.ProvinceRepo;
 import smt.webUI.ResponseJSend;
 import smt.webUI.ResponseStatus;
 
 public class EntityServiceJPA implements EntityService {
 
+	public static Logger logger = LoggerFactory.getLogger(EntityServiceJPA.class);
+	
 	@Autowired
 	ProvinceRepo provinceRepo;
 	
@@ -33,6 +49,9 @@ public class EntityServiceJPA implements EntityService {
 	
 	@Autowired
 	OrganizationNetworkRepo organizationNetworkRepo;
+
+	@Autowired
+	OrganizationPersonRepo organizationPersonRepo;
 	
 	@Autowired
 	HealthZoneRepo healthZoneRepo;
@@ -42,6 +61,9 @@ public class EntityServiceJPA implements EntityService {
 	
 	@Autowired
 	NetworkTypeRepo networkTypeRepo;
+	
+	@Autowired
+	PersonTypeRepo personTypeRepo;
 	
 	@Autowired
 	OrgTypeRepo orgTypeRepo;
@@ -90,19 +112,19 @@ public class EntityServiceJPA implements EntityService {
 	@Override
 	public ResponseJSend<Long> saveOrganizationNetwork(JsonNode node, SecurityUser user) {
 		OrganizationNetwork model;
-		SecurityUser sUser = secUserRepo.findOne(1L);
+
 		if(node.get("id") != null) {
 			// this is update
 			model = organizationNetworkRepo.findOne(node.get("id").asLong());
 			
-			model.setLastUpdateBy(sUser);
+			model.setLastUpdateBy(user);
 			model.setLastUpdateDate(new Date());
 		} else {
 			// this is new
 			model = new OrganizationNetwork();
-			model.setCreateBy(sUser);
+			model.setCreateBy(user);
 			model.setCreateDate(new Date());
-			model.setLastUpdateBy(sUser);
+			model.setLastUpdateBy(user);
 			model.setLastUpdateDate(new Date());
 		}
 		
@@ -158,11 +180,64 @@ public class EntityServiceJPA implements EntityService {
 		organizationNetworkRepo.save(model);
 		
 		// now we will deal with medicalStaffs
+		List<OrganizationPerson> staffs = new ArrayList<OrganizationPerson>();
 		
+		for(JsonNode staffNode : node.get("medicalStaffs") ) {
+			logger.debug("staffNode: " +staffNode.toString());
+			OrganizationPerson staff;
+			if(staffNode.get("id") != null) {
+				staff = organizationPersonRepo.findOne(staffNode.get("id").asLong());
+				
+			} else { 
+				staff = new OrganizationPerson();
+				staff.setCreateBy(user);
+				staff.setCreateDate(new Date());
+			}
+			
+			staff.setLastUpdateBy(user);
+			staff.setLastUpdateDate(new Date());
+			
+			staff.setName(staffNode.get("name").asText());
+			
+			if(staffNode.get("type") != null) {
+				Long typeId = staffNode.get("type").get("id").asLong();
+				PersonType type = personTypeRepo.findOne(typeId);
+				staff.setType(type);
+			}
+			
+			
+			staff.setOrganizationNetwork(model);
+			staffs.add(staff);
+		}
+		
+		organizationPersonRepo.save(staffs);
+		
+		model.setMedicalStaffs(staffs);
+		organizationNetworkRepo.save(model);
 		
 		ResponseJSend<Long> response = new ResponseJSend<Long>();
 		response.status = ResponseStatus.SUCCESS;
 		response.data = model.getId(); 
+		return response;
+	}
+
+	@Override
+	public ResponseJSend<Page<OrganizationNetwork>> findOrganizationNetworkByExample(
+			JsonNode node) {
+		
+		PageRequest pageRequest =
+	            new PageRequest(0, 25, Sort.Direction.DESC, "orgName");
+		
+		QOrganizationNetwork q = QOrganizationNetwork.organizationNetwork;
+		
+		
+		q.orgName.like(node.get("orgName").asText());
+		
+		Page<OrganizationNetwork> orgs  = organizationNetworkRepo.findAll(q.orgName.like(node.get("orgName").asText()), pageRequest);
+		
+		ResponseJSend<Page<OrganizationNetwork>> response = new ResponseJSend<Page<OrganizationNetwork>>();
+		response.data=orgs;
+		response.status=ResponseStatus.SUCCESS;
 		return response;
 	}
 

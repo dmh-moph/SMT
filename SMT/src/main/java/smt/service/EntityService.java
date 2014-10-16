@@ -2,6 +2,8 @@ package smt.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 import smt.auth.model.SecurityUser;
@@ -31,5 +33,8 @@ public interface EntityService {
 	public OrganizationNetwork findOrganizationNetworkById(Long id);
 
 	public ResponseJSend<Long> saveOrganizationNetwork(JsonNode node, SecurityUser user);
+
+	public ResponseJSend<Page<OrganizationNetwork>> findOrganizationNetworkByExample(
+			JsonNode node);
 
 }

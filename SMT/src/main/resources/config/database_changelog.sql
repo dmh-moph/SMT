@@ -27,5 +27,11 @@ create table SEC_USER (
     
 create sequence SEC_USER_SEQ START WITH 1 INCREMENT by 1 MAXVALUE 9999999999 MINVALUE 1 NOCYCLE;
 
+alter table smt_organization_person add (dv_person_type number, organizationNetwork_index number);
+alter table smt_organization_person 
+  add CONSTRAINT dv_person_type_fk 
+  foreign key (DV_PERSON_TYPE)
+  REFERENCES GLB_VARIABLE;
+
 
 commit;

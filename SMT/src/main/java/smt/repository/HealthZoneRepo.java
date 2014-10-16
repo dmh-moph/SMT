@@ -1,4 +1,4 @@
-package smt.service;
+package smt.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

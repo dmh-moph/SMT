@@ -87,11 +87,15 @@
 <form role="form">
 	<div class="form-group">
 		<label for="firstName">ชื่อ - นามสกุล</label>
-		<input type="text" class="form-control txtForm" id="name" data-field="name" placeholder="..." value="{{name}}"/>
+		<input type="text" class="form-control formTxt" id="name" data-field="name" placeholder="..." value="{{model.name}}"/>
 	</div>
 	<div class="form-group">
 		<label for="lastName">ประเภท</label>
-		<input type="text" class="form-control txtForm" id="type" data-field="type" placeholder="..." value="{{type}}"/>
+		<select class="form-control formSlt" id="typeSlt"  data-field="type">
+		{{#each this.personTypes}}								
+				<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
+		{{/each}}
+		</select>	
 	</div>
 </form>
 </script>
@@ -304,7 +308,7 @@
 		<button type="button" class="btn btn-info btn-xs editPersonBtn"><i class="fa fa-edit"> </i></button>
 	</td>
 	<td>{{name}}</td>
-	<td>{{type}}</td>
+	<td>{{type.description}}</td>
 
 </tr>
 {{/each}}
@@ -406,8 +410,9 @@ $( document ).ready(function() {
 	networkTypes = new smt.Collection.NetworkTypes();
 	orgTypes = new  smt.Collection.OrgTypes();
 	healthZones = new smt.Collection.HealthZones();
+	personTypes = new smt.Collection.PersonTypes();
 	
-	$.when(networkTypes.fetch(), orgTypes.fetch(), healthZones.fetch()).done(function(x) {
+	$.when(networkTypes.fetch(), orgTypes.fetch(), healthZones.fetch(), personTypes.fetch()).done(function(x) {
 		
 		searchView = new SearchView({
 			networkTypes: networkTypes,
@@ -424,6 +429,7 @@ $( document ).ready(function() {
 			networkTypes: networkTypes,
 			orgTypes: orgTypes,
 			healthZones: healthZones,
+			personTypes: personTypes,
 			el: "#formView"
 		})
 		

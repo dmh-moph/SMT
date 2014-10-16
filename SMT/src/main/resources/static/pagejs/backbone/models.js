@@ -40,6 +40,8 @@ smt.Model.DV_NetworkType = Backbone.RelationalModel.extend({
 });
 smt.Model.DV_OrgType = Backbone.RelationalModel.extend({
 });
+smt.Model.DV_PersonType = Backbone.RelationalModel.extend({
+});
 
 smt.Model.HealthZone = Backbone.RelationalModel.extend();
  
@@ -94,6 +96,10 @@ smt.Model.OrganizationPerson = Backbone.RelationalModel.extend({
 		type: Backbone.HasOne,
 		key: 'organizationNetwork',
 		relatedModel: 'smt.Model.OrganizationNetwork'
+	},{
+		type: Backbone.HasOne,
+		key: 'type',
+		relatedModel: 'smt.Model.DV_PersonType'
 	}]
 });
 
@@ -118,6 +124,10 @@ smt.Collection.NetworkTypes = Backbone.Collection.extend({
 smt.Collection.OrgTypes = Backbone.Collection.extend({
 	model: smt.Model.DV_OrgType,
 	url: appUrl('DomainVariable/ORG_TYPE')
+});
+smt.Collection.PersonTypes = Backbone.Collection.extend({
+	model: smt.Model.DV_PersonType,
+	url: appUrl('DomainVariable/PERSON_TYPE')
 });
 
 })();

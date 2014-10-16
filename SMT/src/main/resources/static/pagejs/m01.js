@@ -97,10 +97,14 @@ var SearchView = Backbone.View.extend({
     events: {
     	"change .formSlt": "onChangeFormSlt",
     	
-    	"click #newFormBtn" : "onClicknewFormBtn"
+    	"click #newFormBtn" : "onClicknewFormBtn",
+    	"click #searchBtn" : "onClickSearchBtn"
     		
     },
     
+    onClickSearchBtn:function(e) {
+    	
+    },
     onClicknewFormBtn : function(e) {
     	// we can simply navigate to newForm
     	appRouter.navigate("newNetworkOrgnazation", {trigger: true});
@@ -173,16 +177,17 @@ var FormView = Backbone.View.extend({
 		 this.amphurSltTemplate = Handlebars.compile($("#amphurSltTemplate").html());
 		 this.medicalStaffsTbodyTemplate = Handlebars.compile($("#medicalStaffsTbodyTemplate").html());
 		 
-		 
-		 this.personModalView = new PersonModalView({el : '#personModal', parentView: this});
-			
+		
 		 // the three must have option!
 		 this.networkTypes = options.networkTypes;
 		 this.orgTypes = options.orgTypes;
 		 this.heathZones = options.healthZones;
+		 this.personTypes = options.personTypes;
 		 
 		 this.provinces = new smt.Collection.Provinces();
 		 this.amphurs = new smt.Collection.Amphurs();
+		 
+		 this.personModalView = new PersonModalView({el : '#personModal', parentView: this, personTypes : this.personTypes});
 	 },
 	 events: {
 		 "change .formSlt": "onChangeFormSlt",
@@ -350,6 +355,12 @@ var PersonModalView = Backbone.View.extend({
 			if(options.parentView != null) {
 				this.parentView = options.parentView;
 			}
+			
+			if(options.personTypes != null) {
+				
+				this.personTypes = options.personTypes;
+				
+			}
 		}
 		this.currentOrganizationNetwork = null;
 		this.currentPerson = null;
@@ -358,7 +369,22 @@ var PersonModalView = Backbone.View.extend({
 	},events : {
 		"click #personModalCloseBtn" : "onClickCloseBtn",
 		 "click #personModalSaveBtn" : "onClickSaveBtn",
-		"change .txtForm" : "onChangeTxtForm"
+		"change .formTxt" : "onChangeFormTxt",
+		"change .formSlt" : "onChangeFormSlt"
+	},
+	
+	onChangeFormSlt: function(e) {
+    	var id=$(e.currentTarget).val();
+    	var field=$(e.currentTarget).attr('data-field'); 
+    	
+    	var model;
+    	
+    	if(field == 'type') {
+    		model = smt.Model.DV_PersonType.findOrCreate({id:id});
+    	}
+    	this.currentPerson.set(field,model);
+    	
+    	console.log(this.currentPerson.toJSON());
 	},
 	onClickSaveBtn: function(e) {
 		// validate input here...
@@ -374,14 +400,23 @@ var PersonModalView = Backbone.View.extend({
 		 this.$el.modal('hide');
 		 return false;
 	 },
-	 onChangeTxtForm: function(e) {
+	 onChangeFormTxt: function(e) {
 		var field = $(e.currentTarget).attr('data-field');
 		var value = $(e.currentTarget).val();
 		
 		this.currentPerson.set(field, value);
 	},
 	render : function() {
-		var json=this.currentPerson.toJSON(); 
+		var json = {};
+		json.model=this.currentPerson.toJSON();
+		json.personTypes = new Array();
+		if(this.currentPerson.get('id')==null) {
+			json.personTypes.push({id:0, description: 'กรุณาเลือกประเภทบุคคลากรทางการแพทย์'});
+		}
+		$.merge(json.personTypes, this.personTypes.toJSON());
+		__setSelect(json.personTypes, this.currentPerson.get('type'));
+		
+		console.log(json.personTypes);
 		
 		this.$el.find('.modal-body').html(this.personModalBodyTemplate(json));
 		

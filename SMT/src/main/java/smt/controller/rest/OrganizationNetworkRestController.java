@@ -3,6 +3,7 @@ package smt.controller.rest;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,11 @@ public class OrganizationNetworkRestController {
 	@RequestMapping("/{id}")
 	public OrganizationNetwork findOrganizationNetworkById(@PathVariable Long id) {
 		return entityService.findOrganizationNetworkById(id);
+	}
+	
+	@RequestMapping(value = "/search", method = {RequestMethod.POST}) 
+	public ResponseJSend<Page<OrganizationNetwork>> findOrganizationNetworkByExample(@RequestBody JsonNode node) {
+		return entityService.findOrganizationNetworkByExample(node);
 	}
 	
 	@RequestMapping(value = "", method = {RequestMethod.POST}) 

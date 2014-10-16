@@ -17,6 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import smt.auth.model.SecurityUser;
+import smt.model.glb.PersonType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -46,9 +47,9 @@ public class OrganizationPerson implements Serializable {
 	@Column(name="PERSON_NAME")
 	private String name;
 	
-	@Basic
-	@Column(name="PERSON_TYPE")
-	private String type;
+	@ManyToOne
+	@JoinColumn(name="DV_PERSON_TYPE")
+	private PersonType type;
 	
 	@ManyToOne
 	@JoinColumn(name="CREATE_BY")
@@ -90,11 +91,11 @@ public class OrganizationPerson implements Serializable {
 		this.name = name;
 	}
 
-	public String getType() {
+	public PersonType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(PersonType type) {
 		this.type = type;
 	}
 
