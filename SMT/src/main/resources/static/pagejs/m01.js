@@ -50,7 +50,7 @@ var AppRouter = Backbone.Router.extend({
     	// show search
     	this.searchView.render();
     	// no table result
-    	this.tableResultView.$el.empty();
+    	this.tableResultView.render();
     	// no form
     	this.formView.$el.empty();
     },
@@ -106,6 +106,7 @@ var SearchView = Backbone.View.extend({
     },
     onClickClearFormBtn: function(e) {
     	this.searchModel = new smt.Model.OrganizationNetwork();
+    	
     	appRouter.search();
     },
     onSubmitSearchForm: function(e) {
@@ -176,8 +177,18 @@ var SearchView = Backbone.View.extend({
     	json.searchModel = this.searchModel.toJSON();
     	
     	json.networkTypes = this.networkTypes.toJSON();
+    	__setSelect(json.networkTypes, this.searchModel.get('networkType'));
+    	
     	json.orgTypes = this.orgTypes.toJSON();
+    	__setSelect(json.orgTypes, this.searchModel.get('orgType'));
+    	
     	json.healthZones = this.heathZones.toJSON();
+    	__setSelect(json.healthZones, this.searchModel.get('zone'));
+    	
+    	json.provinces = this.provinces.toJSON();
+    	__setSelect(json.provinces, this.searchModel.get('province'));
+    	
+    	console.log(json);
     	
     	this.$el.html(this.searchViewTemplate(json));
     	
@@ -192,7 +203,30 @@ var TableResultView = Backbone.View.extend({
 		this.tableResultViewTemplate = Handlebars.compile($("#tableResultViewTemplate").html());
 	},
 	events: {
-		"click .editOrganizationNetworkBtn" : "onClickEditOrganizationNetworkBtn"
+		"click .editOrganizationNetworkBtn" : "onClickEditOrganizationNetworkBtn",
+		"click .removeOrganizationNetworkBtn" : "onClickremoveOrganizationNetworkBtn",
+	},
+	
+	onClickremoveOrganizationNetworkBtn: function(e) {
+		var organizationNetworkId = $(e.currentTarget).parents('tr').attr("data-id");
+		
+		var orgNetwork = smt.Model.OrganizationNetwork.findOrCreate({id: organizationNetworkId});
+		
+		var r = confirm('คุณต้องการลบรายการ' + orgNetwork.get('orgName'));
+		if (r == true) {
+			orgNetwork.destroy({
+				success: function(model, response) {
+					alert("ลบข้อมูลเรียบร้อยแล้ว")
+					appRouter.search();
+				}
+			});
+			
+			
+		} else {
+		    return false;
+		} 
+		
+		
 	},
 	
 	onClickEditOrganizationNetworkBtn: function(e) {
@@ -202,12 +236,12 @@ var TableResultView = Backbone.View.extend({
 	
 	renderWithSearchModel: function(searchModel, pageNum) {
 		this.searchModel = searchModel;
-		this.pageNum = pageNum
+		this.pageNum = pageNum;
 		this.render();
 	},
 	
 	renderWithPage: function(pageNum) {
-		this.pageNum = pageNum
+		this.pageNum = pageNum;
 		this.render();
 	},
 	
@@ -272,7 +306,7 @@ var FormView = Backbone.View.extend({
 		},this)});
 	},
 	onClickBackBtn: function(e) {
-		appRouter.navigate("", {trigger: true});
+		appRouter.navigate("search", {trigger: true});
 	},
 	onClickEditPersonBtn: function(e) {
 		var index=$(e.currentTarget).parents('tr').attr('data-index');

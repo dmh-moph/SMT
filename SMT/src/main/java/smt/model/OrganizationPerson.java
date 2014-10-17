@@ -33,7 +33,15 @@ public class OrganizationPerson implements Serializable {
 	 */
 	private static final long serialVersionUID = 7529785437671030659L;
 
+	@Override
+	public int hashCode() {
+		if(this.id !=null) return this.id.hashCode();
+		
+		return super.hashCode();
+	}
 
+	
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE ,generator="SMT_ORGANIZATION_PERSON_SEQ")
 	@Column(name="ID")

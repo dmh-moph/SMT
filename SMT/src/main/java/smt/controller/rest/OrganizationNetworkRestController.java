@@ -36,8 +36,23 @@ public class OrganizationNetworkRestController {
 		return entityService.findOrganizationNetworkById(id);
 	}
 	
-	@RequestMapping(value = "", method = {RequestMethod.POST}) 
-	public ResponseJSend<Long> saveOrganizationNetwork(@RequestBody JsonNode node, @Activeuser SecurityUser user) {
+	@RequestMapping(value= "/{id}", method = {RequestMethod.PUT})
+	public ResponseJSend<Long> updateOrganizationNetworkById(@RequestBody JsonNode node,
+			@Activeuser SecurityUser user) {
+		return entityService.saveOrganizationNetwork(node, user);
+	}
+	
+	@RequestMapping(value= "/{id}", method = {RequestMethod.DELETE})
+	public ResponseJSend<Long> deleteOrganizationNetworkById(
+			@PathVariable Long id,
+			@Activeuser SecurityUser user) {
+		return entityService.deleteOrganizationNetwork(id);
+	}
+	
+	
+	@RequestMapping(value = "", method = {RequestMethod.POST, RequestMethod.PUT}) 
+	public ResponseJSend<Long> saveOrganizationNetwork(@RequestBody JsonNode node,
+			@Activeuser SecurityUser user) {
 		
 		return this.entityService.saveOrganizationNetwork(node, user);
 	}

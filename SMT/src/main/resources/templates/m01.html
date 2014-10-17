@@ -329,7 +329,7 @@
 						<select class="form-control formSlt" id="healthZoneSlt" data-field="zone">
 							<option value="0">กรุณาเลือก</option>
 							{{#each this.healthZones}}
-								<option value="{{id}}">{{name}}</option>
+								<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}</option>
 							{{/each}}
 						</select>				      
 				    </div>
@@ -341,6 +341,9 @@
 			    	<div class="col-md-8">
 						<select class="form-control formSlt" id="provinceSlt" data-field="province">
 							<option value="0">กรุณาเลือกเขตบริการสุขภาพ</option>
+							{{#each this.provinces}}
+								<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}</option>
+							{{/each}}
 						</select>				      
 			    	</div>
 				</div>
@@ -354,7 +357,7 @@
 				      <select class="form-control formSlt" id="networkTypeSlt" data-field="networkType">
 							<option value="0">กรุณาเลือก</option>
 							{{#each this.networkTypes}}
-								<option value="{{id}}">{{description}}</option>
+								<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
 							{{/each}}
 						</select>	
 				    </div>
@@ -367,7 +370,7 @@
 			      		 <select class="form-control formSlt" id="orgTypeSlt"  data-field="orgType">
 							<option value="0">กรุณาเลือก</option>
 							{{#each this.orgTypes}}
-								<option value="{{id}}">{{description}}</option>
+								<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
 							{{/each}}
 						</select>	
 			    	</div>
@@ -379,7 +382,8 @@
 				<div class="form-group">
 				    <label for="inputEmail3" class="col-sm-2 control-label">ชื่อหน่วยงาน</label>
 				    <div class="col-sm-10">
-				      <input type="text" class="form-control formTxt" id="orgNameTxt" placeholder="ระบุชื่อหน่วยงานที่ต้องการค้นหา..." data-field="orgName"/>
+				      <input type="text" class="form-control formTxt" id="orgNameTxt" 
+							placeholder="ระบุชื่อหน่วยงานที่ต้องการค้นหา..." data-field="orgName" value="{{searchModel.orgName}}"/>
 				    </div>
 				</div>
 			</div>

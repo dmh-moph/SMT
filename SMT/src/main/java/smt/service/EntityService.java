@@ -37,4 +37,6 @@ public interface EntityService {
 	public ResponseJSend<Page<OrganizationNetwork>> findOrganizationNetworkByExample(
 			JsonNode node, Integer pageNum);
 
+	public ResponseJSend<Long> deleteOrganizationNetwork(Long id);
+
 }

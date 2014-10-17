@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,6 +44,14 @@ public class OrganizationNetwork implements Serializable {
 	private static final long serialVersionUID = -7791733555935177163L;
 	
 	
+	
+	@Override
+	public int hashCode() {
+		if(this.id !=null) return this.id.hashCode();
+		
+		return super.hashCode();
+	}
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE ,generator="SMT_ORGANIZATION_NETWORK_SEQ")
 	@Column(name="ID")
@@ -100,7 +109,7 @@ public class OrganizationNetwork implements Serializable {
 	@Column(name="WEBSITE")
 	private String website;
 	
-	 @OneToMany(mappedBy="organizationNetwork")
+	 @OneToMany(mappedBy="organizationNetwork", cascade=CascadeType.ALL)
 	 @OrderColumn(name="organizationNetwork_index")
 	 List<OrganizationPerson> medicalStaffs;
 	
@@ -269,6 +278,14 @@ public class OrganizationNetwork implements Serializable {
 	}
 
 	public void setMedicalStaffs(List<OrganizationPerson> medicalStaffs) {
-		this.medicalStaffs = medicalStaffs;
+		if(this.medicalStaffs == null) {
+			this.medicalStaffs = medicalStaffs;
+		}
+		
+		this.medicalStaffs.removeAll(this.medicalStaffs);		
+		if(medicalStaffs!=null) {
+			this.medicalStaffs.addAll(medicalStaffs);
+		}
 	}
+	
 }

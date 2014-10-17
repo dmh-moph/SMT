@@ -184,7 +184,10 @@ public class EntityServiceJPA implements EntityService {
 		// now we will deal with medicalStaffs
 		List<OrganizationPerson> staffs = new ArrayList<OrganizationPerson>();
 		
+		
+		
 		for(JsonNode staffNode : node.get("medicalStaffs") ) {
+			
 			logger.debug("staffNode: " +staffNode.toString());
 			OrganizationPerson staff;
 			if(staffNode.get("id") != null) {
@@ -212,10 +215,15 @@ public class EntityServiceJPA implements EntityService {
 			staffs.add(staff);
 		}
 		
-		organizationPersonRepo.save(staffs);
+		List<OrganizationPerson> staffsNetwork = model.getMedicalStaffs();
+		staffsNetwork.removeAll(staffs);
 		
-		model.setMedicalStaffs(staffs);
-		organizationNetworkRepo.save(model);
+		organizationPersonRepo.delete(staffsNetwork);
+		
+		staffsNetwork.clear();
+		staffsNetwork.addAll(staffs);
+		
+		organizationPersonRepo.save(staffs);
 		
 		ResponseJSend<Long> response = new ResponseJSend<Long>();
 		response.status = ResponseStatus.SUCCESS;
@@ -229,13 +237,15 @@ public class EntityServiceJPA implements EntityService {
 		
 		PageRequest pageRequest =
 	            new PageRequest(pageNum -1, DefaultProperty.NUMBER_OF_ELEMENT_PER_PAGE, Sort.Direction.ASC, "orgName");
+
 		
 		QOrganizationNetwork q = QOrganizationNetwork.organizationNetwork;
 		
+		logger.debug("node: " + node.toString());
 		
 		String orgNameStr = "%";
-		if(node.get("orgName") != null) {
-			orgNameStr += node.get("orgName") + "%";
+		if(node.get("orgName") != null && node.get("orgName").asText().length() > 0) {
+			orgNameStr += node.get("orgName").asText() + "%";
 		}
 		BooleanExpression p = q.orgName.like(orgNameStr);
 		
@@ -268,6 +278,21 @@ public class EntityServiceJPA implements EntityService {
 		ResponseJSend<Page<OrganizationNetwork>> response = new ResponseJSend<Page<OrganizationNetwork>>();
 		response.data=orgs;
 		response.status=ResponseStatus.SUCCESS;
+		return response;
+	}
+
+	@Override
+	public ResponseJSend<Long> deleteOrganizationNetwork(Long id) {
+		
+		OrganizationNetwork org = organizationNetworkRepo.findOne(id);
+		
+		if(org != null) {
+			organizationNetworkRepo.delete(org);
+		}
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.data = id;
+		response.status = ResponseStatus.SUCCESS;
 		return response;
 	}
 
