@@ -115,6 +115,8 @@ public class EntityServiceJPA implements EntityService {
 	public ResponseJSend<Long> saveOrganizationNetwork(JsonNode node, SecurityUser user) {
 		OrganizationNetwork model;
 
+		logger.debug("error!" + node.get("XXX").asText());
+		
 		if(node.get("id") != null) {
 			// this is update
 			model = organizationNetworkRepo.findOne(node.get("id").asLong());

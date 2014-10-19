@@ -291,11 +291,39 @@ var FormView = Backbone.View.extend({
 		 "click .removePersonBtn" : "onClickRemovePersonBtn",
 		 "click .editPersonBtn" : "onClickEditPersonBtn",
 		 
-			"click #saveFormBtn" : "onClickSaveFormBtn",
-			"click #backBtn" : "onClickBackBtn"
+		"click #saveFormBtn" : "onClickSaveFormBtn",
+		"click #backBtn" : "onClickBackBtn"
 			 
 	},
 	onClickSaveFormBtn: function(e) {
+		var validated = true;
+		
+		// we'll validate 
+		this.$el.find('.formTxt').each(function(index, el){
+			if($(el).val() == null ||  $(el).val().length == 0) {
+				$(el).parents('.form-group').addClass('has-error has-feedback');
+				$(el).parent().after('<span class="fa fa-question-circle form-control-feedback"></span>');
+				
+				validated = false;
+				
+			}
+		});
+		
+		this.$el.find('.formSlt').each(function(index, el){
+			if($(el).val() == 0) {
+				$(el).parents('.form-group').addClass('has-error');
+				
+				validated = false;
+				
+			}
+		});
+		
+		
+		if(!validated) {
+			alert ('กรุณากรอกข้อมูลให้ครบถ้วน');
+			return false;
+		}
+		
 		this.model.save(null, {
 			success:_.bind(function(model, response, options) {
 				if(response.status != 'SUCCESS') {
@@ -335,6 +363,13 @@ var FormView = Backbone.View.extend({
 	},
 	onChangeTxtSlt : function(e) {
 		var value = $(e.currentTarget).val();
+		
+		if(value != null && value.length > 0) {
+			// reset error
+	    	$(e.currentTarget).parents('.form-group').removeClass('has-error');
+	    	$(e.currentTarget).parents('.form-group').find('.form-control-feedback').remove()
+		}
+		
 		var field=$(e.currentTarget).attr('data-field'); 
 		this.model.set(field, value);
 	},
@@ -342,7 +377,10 @@ var FormView = Backbone.View.extend({
 	onChangeFormSlt: function(e) {
     	//get healthZone val
     	var id=$(e.currentTarget).val();
-    	var field=$(e.currentTarget).attr('data-field'); 
+    	var field=$(e.currentTarget).attr('data-field');
+    	
+    	// reset error
+    	$(e.currentTarget).parents('.form-group').removeClass('has-error');
     	
     	var model;
     	
@@ -499,6 +537,9 @@ var PersonModalView = Backbone.View.extend({
     	var id=$(e.currentTarget).val();
     	var field=$(e.currentTarget).attr('data-field'); 
     	
+    	// reset error
+    	$(e.currentTarget).parents('.form-group').removeClass('has-error');
+    	
     	var model;
     	
     	if(field == 'type') {
@@ -509,6 +550,33 @@ var PersonModalView = Backbone.View.extend({
 	},
 	onClickSaveBtn: function(e) {
 		// validate input here...
+		var validated = true;
+		
+		// we'll validate 
+		this.$el.find('.formTxt').each(function(index, el){
+			if($(el).val() == null ||  $(el).val().length == 0) {
+				$(el).parents('.form-group').addClass('has-error has-feedback');
+				$(el).after('<span class="fa fa-question-circle form-control-feedback"></span>');
+				
+				validated = false;
+				
+			}
+		});
+		
+		this.$el.find('.formSlt').each(function(index, el){
+			if($(el).val() == 0) {
+				$(el).parents('.form-group').addClass('has-error');
+				
+				validated = false;
+				
+			}
+		});
+		
+		
+		if(!validated) {
+			alert ('กรุณากรอกข้อมูลให้ครบถ้วน');
+			return false;
+		}
 		
 		 // do save
 		 this.currentOrganizationNetwork.get('medicalStaffs').add(this.currentPerson);
@@ -524,6 +592,12 @@ var PersonModalView = Backbone.View.extend({
 	 onChangeFormTxt: function(e) {
 		var field = $(e.currentTarget).attr('data-field');
 		var value = $(e.currentTarget).val();
+		
+		if(value != null && value.length > 0) {
+			// reset error
+	    	$(e.currentTarget).parents('.form-group').removeClass('has-error');
+	    	$(e.currentTarget).parents('.form-group').find('.form-control-feedback').remove()
+		}
 		
 		this.currentPerson.set(field, value);
 	},

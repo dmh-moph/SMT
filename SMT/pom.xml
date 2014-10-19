@@ -126,6 +126,7 @@
 				<directory>src/main/resources</directory>
 				<includes>
 					<include>application.properties</include>
+					<include>messages.properties</include>
 					<include>logback.xml</include>
 				</includes>
 				<filtering>true</filtering>
@@ -169,6 +170,26 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+					<revisionOnScmFailure>true</revisionOnScmFailure>
+					<shortRevisionLength>7</shortRevisionLength>
+					<timestampFormat>{0,date,yyyyMMdd HH:mm:ss}</timestampFormat>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

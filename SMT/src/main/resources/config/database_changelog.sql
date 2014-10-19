@@ -33,5 +33,18 @@ alter table smt_organization_person
   foreign key (DV_PERSON_TYPE)
   REFERENCES GLB_VARIABLE;
 
+alter table smt_behavior add (DV_EDUCATION_LEVEL number, DV_SITUATION_TYPE number);
+alter table smt_behavior 
+  add CONSTRAINT DV_EDUCATION_LEVEL_FK 
+  foreign key (DV_EDUCATION_LEVEL)
+  REFERENCES GLB_VARIABLE;
+  
+alter table smt_behavior 
+  add CONSTRAINT DV_SITUATION_TYPE_FK 
+  foreign key (DV_SITUATION_TYPE)
+  REFERENCES GLB_VARIABLE;
 
+
+  
+  
 commit;

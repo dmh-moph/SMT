@@ -28,7 +28,24 @@
 </head>
 
 <body>
-
+	<div id="aboutModal" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<span style="font-weight: bold;">SMART TEEN Application Info</span>
+			</div>
+			<div class="modal-body">
+				<div>
+				<b>Build #</b><span th:utext="#{application.buildNumber}">buildTimestamp</span>-<span th:utext="#{application.buildTimestamp}">buildTimestamp</span>
+				</div>
+				<div>
+					<b>JDBC URL : </b> <span th:utext="#{jdbc.url}">jdbc.url</span>
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>		
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -42,18 +59,8 @@
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="/admin/dashboard" th:href="@{/admin/dashboard}">Admin</a></li>
-					<li>
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Profile <b class="caret"></b></a>
-				          <ul class="dropdown-menu">
-				            <li><a href="#">Action</a></li>
-				            <li><a href="#">Another action</a></li>
-				            <li><a href="#">Something else here</a></li>
-				            <li class="divider"></li>
-				            <li><a href="logout" th:href="@{/logout}">logout</a></li>
-				          </ul>
-					</li>
-					<li><a href="#">Help</a></li>
+					<li><a href="#" id="aboutLnk"  tabindex="0" onclick="showAboutModal();">About</a></li>
+					<li><a href="logout" th:href="@{/logout}">logout</a></li>
 				</ul>
 			</div>
 		</div>
@@ -98,7 +105,30 @@
 	<script type="text/javascript" src="../../static/pagejs/backbone/models.js"
 		th:src="@{/static/pagejs/backbone/models.js}"></script>
 		
+	<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	$(document).ready(function() {
+		   // register Global error handling here .. if there isn't one
+		   
+			$(document).ajaxError( function(event, jqXHR, ajaxSettings, thrownError){
+				if(jqXHR.status == 403) {
+					alert('Session Timeout,  Please Log in again');
+					window.location.reload();
+				} else {
+					alert("Error Status Code: " + jqXHR.status + " " + jqXHR.statusText + "\n" + jqXHR.responseText);	
+				}
+				
+			});
+	 });
+	
+	function showAboutModal() {
+		$('#aboutModal').modal({show: true, backdrop: 'static', keyboard: false});
+	}
+	/*]]>*/
+	</script>
+		
 	<div layout:fragment="pageScript">
 	</div>
+	
 </body>
 </html>
