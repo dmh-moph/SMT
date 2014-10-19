@@ -113,8 +113,7 @@ public class EntityServiceJPA implements EntityService {
 
 	@Override
 	public ResponseJSend<Long> saveOrganizationNetwork(JsonNode node, SecurityUser user) {
-		OrganizationNetwork model;
-
+		OrganizationNetwork model;		
 		if(node.get("id") != null) {
 			// this is update
 			model = organizationNetworkRepo.findOne(node.get("id").asLong());

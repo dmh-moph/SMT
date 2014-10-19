@@ -45,7 +45,20 @@
 			</div>
 			</div>
 		</div>
-	</div>		
+	</div>
+	<div id="errorModal" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<span style="font-weight: bold;"></span>
+			</div>
+			<div class="modal-body">
+				
+			</div>
+			</div>
+		</div>
+	</div>			
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -104,6 +117,19 @@
 		th:src="@{/static/pagejs/appUtil.js}"></script>
 	<script type="text/javascript" src="../../static/pagejs/backbone/models.js"
 		th:src="@{/static/pagejs/backbone/models.js}"></script>
+	
+	<script id="errorModalBodyTemplate" type="text/x-handlebars-template">
+		<div>
+			<b>Error Timestamp : </b> {{timestamp}}
+		</div>
+		<div>
+			<b>Error Message : </b> {{message}}
+		</div>
+		<div>
+			<b>Stack Trace : </b>
+			<pre class="pre-scrollable">{{stackTrace}}</pre>
+		</div>
+	</script>
 		
 	<script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
@@ -115,7 +141,15 @@
 					alert('Session Timeout,  Please Log in again');
 					window.location.reload();
 				} else {
-					alert("Error Status Code: " + jqXHR.status + " " + jqXHR.statusText + "\n" + jqXHR.responseText);	
+		 
+					$('#errorModal').find('.modal-header span').html("<h3>Error Status Code: " + jqXHR.status + " " + jqXHR.statusText +"</h3>");
+					
+					var json =jqXHR.responseJSON;
+					var errorTemplate = Handlebars.compile($("#errorModalBodyTemplate").html());
+					
+					$('#errorModal').find('.modal-body').html(errorTemplate(json));
+					
+					$('#errorModal').modal({show: true, backdrop: 'static', keyboard: false});
 				}
 				
 			});
