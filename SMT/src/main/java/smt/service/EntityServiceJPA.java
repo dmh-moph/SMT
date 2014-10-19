@@ -215,7 +215,10 @@ public class EntityServiceJPA implements EntityService {
 		}
 		
 		List<OrganizationPerson> staffsNetwork = model.getMedicalStaffs();
-		if(staffsNetwork == null) model.setMedicalStaffs(new ArrayList<OrganizationPerson>() );
+		if(staffsNetwork == null) {
+			model.setMedicalStaffs(new ArrayList<OrganizationPerson>() ) ;
+			staffsNetwork = model.getMedicalStaffs();
+		}
 		staffsNetwork.removeAll(staffs);
 		
 		organizationPersonRepo.delete(staffsNetwork);
