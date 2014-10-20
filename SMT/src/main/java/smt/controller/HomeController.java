@@ -27,4 +27,10 @@ public class HomeController {
 		
 		return "m01";
 	}
+	
+	@RequestMapping("/m03")
+	public String m03Handle(Model model) {
+		
+		return "m03";
+	}
 }

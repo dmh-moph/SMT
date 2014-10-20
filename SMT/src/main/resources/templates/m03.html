@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
+<head>
+	<meta charset="utf-8" />
+	
+</head>
+<body>
+	<div layout:fragment="content">
+		<ol id="breadcrumb" class="breadcrumb">
+		</ol>
+		
+		<div id="mainContent">
+			<div id="searchView">
+			</div>
+			
+			<div class="row" id="tableResultView">
+
+			</div>
+			<div class="row" id="formView">
+		
+			</div>
+		</div>
+		
+		<div id="personModal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<span style="font-weight: bold;"></span>
+				</div>
+				<div class="modal-body">
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" id="personModalCloseBtn"><i class="fa fa-times"></i>
+					ปิดหน้าต่าง</button>
+					<button type="button" class="btn btn-info pull-left" id="personModalSaveBtn"> <i class="fa fa-floppy-o"></i>
+					บันทึกรายละเอียด</button>  
+				</div>
+				</div>
+			</div>
+		</div>		
+	</div>
+	
+<div layout:fragment="pageScript">
+	
+<script type="text/javascript" src="../../static/pagejs/m03.js"
+			th:src="@{/static/pagejs/m03.js}"></script>
+
+<script id="defaultBreadCrumbTemplate" type="text/x-handlebars-template">
+<li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
+<li id="rootBreadcrumb" class="active">m03: ข้อมูลด้านพฤติการรมปัญหาของวัยรุ่น</li>
+</script>
+
+<script id="newFormBreadCrumbTemplate" type="text/x-handlebars-template">
+<li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
+<li id="rootBreadcrumb"><a href="#">m03: ข้อมูลด้านพฤติการรมปัญหาของวัยรุ่น</a></li>
+<li class="active">สร้างพฤติกรรมปัญหาใหม่</li>
+</script>
+
+<script id="editFormBreadCrumbTemplate" type="text/x-handlebars-template">
+<li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
+<li id="rootBreadcrumb"><a href="#">m03: ข้อมูลด้านพฤติการรมปัญหาของวัยรุ่น</a></li>
+<li class="active">แก้ไขพฤติกรรมปัญหา(#{{companyId}})</li>
+</script>			
+
+<script  id="provinceSltTemplate" type="text/x-handlebars-template">
+<option value="0">กรุณาเลือกจังหวัด</option>
+{{#each this}}
+	<option value="{{id}}">{{name}}</option>
+{{/each}}
+</script>
+
+<script  id="amphurSltTemplate" type="text/x-handlebars-template">
+<option value="0">กรุณาเลือกอำเภอ</option>
+{{#each this}}
+	<option value="{{id}}">{{name}}</option>
+{{/each}}
+</script>
+
+
+
+<script  id="personModalBodyTemplate" type="text/x-handlebars-template">
+<form role="form">
+	<div class="form-group">
+		<label for="firstName">ชื่อ - นามสกุล</label>
+		<input type="text" class="form-control formTxt" id="name" data-field="name" placeholder="..." value="{{model.name}}"/>
+	</div>
+	<div class="form-group">
+		<label for="lastName">ประเภท</label>
+		<select class="form-control formSlt" id="typeSlt"  data-field="type">
+		{{#each this.personTypes}}								
+				<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
+		{{/each}}
+		</select>	
+	</div>
+</form>
+</script>
+
+<script  id="formViewTemplate" type="text/x-handlebars-template">
+<div class="col-md-12">
+	<form class="form-horizontal" role="form">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<b><i class="fa fa-pencil-square-o"></i> กรุณาระบุข้อมูลด้านล่างให้ครบถ้วน</b>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-4 control-label">ข้อมูลของปี</label>
+					    <div class="col-md-8">
+				    	  <input type="text" class="form-control formTxt" id="yearTxt" 
+								placeholder="ระบุปีที่ต้องการค้นหา..." data-field="year" value="{{model.year}}"/>
+				    	</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-4 control-label">เขตบริการสุขภาพ</label>
+					    <div class="col-md-8">
+							<select class="form-control formSlt" id="healthZoneSlt" data-field="zone">
+								{{#each this.healthZones}}
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}</option>
+								{{/each}}
+							</select>				      
+					    </div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+				    	<label for="inputEmail3" class="col-md-4 control-label">จังหวัด</label>
+				    	<div class="col-md-8">
+							<select class="form-control formSlt" id="provinceSlt" data-field="province">
+								{{#each this.provinces}}
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}</option>
+								{{/each}}
+							</select>				      
+				    	</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-4 control-label">สถานการณ์ของปัญหา</label>
+					    <div class="col-md-8">
+					      <select class="form-control formSlt" id="situationTypeSlt" data-field="situationType">
+								{{#each this.situationTypes}}
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
+								{{/each}}
+							</select>	
+					    </div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-4 control-label" style="padding-top:0px;">กลุ่มเป้าหมาย<br/>(ระดับการศึกษา)</label>
+					    <div class="col-md-8">
+					      <select class="form-control formSlt" id="targetEducationLevelSlt" data-field="targetEducationLevel">
+								{{#each this.educationLevels}}
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
+								{{/each}}
+							</select>	
+					    </div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-4 control-label">เพศ</label>
+					    <div class="col-md-8">
+					      <input type="text" class="form-control formTxt" id="orgCode1Txt" data-field="orgCode1" value="{{model.orgCode1}}"></input>
+					    </div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+				    	<label for="inputEmail3" class="col-md-4 control-label">ช่วงอายุ ตั้งแต่ :</label>
+				    	<div class="col-md-8">
+				      		  <input type="text" class="form-control formTxt" id="orgCode2Txt" data-field="orgCode2" value="{{model.orgCode2}}"></input>
+				    	</div>
+					</div>
+					<div class="form-group">
+				    	<label for="inputEmail3" class="col-md-4 control-label">ถึง</label>
+				    	<div class="col-md-8">
+				      		  <input type="text" class="form-control formTxt" id="orgCode2Txt" data-field="orgCode2" value="{{model.orgCode2}}"></input>
+				    	</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-2 control-label">ปัจจัยเสี่ยง</label>
+					    <div class="col-md-10">
+					      <input type="text" class="form-control formTxt" id="riskFactorTxt" data-field="riskFactor" value="{{model.riskFacotr}}"></input>
+					    </div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-2 control-label">สาเหตุของปัญหา</label>
+					    <div class="col-md-10">
+					      <input type="text" class="form-control formTxt" id="causeTxt" data-field="cause" value="{{model.cause}}"></input>
+					    </div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-2 control-label">รายละเอียดของปัญหา</label>
+					    <div class="col-md-10">
+					      <input type="text" class="form-control formTxt" id="descriptionTxt" data-field="description" value="{{model.description}}"></input>
+					    </div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-2 control-label">สถานที่เกิดของปัญหา</label>
+					    <div class="col-md-10">
+					      <input type="text" class="form-control formTxt" id="placeTxt" data-field="place" value="{{model.place}}"></input>
+					    </div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<b><i class="fa fa-pencil-square-o"></i> ข้อมูลเพื่อการติดต่อ</b>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+					    				<label for="inputEmail3" class="col-md-4 control-label">ชื่อผู้ประสานงาน</label>
+					    				<div class="col-md-8">
+					      					<input type="text" class="form-control formTxt" id="contactPersonTxt" data-field="contactPerson" value="{{model.contactPerson}}"></input>
+					    				</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+				    					<label for="inputEmail3" class="col-md-4 control-label">เบอร์โทรศัพท์</label>
+				    					<div class="col-md-8">
+				      		  				<input type="text" class="form-control formTxt" id="telephoneTxt" data-field="telephone" value="{{model.telephone}}"></input>
+				      		  			</div>
+				    				</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+					    				<label for="inputEmail3" class="col-md-4 control-label">อีเมล์</label>
+					    				<div class="col-md-8">
+					      					<input type="text" class="form-control formTxt" id="emailTxt" data-field="email" value="{{model.email}}"></input>
+					    				</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+				    					<label for="inputEmail3" class="col-md-4 control-label">เว็บไซต์</label>
+				    					<div class="col-md-8">
+				      		  				<input type="text" class="form-control formTxt" id="websiteTxt" data-field="website" value="{{model.website}}"></input>
+				      		  			</div>
+				    				</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<b><i class="fa fa-pencil-square-o"></i> ผลกระทบที่เกิดขึ้น</b> 
+							
+						</div>
+						<div class="panel-body">
+							<div class="row" style="margin-bottom: 8px">
+								<div class="col-md-12">
+									<button id="newImpactBtn" type="button" class="btn btn-primary btn-xs"><i class="fa fa-plus-circle"></i> เพิ่มรายการผลกระทบ</button>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<td style="width:64px;"> </td>
+												<td>ลำดับที่</td>
+												<td>ผลกระทบ</td>
+
+											</tr>
+										</thead>
+										<tbody id="impactsTbody">
+										<tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>			
+		</div>
+		<div class="panel-footer">
+			<button id="backBtn" type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i> กลับหน้าเดิม</button>
+			<button id="saveFormBtn" type="button" class="btn btn-default"><i class="fa fa-floppy-o"></i> บันทึกข้อมูล</button>
+			<button id="clearFormBtn" type="button" class="btn btn-default"><i class="fa fa-times-circle"></i> ล้างข้อมูล</button>
+		</div>
+	</div>
+	</form>
+</div>
+</script>
+
+<script  id="medicalStaffsTbodyTemplate" type="text/x-handlebars-template">
+{{#each this}}
+<tr data-id="{{id}}" data-index="{{@index}}">
+	<td><button type="button" class="btn btn-danger btn-xs removePersonBtn"><i class="fa fa-trash"> </i></button> 
+		<button type="button" class="btn btn-info btn-xs editPersonBtn"><i class="fa fa-edit"> </i></button>
+	</td>
+	<td>{{name}}</td>
+	<td>{{type.description}}</td>
+
+</tr>
+{{/each}}
+</script>
+
+<script  id="searchViewTemplate" type="text/x-handlebars-template">
+<div class="panel panel-primary">
+<div class="panel-heading">
+ 			<h4 class="panel-title">ค้นหาข้อมูลข้อมูลด้านพฤติการรมปัญหาของวัยรุ่น</h4>
+		</div>
+		<div class="panel-body">
+	<form class="form-horizontal" role="form" id="searchForm">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+				    <label for="inputEmail3" class="col-md-4 control-label">ข้อมูลของปี</label>
+				    <div class="col-md-8">
+				      <input type="text" class="form-control formTxt" id="yearTxt" 
+							placeholder="ระบุปีที่ต้องการค้นหา..." data-field="year" value="{{searchModel.year}}"/>
+				    </div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+				    <label for="inputEmail3" class="col-md-4 control-label">เขตบริการสุขภาพ</label>
+				    <div class="col-md-8">
+						<select class="form-control formSlt" id="healthZoneSlt" data-field="zone">
+							<option value="0">กรุณาเลือก</option>
+							{{#each this.healthZones}}
+								<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}</option>
+							{{/each}}
+						</select>				      
+				    </div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+			    	<label for="inputEmail3" class="col-md-4 control-label">จังหวัด</label>
+			    	<div class="col-md-8">
+						<select class="form-control formSlt" id="provinceSlt" data-field="province">
+							<option value="0">กรุณาเลือกเขตบริการสุขภาพ</option>
+							{{#each this.provinces}}
+								<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}</option>
+							{{/each}}
+						</select>				      
+			    	</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+				    <label for="inputEmail3" class="col-sm-2 control-label">ชื่อพฤติกรรมปัญหา</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control formTxt" id="nameTxt" 
+							placeholder="ระบุชื่อพฤติกรรมที่ต้องการค้นหา..." data-field="name" value="{{searchModel.name}}"/>
+				    </div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12" style="text-align: center;">
+					<button type="button" class="btn btn-default" id="newFormBtn">
+						<i class="fa fa-plus"></i> เพิ่มข้อมูลพฤติกรรม</button>
+					<button type="button" class="btn btn-default" id="searchBtn">
+						<span class="glyphicon glyphicon-search"></span> ค้นหา</button>
+					<button type="button" class="btn btn-default" id="clearFormBtn">
+						<i class="fa fa-times-circle"></i> ล้างข้อมูลค้นหา</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</script>
+
+<script id="tableResultViewTemplate" type="text/x-handlebars-template">
+<div class="panel panel-default">
+	<div class="panel-body">
+		<b>ผลการค้นหา</b>
+	</div>
+	<table class="table table-bordered table-hover">
+		<thead>
+			<tr>
+				<td style="width: 65px;text-align:center;"></td>
+				<td style="width: 120px;text-align:center;" class=""><b>ประเภทเครือข่าย</b></td>
+				<td style="width: 120px;text-align:center;" class=""><b>ประเภทหน่วยงาน</b></td>
+				<td style="text-align:center;"><b>ชื่อหน่วยงาน</b></td>
+				<td style="width: 60px;text-align:center;" class=""><b>เขต</b></td>
+				<td style="width: 100px;text-align:center;" class=""><b>จังหวัด</b></td>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each content}}
+			<tr data-id="{{id}}">
+				<td> <button type="button" class="btn btn-danger btn-xs removeOrganizationNetworkBtn"><i class="fa fa-trash"> </i></button> 
+					 <button type="button" class="btn btn-info btn-xs editOrganizationNetworkBtn"><i class="fa fa-edit"> </i></button>
+				</td>
+				<td style="text-align:center;">{{networkType.description}}</td>
+				<td style="text-align:center;">{{orgType.description}}</a></td>
+				<td>{{orgName}}</td>
+				<td style="text-align:center;">{{zone.code}}</td>
+				<td style="text-align:center;">{{province.name}}</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+	<form class="form-inline">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-md-6">
+				1-15 จาก {{page.totalElements}} รายการ  
+			</div>
+			<div class="col-md-6" style="text-align: right;">
+				{{#unless page.firstPage}}<button class="btn btn-default btn-sm companyPageNav" data-targetPage="{{page.prevPage}}" type="button"><i class="fa fa-chevron-left"></i></button>{{/unless}}
+				หน้าที่ <input class="form-control input-sm" size="2" type="text" id="companyPageTxt" value="{{page.pageNumber}}"></input> จาก {{page.totalPages}} หน้า
+				{{#unless page.lastPage}}<button class="btn btn-default btn-sm companyPageNav" data-targetPage="{{page.nextPage}}" type="button"><i class="fa fa-chevron-right"></i></button>{{/unless}}
+			</div>
+		</div>
+	</div>
+	</form>
+</div>
+</script>
+
+
+<script type="text/javascript" th:inline="javascript">
+//<!--
+
+var appRouter;
+
+$( document ).ready(function() {
+	
+	//initialize things
+	networkTypes = new smt.Collection.NetworkTypes();
+	orgTypes = new  smt.Collection.OrgTypes();
+	healthZones = new smt.Collection.HealthZones();
+	personTypes = new smt.Collection.PersonTypes();
+	
+	$.when(networkTypes.fetch(), orgTypes.fetch(), healthZones.fetch(), personTypes.fetch()).done(function(x) {
+		
+		searchView = new SearchView({
+			networkTypes: networkTypes,
+			orgTypes: orgTypes,
+			healthZones: healthZones,
+			el: "#searchView"
+		});
+		
+		tableResultView = new TableResultView({
+			el: "#tableResultView"
+		});
+		
+		formView = new FormView({
+			networkTypes: networkTypes,
+			orgTypes: orgTypes,
+			healthZones: healthZones,
+			personTypes: personTypes,
+			el: "#formView"
+		})
+		
+		
+		
+		appRouter = new AppRouter({
+			searchView: searchView,
+			tableResultView: tableResultView,
+			formView: formView
+		});
+		Backbone.history.start();
+
+	});
+	
+	
+});
+
+
+//-->
+</script>			
+</div>	
+</body>
+</html>
