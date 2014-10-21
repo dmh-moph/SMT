@@ -162,12 +162,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-6">
-					<div class="form-group">
-					    <label for="inputEmail3" class="col-md-4 control-label">ชื่อหน่วยงาน</label>
-					    <div class="col-md-8">
-					      <input type="text" class="form-control formTxt" id="orgNameTxt" data-field="orgName" value="{{model.orgName}}"></input>
-					    </div>
-					</div>
+					{{txtInput "half" "ชื่อหน่วยงาน" "orgName" this.model.orgName}}
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
@@ -184,30 +179,15 @@
 			</div>
 			<div class="row">
 				<div class="col-md-6">
-					<div class="form-group">
-					    <label for="inputEmail3" class="col-md-4 control-label">รหัส 9 หลัก</label>
-					    <div class="col-md-8">
-					      <input type="text" class="form-control formTxt" id="orgCode1Txt" data-field="orgCode1" value="{{model.orgCode1}}"></input>
-					    </div>
-					</div>
+					{{txtInput "half" "รหัส9 หลัก" "orgCode1" this.model.orgCode1}}
 				</div>
 				<div class="col-md-6">
-					<div class="form-group">
-				    	<label for="inputEmail3" class="col-md-4 control-label">รหัส 5 หลัก</label>
-				    	<div class="col-md-8">
-				      		  <input type="text" class="form-control formTxt" id="orgCode2Txt" data-field="orgCode2" value="{{model.orgCode2}}"></input>
-				    	</div>
-					</div>
+					{{txtInput "half" "รหัส 5 หลัก" "orgCode2" this.model.orgCode2}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<div class="form-group">
-					    <label for="inputEmail3" class="col-md-2 control-label">สถานที่ตั้ง</label>
-					    <div class="col-md-10">
-					      <input type="text" class="form-control formTxt" id="addressTxt" data-field="address" value="{{model.address}}"></input>
-					    </div>
-					</div>
+					{{txtInput "full" "สถานที่ตั้ง" "address" this.model.address}}					
 				</div>
 			</div>
 			<div class="row">
@@ -219,38 +199,18 @@
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
-					    				<label for="inputEmail3" class="col-md-4 control-label">ชื่อผู้ประสานงาน</label>
-					    				<div class="col-md-8">
-					      					<input type="text" class="form-control formTxt" id="contactPersonTxt" data-field="contactPerson" value="{{model.contactPerson}}"></input>
-					    				</div>
-									</div>
+									{{txtInput "half" "ชื่อผู้ประสานงาน" "contactPerson" this.model.contactPerson}}
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
-				    					<label for="inputEmail3" class="col-md-4 control-label">เบอร์โทรศัพท์</label>
-				    					<div class="col-md-8">
-				      		  				<input type="text" class="form-control formTxt" id="telephoneTxt" data-field="telephone" value="{{model.telephone}}"></input>
-				      		  			</div>
-				    				</div>
+									{{txtInput "half" "เบอร์โทรศัพท์" "telephone" this.model.telephone}}
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
-					    				<label for="inputEmail3" class="col-md-4 control-label">อีเมล์</label>
-					    				<div class="col-md-8">
-					      					<input type="text" class="form-control formTxt" id="emailTxt" data-field="email" value="{{model.email}}"></input>
-					    				</div>
-									</div>
+									{{txtInput "half" "อีเมล์" "email" this.model.email}}
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
-				    					<label for="inputEmail3" class="col-md-4 control-label">เว็บไซต์</label>
-				    					<div class="col-md-8">
-				      		  				<input type="text" class="form-control formTxt" id="websiteTxt" data-field="website" value="{{model.website}}"></input>
-				      		  			</div>
-				    				</div>
+									{{txtInput "half" "เว็บไซต์" "website" this.model.website}}
 								</div>
 							</div>
 						</div>
