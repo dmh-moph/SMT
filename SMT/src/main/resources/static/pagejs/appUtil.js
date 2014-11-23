@@ -6,6 +6,19 @@ if (typeof console === 'undefined') {
     console = { log: function() {} };
 }
 
+Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
+    lvalue = parseFloat(lvalue);
+    rvalue = parseFloat(rvalue);
+        
+    return {
+        "+": lvalue + rvalue,
+        "-": lvalue - rvalue,
+        "*": lvalue * rvalue,
+        "/": lvalue / rvalue,
+        "%": lvalue % rvalue
+    }[operator];
+});
+
 Handlebars.registerHelper('formatNumber', function(number) {
 	return addCommas(number);
 });
@@ -23,7 +36,10 @@ Handlebars.registerHelper('txtInput', function(size, label, field, defaultValue)
 	if(size == "half") {
 		mdLabel = 4;
 		mdTxt = 8;
-	} 
+	} else if(size == "quarter") {
+		mdLabel = 6;
+		mdTxt = 6;
+	}
 	
 	var s = "" +
 			"<div class='form-group'> \n" +

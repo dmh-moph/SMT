@@ -84,10 +84,9 @@ var SearchView = Backbone.View.extend({
     	this.searchModel = new smt.Model.OrganizationNetwork();
     	
     	// the three must have option!
-    	this.networkTypes = options.networkTypes;
-    	this.orgTypes = options.orgTypes;
     	this.heathZones = options.healthZones;
-    	
+		 this.situationTypes = options.situationTypes;
+		 this.educationLevels = options.educationLevels;
 
     	this.provinces = new smt.Collection.Provinces();
     	
@@ -176,11 +175,11 @@ var SearchView = Backbone.View.extend({
     	var json = {};
     	json.searchModel = this.searchModel.toJSON();
     	
-    	json.networkTypes = this.networkTypes.toJSON();
-    	__setSelect(json.networkTypes, this.searchModel.get('networkType'));
+    	json.situationTypes = this.situationTypes.toJSON();
+    	__setSelect(json.situationTypes, this.searchModel.get('situationType'));
     	
-    	json.orgTypes = this.orgTypes.toJSON();
-    	__setSelect(json.orgTypes, this.searchModel.get('orgType'));
+    	json.educationLevels = this.educationLevels.toJSON();
+    	__setSelect(json.educationLevels, this.searchModel.get('educationLevel'));
     	
     	json.healthZones = this.heathZones.toJSON();
     	__setSelect(json.healthZones, this.searchModel.get('zone'));
@@ -269,25 +268,25 @@ var FormView = Backbone.View.extend({
 		 this.formViewTemplate = Handlebars.compile($("#formViewTemplate").html());
 		 this.provinceSltTemplate = Handlebars.compile($("#provinceSltTemplate").html());
 		 this.amphurSltTemplate = Handlebars.compile($("#amphurSltTemplate").html());
-		 this.medicalStaffsTbodyTemplate = Handlebars.compile($("#medicalStaffsTbodyTemplate").html());
+		 this.impactsTbodyTemplate = Handlebars.compile($("#impactsTbodyTemplate").html());
 		 
 		
 		 // the three must have option!
-		 this.networkTypes = options.networkTypes;
-		 this.orgTypes = options.orgTypes;
+		 this.situationTypes = options.situationTypes;
+		 this.educationLevels = options.educationLevels;
 		 this.heathZones = options.healthZones;
-		 this.personTypes = options.personTypes;
+		
 		 
 		 this.provinces = new smt.Collection.Provinces();
 		 this.amphurs = new smt.Collection.Amphurs();
 		 
-		 this.personModalView = new PersonModalView({el : '#personModal', parentView: this, personTypes : this.personTypes});
+		 this.impactModalView = new ImpactModalView({el : '#impactModal', parentView: this});
 	 },
 	 events: {
 		 "change .formSlt": "onChangeFormSlt",
 		 "change .formTxt" : "onChangeTxtSlt",
 		 
-		 "click #newPersonBtn" : "onClickNewPersonBtn",
+		 "click #newImpactBtn" : "onClickNewImpactBtn",
 		 "click .removePersonBtn" : "onClickRemovePersonBtn",
 		 "click .editPersonBtn" : "onClickEditPersonBtn",
 		 
@@ -357,9 +356,9 @@ var FormView = Backbone.View.extend({
 		
 		return false;
 	},
-	onClickNewPersonBtn: function(e) {
-		this.personModalView.setCurrentOrganizationNetwork(this.model);
-		this.personModalView.newPersonAndRender();
+	onClickNewImpactBtn: function(e) {
+		this.impactModalView.setCurrentBehavior(this.model);
+		this.impactModalView.newImpactAndRender();
 	},
 	onChangeTxtSlt : function(e) {
 		var value = $(e.currentTarget).val();
@@ -418,10 +417,10 @@ var FormView = Backbone.View.extend({
         		}, this)
         	})
     		
-    	} else if(field == 'networkType') {
-    		model = smt.Model.DV_NetworkType.findOrCreate({id:id});
-    	} else if(field == 'orgType') {
-    		model = smt.Model.DV_OrgType.findOrCreate({id:id});
+    	} else if(field == 'situationType') {
+    		model = smt.Model.DV_SituationType.findOrCreate({id:id});
+    	} else if(field == 'targetEducationLevel') {
+    		model = smt.Model.DV_EducationLevel.findOrCreate({id:id});
     	} else if(field == 'amphur'){
     		model = smt.Model.Amphur.findOrCreate({id: id});
     	} else {
@@ -433,7 +432,7 @@ var FormView = Backbone.View.extend({
 	
 	newForm: function() {
 		this.modelId = null;
-		this.model = new smt.Model.OrganizationNetwork();
+		this.model = new smt.Model.Bahavior();
 		
 		this.render();
 	},
@@ -450,11 +449,11 @@ var FormView = Backbone.View.extend({
 		},this));
 		
 	},
-	renderPersonTbl: function() {
-		var json = this.model.get('medicalStaffs').toJSON();
-		var html = this.medicalStaffsTbodyTemplate(json);
+	renderImpactTbl: function() {
+		var json = this.model.get('impacts').toJSON();
+		var html = this.impactsTbodyTemplate(json);
 		
-		this.$el.find('#medicalStaffsTbody').html(html);
+		this.$el.find('#impactsTbody').html(html);
 		
 	},
 	render: function() {
@@ -462,13 +461,13 @@ var FormView = Backbone.View.extend({
 		json.model = this.model.toJSON();
 		
 		if(this.model.get('id') == null) {
-			json.networkTypes=new Array();
-			json.networkTypes.push({id:0,description: 'กรุณาเลือกประเภทเครือข่าย'});
-			$.merge(json.networkTypes, networkTypes.toJSON());
+			json.situationTypes=new Array();
+			json.situationTypes.push({id:0,description: 'กรุณาเลือกประเภทสถานการณ์'});
+			$.merge(json.situationTypes, situationTypes.toJSON());
 			
-			json.orgTypes=new Array();
-			json.orgTypes.push({id:0,description: 'กรุณาเลือกประเภทหน่วยงาน'});
-			$.merge(json.orgTypes, orgTypes.toJSON());
+			json.educationLevels=new Array();
+			json.educationLevels.push({id:0,description: 'กรุณาเลือกระดับการศึกษา'});
+			$.merge(json.educationLevels, educationLevels.toJSON());
 			
 			json.healthZones=new Array();
 			json.healthZones.push({id:0,name: 'กรุณาเลือกเขตบริการสุขภาพ'});
@@ -480,13 +479,13 @@ var FormView = Backbone.View.extend({
 			json.amphurs=new Array();
 			json.amphurs.push({id:0,name: 'กรุณาเลือกอำเภอ'});
 		} else {
-			json.networkTypes=new Array();
-			$.merge(json.networkTypes, networkTypes.toJSON());
-			 __setSelect(json.networkTypes, this.model.get('networkType'));
+			json.situationTypes=new Array();
+			$.merge(json.situationTypes, situationTypes.toJSON());
+			 __setSelect(json.situationTypes, this.model.get('situationType'));
 			
-			json.orgTypes=new Array();
-			$.merge(json.orgTypes, orgTypes.toJSON());
-			__setSelect(json.orgTypes, this.model.get('orgType'));
+			json.educationLevels=new Array();
+			$.merge(json.educationLevels, educationLevels.toJSON());
+			__setSelect(json.educationLevels, this.model.get('educationLevel'));
 			
 			json.healthZones=new Array();
 			$.merge(json.healthZones, healthZones.toJSON());
@@ -504,31 +503,26 @@ var FormView = Backbone.View.extend({
 		console.log(json);
 		this.$el.html(this.formViewTemplate(json));
 		
-		this.renderPersonTbl();
+		this.renderImpactTbl();
 		return this;
 	}
 });
 
-var PersonModalView = Backbone.View.extend({
+var ImpactModalView = Backbone.View.extend({
 	initialize: function(options){
 		if(options != null) {
 			if(options.parentView != null) {
 				this.parentView = options.parentView;
 			}
 			
-			if(options.personTypes != null) {
-				
-				this.personTypes = options.personTypes;
-				
-			}
 		}
-		this.currentOrganizationNetwork = null;
-		this.currentPerson = null;
+		this.currentBehavior = null;
+		this.currentImpact = null;
 		
-		this.personModalBodyTemplate = Handlebars.compile($("#personModalBodyTemplate").html());
+		this.impactModalBodyTemplate = Handlebars.compile($("#impactModalBodyTemplate").html());
 	},events : {
-		"click #personModalCloseBtn" : "onClickCloseBtn",
-		 "click #personModalSaveBtn" : "onClickSaveBtn",
+		"click #impactModalCloseBtn" : "onClickCloseBtn",
+		 "click #impactModalSaveBtn" : "onClickSaveBtn",
 		"change .formTxt" : "onChangeFormTxt",
 		"change .formSlt" : "onChangeFormSlt"
 	},
@@ -563,26 +557,15 @@ var PersonModalView = Backbone.View.extend({
 			}
 		});
 		
-		this.$el.find('.formSlt').each(function(index, el){
-			if($(el).val() == 0) {
-				$(el).parents('.form-group').addClass('has-error');
-				
-				validated = false;
-				
-			}
-		});
-		
-		
 		if(!validated) {
 			alert ('กรุณากรอกข้อมูลให้ครบถ้วน');
 			return false;
 		}
 		
 		 // do save
-		 this.currentOrganizationNetwork.get('medicalStaffs').add(this.currentPerson);
-		 this.currentPerson.set('organizationNetwork', this.currentOrganizationNetwork);
+		 this.currentBehavior.get('impacts').add(this.currentImpact);
 		 
-		 this.parentView.renderPersonTbl();
+		 this.parentView.renderImpactTbl();
 		 this.$el.modal('hide');
 	 },
 	onClickCloseBtn: function() {
@@ -599,37 +582,30 @@ var PersonModalView = Backbone.View.extend({
 	    	$(e.currentTarget).parents('.form-group').find('.form-control-feedback').remove()
 		}
 		
-		this.currentPerson.set(field, value);
+		this.currentImpact.set(field, value);
 	},
 	render : function() {
 		var json = {};
-		json.model=this.currentPerson.toJSON();
-		json.personTypes = new Array();
-		if(this.currentPerson.get('id')==null) {
-			json.personTypes.push({id:0, description: 'กรุณาเลือกประเภทบุคคลากรทางการแพทย์'});
-		}
-		$.merge(json.personTypes, this.personTypes.toJSON());
-		__setSelect(json.personTypes, this.currentPerson.get('type'));
+		json.model=this.currentImpact.toJSON();
 		
-		
-		this.$el.find('.modal-body').html(this.personModalBodyTemplate(json));
+		this.$el.find('.modal-body').html(this.impactModalBodyTemplate(json));
 		
 		this.$el.modal({show: true, backdrop: 'static', keyboard: false});
 		return this;
 	},
-	setCurrentOrganizationNetwork: function(org) {
-		this.currentOrganizationNetwork = org;
+	setCurrentBehavior: function(behavior) {
+		this.currentBehavior = behavior;
 	},
-	setCurrentPersonAndRender: function(person){
-		this.currentPerson = person;
-		this.$el.find('.modal-header span').html("แก้ไขรายการข้อมูลบุคลากรทางแพทย์");
+	setCurrentImpactAndRender: function(impact){
+		this.currentImpact = person;
+		this.$el.find('.modal-header span').html("แก้ไขรายการข้อมูลผลกระทบ");
 		this.render();
 		
 		return this;
 	},
-	newPersonAndRender : function() {
-		this.currentPerson = new smt.Model.OrganizationPerson();
-		this.$el.find('.modal-header span').html("เพิ่มรายการข้อมูลบุคลากรทางแพทย์");
+	newImpactAndRender : function() {
+		this.currentImpact = new smt.Model.BehaviorImpact();
+		this.$el.find('.modal-header span').html("เพิ่มรายการข้อมูลผลกระทบ");
 		this.render();
 		
 		return this;

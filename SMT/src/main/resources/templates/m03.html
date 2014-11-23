@@ -24,7 +24,7 @@
 			</div>
 		</div>
 		
-		<div id="personModal" class="modal fade" role="dialog">
+		<div id="impactModal" class="modal fade" role="dialog">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 				<div class="modal-header">
@@ -35,9 +35,9 @@
 					
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-danger pull-right" id="personModalCloseBtn"><i class="fa fa-times"></i>
+					<button type="button" class="btn btn-danger pull-right" id="impactModalCloseBtn"><i class="fa fa-times"></i>
 					ปิดหน้าต่าง</button>
-					<button type="button" class="btn btn-info pull-left" id="personModalSaveBtn"> <i class="fa fa-floppy-o"></i>
+					<button type="button" class="btn btn-info pull-left" id="impactModalSaveBtn"> <i class="fa fa-floppy-o"></i>
 					บันทึกรายละเอียด</button>  
 				</div>
 				</div>
@@ -52,18 +52,18 @@
 
 <script id="defaultBreadCrumbTemplate" type="text/x-handlebars-template">
 <li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
-<li id="rootBreadcrumb" class="active">m03: ข้อมูลด้านพฤติการรมปัญหาของวัยรุ่น</li>
+<li id="rootBreadcrumb" class="active">m03: ข้อมูลด้านพฤติกรรมปัญหาของวัยรุ่น</li>
 </script>
 
 <script id="newFormBreadCrumbTemplate" type="text/x-handlebars-template">
 <li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
-<li id="rootBreadcrumb"><a href="#">m03: ข้อมูลด้านพฤติการรมปัญหาของวัยรุ่น</a></li>
+<li id="rootBreadcrumb"><a href="#">m03: ข้อมูลด้านพฤติกรรมปัญหาของวัยรุ่น</a></li>
 <li class="active">สร้างพฤติกรรมปัญหาใหม่</li>
 </script>
 
 <script id="editFormBreadCrumbTemplate" type="text/x-handlebars-template">
 <li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
-<li id="rootBreadcrumb"><a href="#">m03: ข้อมูลด้านพฤติการรมปัญหาของวัยรุ่น</a></li>
+<li id="rootBreadcrumb"><a href="#">m03: ข้อมูลด้านพฤติกรรมปัญหาของวัยรุ่น</a></li>
 <li class="active">แก้ไขพฤติกรรมปัญหา(#{{companyId}})</li>
 </script>			
 
@@ -83,20 +83,13 @@
 
 
 
-<script  id="personModalBodyTemplate" type="text/x-handlebars-template">
-<form role="form">
-	<div class="form-group">
-		<label for="firstName">ชื่อ - นามสกุล</label>
-		<input type="text" class="form-control formTxt" id="name" data-field="name" placeholder="..." value="{{model.name}}"/>
+<script  id="impactModalBodyTemplate" type="text/x-handlebars-template">
+<form class="form-horizontal" role="form">
+<div class="row">
+	<div class="col-md-12">
+	{{txtInput "full" "ผลกระทบ" "description" model.description}}
 	</div>
-	<div class="form-group">
-		<label for="lastName">ประเภท</label>
-		<select class="form-control formSlt" id="typeSlt"  data-field="type">
-		{{#each this.personTypes}}								
-				<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
-		{{/each}}
-		</select>	
-	</div>
+</div>
 </form>
 </script>
 
@@ -110,13 +103,7 @@
 		<div class="panel-body">
 			<div class="row">
 				<div class="col-md-6">
-					<div class="form-group">
-					    <label for="inputEmail3" class="col-md-4 control-label">ข้อมูลของปี</label>
-					    <div class="col-md-8">
-				    	  <input type="text" class="form-control formTxt" id="yearTxt" 
-								placeholder="ระบุปีที่ต้องการค้นหา..." data-field="year" value="{{model.year}}"/>
-				    	</div>
-					</div>
+					{{txtInput "half" "ข้อมูลของปี" "year" model.year}}
 				</div>
 			</div>
 			<div class="row">
@@ -172,62 +159,34 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-6">
-					<div class="form-group">
-					    <label for="inputEmail3" class="col-md-4 control-label">เพศ</label>
-					    <div class="col-md-8">
-					      <input type="text" class="form-control formTxt" id="orgCode1Txt" data-field="orgCode1" value="{{model.orgCode1}}"></input>
-					    </div>
-					</div>
+				<div class="col-md-4">
+					{{txtInput "quarter" "เพศ" "sex" model.sex}}
 				</div>
-				<div class="col-md-6">
-					<div class="form-group">
-				    	<label for="inputEmail3" class="col-md-4 control-label">ช่วงอายุ ตั้งแต่ :</label>
-				    	<div class="col-md-8">
-				      		  <input type="text" class="form-control formTxt" id="orgCode2Txt" data-field="orgCode2" value="{{model.orgCode2}}"></input>
-				    	</div>
-					</div>
-					<div class="form-group">
-				    	<label for="inputEmail3" class="col-md-4 control-label">ถึง</label>
-				    	<div class="col-md-8">
-				      		  <input type="text" class="form-control formTxt" id="orgCode2Txt" data-field="orgCode2" value="{{model.orgCode2}}"></input>
-				    	</div>
-					</div>
+				<div class="col-md-4">
+					{{txtInput "quarter" "ช่วงอายุ ตั้งแต่" "startAge" model.startAge}}
+				</div>
+				<div class="col-md-4">
+					{{txtInput "quarter" "ถึง" "endAge" model.endAge}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "ปัจจัยเสี่ยง" "riskFactor" model.riskFactor}}
+					{{txtInput "full" "ปัจจัยเสี่ยง" "riskFactor" model.riskFactor}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<div class="form-group">
-					    <label for="inputEmail3" class="col-md-2 control-label">สาเหตุของปัญหา</label>
-					    <div class="col-md-10">
-					      <input type="text" class="form-control formTxt" id="causeTxt" data-field="cause" value="{{model.cause}}"></input>
-					    </div>
-					</div>
+					{{txtInput "full" "สาเหตุของปัญหา" "cause" model.cause}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<div class="form-group">
-					    <label for="inputEmail3" class="col-md-2 control-label">รายละเอียดของปัญหา</label>
-					    <div class="col-md-10">
-					      <input type="text" class="form-control formTxt" id="descriptionTxt" data-field="description" value="{{model.description}}"></input>
-					    </div>
-					</div>
+					{{txtInput "full" "รายละเอียดของปัญหา" "description" model.description}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<div class="form-group">
-					    <label for="inputEmail3" class="col-md-2 control-label">สถานที่เกิดของปัญหา</label>
-					    <div class="col-md-10">
-					      <input type="text" class="form-control formTxt" id="placeTxt" data-field="place" value="{{model.place}}"></input>
-					    </div>
-					</div>
+					{{txtInput "full" "สถานที่เกิดของปัญหา" "place" model.place}}
 				</div>
 			</div>
 			<div class="row">
@@ -239,38 +198,18 @@
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
-					    				<label for="inputEmail3" class="col-md-4 control-label">ชื่อผู้ประสานงาน</label>
-					    				<div class="col-md-8">
-					      					<input type="text" class="form-control formTxt" id="contactPersonTxt" data-field="contactPerson" value="{{model.contactPerson}}"></input>
-					    				</div>
-									</div>
+									{{txtInput "half" "ชื่อผู้ประสานงาน" "contactPerson" model.contactPerson}}
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
-				    					<label for="inputEmail3" class="col-md-4 control-label">เบอร์โทรศัพท์</label>
-				    					<div class="col-md-8">
-				      		  				<input type="text" class="form-control formTxt" id="telephoneTxt" data-field="telephone" value="{{model.telephone}}"></input>
-				      		  			</div>
-				    				</div>
+									{{txtInput "half" "เบอร์โทรศัพท์" "telephone" model.telephone}}
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
-					    				<label for="inputEmail3" class="col-md-4 control-label">อีเมล์</label>
-					    				<div class="col-md-8">
-					      					<input type="text" class="form-control formTxt" id="emailTxt" data-field="email" value="{{model.email}}"></input>
-					    				</div>
-									</div>
+									{{txtInput "half" "อีเมล์" "email" model.email}}
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
-				    					<label for="inputEmail3" class="col-md-4 control-label">เว็บไซต์</label>
-				    					<div class="col-md-8">
-				      		  				<input type="text" class="form-control formTxt" id="websiteTxt" data-field="website" value="{{model.website}}"></input>
-				      		  			</div>
-				    				</div>
+									{{txtInput "half" "เว็บไซต์" "website" model.website}}
 								</div>
 							</div>
 						</div>
@@ -282,7 +221,6 @@
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<b><i class="fa fa-pencil-square-o"></i> ผลกระทบที่เกิดขึ้น</b> 
-							
 						</div>
 						<div class="panel-body">
 							<div class="row" style="margin-bottom: 8px">
@@ -296,7 +234,7 @@
 										<thead>
 											<tr>
 												<td style="width:64px;"> </td>
-												<td>ลำดับที่</td>
+												<td style="width:64px;">ลำดับที่</td>
 												<td>ผลกระทบ</td>
 
 											</tr>
@@ -321,14 +259,14 @@
 </div>
 </script>
 
-<script  id="medicalStaffsTbodyTemplate" type="text/x-handlebars-template">
+<script  id="impactsTbodyTemplate" type="text/x-handlebars-template">
 {{#each this}}
 <tr data-id="{{id}}" data-index="{{@index}}">
-	<td><button type="button" class="btn btn-danger btn-xs removePersonBtn"><i class="fa fa-trash"> </i></button> 
-		<button type="button" class="btn btn-info btn-xs editPersonBtn"><i class="fa fa-edit"> </i></button>
+	<td><button type="button" class="btn btn-danger btn-xs removeImpactBtn"><i class="fa fa-trash"> </i></button> 
+		<button type="button" class="btn btn-info btn-xs editImpactBtn"><i class="fa fa-edit"> </i></button>
 	</td>
-	<td>{{name}}</td>
-	<td>{{type.description}}</td>
+	<td>{{math @index "+" 1}}.</td>
+	<td>{{description}}</td>
 
 </tr>
 {{/each}}
@@ -463,16 +401,16 @@ var appRouter;
 $( document ).ready(function() {
 	
 	//initialize things
-	networkTypes = new smt.Collection.NetworkTypes();
-	orgTypes = new  smt.Collection.OrgTypes();
-	healthZones = new smt.Collection.HealthZones();
-	personTypes = new smt.Collection.PersonTypes();
 	
-	$.when(networkTypes.fetch(), orgTypes.fetch(), healthZones.fetch(), personTypes.fetch()).done(function(x) {
+	healthZones = new smt.Collection.HealthZones();
+	educationLevels = new smt.Collection.EducationLevels();
+	situationTypes = new smt.Collection.SituationTypes();
+	
+	$.when(situationTypes.fetch(), educationLevels.fetch(), healthZones.fetch()).done(function(x) {
 		
 		searchView = new SearchView({
-			networkTypes: networkTypes,
-			orgTypes: orgTypes,
+			situationTypes: situationTypes,
+			educationLevels: educationLevels,
 			healthZones: healthZones,
 			el: "#searchView"
 		});
@@ -482,10 +420,9 @@ $( document ).ready(function() {
 		});
 		
 		formView = new FormView({
-			networkTypes: networkTypes,
-			orgTypes: orgTypes,
+			situationTypes: situationTypes,
+			educationLevels: educationLevels,
 			healthZones: healthZones,
-			personTypes: personTypes,
 			el: "#formView"
 		})
 		

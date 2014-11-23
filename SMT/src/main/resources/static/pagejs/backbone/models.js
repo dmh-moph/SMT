@@ -98,6 +98,10 @@ smt.Model.OrganizationNetwork = Backbone.RelationalModel.extend({
 smt.Model.Bahavior = Backbone.RelationalModel.extend({
 	relations: [{
 		type: Backbone.HasOne,
+		key: 'zone',
+		relatedModel: 'smt.Model.HealthZone'
+	},{
+		type: Backbone.HasOne,
 		key: 'province',
 		relatedModel: 'smt.Model.Province'
 	}, {
@@ -115,7 +119,7 @@ smt.Model.Bahavior = Backbone.RelationalModel.extend({
 	}],
 	urlRoot: appUrl('Behavior')
 });
-smt.Model.BahaviorImpact = Backbone.RelationalModel.extend({
+smt.Model.BehaviorImpact = Backbone.RelationalModel.extend({
 });
 
 smt.Model.OrganizationPerson = Backbone.RelationalModel.extend({
@@ -161,6 +165,14 @@ smt.Collection.OrgTypes = Backbone.Collection.extend({
 smt.Collection.PersonTypes = Backbone.Collection.extend({
 	model: smt.Model.DV_PersonType,
 	url: appUrl('DomainVariable/PERSON_TYPE')
+});
+smt.Collection.EducationLevels = Backbone.Collection.extend({
+	model: smt.Model.DV_EducationLevel,
+	url: appUrl('DomainVariable/EDUCATION')
+});
+smt.Collection.SituationTypes = Backbone.Collection.extend({
+	model: smt.Model.DV_SituationType,
+	url: appUrl('DomainVariable/SITUATION_TYPE')
 });
 
 })();
