@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import smt.auth.model.SecurityUser;
+import smt.model.Behavior;
 import smt.model.OrganizationNetwork;
 import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
@@ -38,5 +39,14 @@ public interface EntityService {
 			JsonNode node, Integer pageNum);
 
 	public ResponseJSend<Long> deleteOrganizationNetwork(Long id);
+
+	public Behavior findBehaviorById(Long id);
+
+	public ResponseJSend<Page<Behavior>> findBehaviorByExample(JsonNode node,
+			Integer pageNum);
+
+	public ResponseJSend<Long> saveBehavior(JsonNode node, SecurityUser user);
+
+	public ResponseJSend<Long> deleteBehavior(Long id);
 
 }

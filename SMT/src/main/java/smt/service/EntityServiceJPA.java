@@ -16,6 +16,7 @@ import com.mysema.query.types.expr.BooleanExpression;
 
 import smt.auth.model.SecurityUser;
 import smt.auth.service.SecUserRepository;
+import smt.model.Behavior;
 import smt.model.OrganizationNetwork;
 import smt.model.OrganizationPerson;
 import smt.model.QOrganizationNetwork;
@@ -299,6 +300,33 @@ public class EntityServiceJPA implements EntityService {
 		return response;
 	}
 
+	@Override
+	public Behavior findBehaviorById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseJSend<Page<Behavior>> findBehaviorByExample(JsonNode node,
+			Integer pageNum) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseJSend<Long> saveBehavior(JsonNode node, SecurityUser user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseJSend<Long> deleteBehavior(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	
 	
 	
 }
