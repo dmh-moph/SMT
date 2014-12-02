@@ -28,6 +28,7 @@ import smt.model.glb.OrgType;
 import smt.model.glb.PersonType;
 import smt.model.glb.Province;
 import smt.repository.AmphurRepo;
+import smt.repository.BehaviorRepo;
 import smt.repository.DomainVariableRepo;
 import smt.repository.HealthZoneRepo;
 import smt.repository.NetworkTypeRepo;
@@ -52,6 +53,9 @@ public class EntityServiceJPA implements EntityService {
 	
 	@Autowired
 	OrganizationNetworkRepo organizationNetworkRepo;
+	
+	@Autowired
+	BehaviorRepo behaviorRepo; 
 
 	@Autowired
 	OrganizationPersonRepo organizationPersonRepo;
@@ -303,7 +307,7 @@ public class EntityServiceJPA implements EntityService {
 	@Override
 	public Behavior findBehaviorById(Long id) {
 		// TODO Auto-generated method stub
-		return null;
+		return behaviorRepo.findOne(id);
 	}
 
 	@Override
@@ -316,13 +320,93 @@ public class EntityServiceJPA implements EntityService {
 	@Override
 	public ResponseJSend<Long> saveBehavior(JsonNode node, SecurityUser user) {
 		// TODO Auto-generated method stub
-		return null;
+		Behavior model;		
+		if(node.get("id") != null) {
+			// this is update
+			model = behaviorRepo.findOne(node.get("id").asLong());
+			
+			model.setCreateBy(user);
+			model.setCreateDate(new Date());
+			
+			model.setLastUpdateBy(user);
+			model.setLastUpdateDate(new Date());
+			
+		} else {
+			// this is new
+			model = new Behavior();
+			
+			model.setLastUpdateBy(user);
+			model.setLastUpdateDate(new Date());
+			
+		}
+		
+		if(node.get("cause") != null && node.get("cause").asText() != null) {
+			model.setCause(node.get("cause").asText());
+		}
+		
+		if(node.get("year") != null) {
+			model.setYear(node.get("year").asInt());
+		}
+		
+		if(node.get("description") != null && node.get("description").asText() != null) {
+			model.setDescription(node.get("description").asText());
+		}
+		
+		if(node.get("symptom") != null && node.get("symptom").asText() != null) {
+			model.setSymptom(node.get("symptom").asText());
+		}
+		
+		if(node.get("riskFactor") != null && node.get("riskFactor").asText() != null) {
+			model.setRiskFactor(node.get("riskFactor").asText());
+		}
+
+		if(node.get("reference") != null && node.get("reference").asText() != null) {
+			model.setReference(node.get("reference").asText());
+		}
+		
+		if(node.get("place") != null && node.get("place").asText() != null) {
+			model.setPlace(node.get("place").asText());
+		}
+
+		if(node.get("name") != null && node.get("name").asText() != null) {
+			model.setName(node.get("name").asText());
+		}
+		
+		if(node.get("preventiveGuideline") != null && node.get("preventiveGuideline").asText() != null) {
+			model.setPreventiveGuideline(node.get("PreventiveGuideline").asText());
+		}
+		
+		if(node.get("endAge") != null) {
+			model.setEndAge(node.get("endAge").asInt());
+		}
+		
+		if(node.get("startAge") != null) {
+			model.setEndAge(node.get("startAge").asInt());
+		}
+		
+		
+		behaviorRepo.save(model);
+		
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.status = ResponseStatus.SUCCESS;
+		response.data = model.getId(); 
+		return response;
 	}
 
 	@Override
 	public ResponseJSend<Long> deleteBehavior(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Behavior behavior = behaviorRepo.findOne(id);
+		
+		if(behavior != null) {
+			behaviorRepo.delete(behavior);
+		}
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.data = id;
+		response.status = ResponseStatus.SUCCESS;
+		
+		return response;
 	}
 
 	
