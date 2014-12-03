@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import smt.auth.model.Activeuser;
@@ -40,7 +41,7 @@ public static Logger logger = LoggerFactory.getLogger(BehaviorRestController.cla
 	
 	@RequestMapping(value= "/{id}", method = {RequestMethod.PUT})
 	public ResponseJSend<Long> updateBehaviorById(@RequestBody JsonNode node,
-			@Activeuser SecurityUser user) {
+			@Activeuser SecurityUser user) throws JsonMappingException {
 		return entityService.saveBehavior(node, user);
 	}
 	
@@ -54,7 +55,7 @@ public static Logger logger = LoggerFactory.getLogger(BehaviorRestController.cla
 	
 	@RequestMapping(value = "", method = {RequestMethod.POST, RequestMethod.PUT}) 
 	public ResponseJSend<Long> saveBehavior(@RequestBody JsonNode node,
-			@Activeuser SecurityUser user) {
+			@Activeuser SecurityUser user) throws JsonMappingException {
 		
 		return this.entityService.saveBehavior(node, user);
 	}

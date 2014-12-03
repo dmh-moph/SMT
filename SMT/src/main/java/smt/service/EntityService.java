@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import smt.auth.model.SecurityUser;
@@ -45,7 +46,7 @@ public interface EntityService {
 	public ResponseJSend<Page<Behavior>> findBehaviorByExample(JsonNode node,
 			Integer pageNum);
 
-	public ResponseJSend<Long> saveBehavior(JsonNode node, SecurityUser user);
+	public ResponseJSend<Long> saveBehavior(JsonNode node, SecurityUser user) throws JsonMappingException;
 
 	public ResponseJSend<Long> deleteBehavior(Long id);
 

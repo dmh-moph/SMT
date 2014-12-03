@@ -71,6 +71,65 @@ public class BehaviorImpact implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="LAST_UPDATE_DATE")
 	private Date lastUpdateDate;
+
+
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Behavior getBehavior() {
+		return behavior;
+	}
+
+	public void setBehavior(Behavior behavior) {
+		this.behavior = behavior;
+	}
+
+	public SecurityUser getCreateBy() {
+		return createBy;
+	}
+
+	public void setCreateBy(SecurityUser createBy) {
+		this.createBy = createBy;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public SecurityUser getLastUpdateBy() {
+		return lastUpdateBy;
+	}
+
+	public void setLastUpdateBy(SecurityUser lastUpdateBy) {
+		this.lastUpdateBy = lastUpdateBy;
+	}
+
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+	
 	
 	
 }

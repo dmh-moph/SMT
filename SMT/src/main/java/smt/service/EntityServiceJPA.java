@@ -6,27 +6,35 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysema.query.types.expr.BooleanExpression;
 
 import smt.auth.model.SecurityUser;
 import smt.auth.service.SecUserRepository;
 import smt.model.Behavior;
+import smt.model.BehaviorImpact;
 import smt.model.OrganizationNetwork;
 import smt.model.OrganizationPerson;
 import smt.model.QOrganizationNetwork;
 import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
+import smt.model.glb.EducationLevel;
 import smt.model.glb.HealthZone;
 import smt.model.glb.NetworkType;
 import smt.model.glb.OrgType;
 import smt.model.glb.PersonType;
 import smt.model.glb.Province;
+import smt.model.glb.SituationType;
 import smt.repository.AmphurRepo;
 import smt.repository.BehaviorRepo;
 import smt.repository.DomainVariableRepo;
@@ -318,79 +326,53 @@ public class EntityServiceJPA implements EntityService {
 	}
 
 	@Override
-	public ResponseJSend<Long> saveBehavior(JsonNode node, SecurityUser user) {
+	public ResponseJSend<Long> saveBehavior(JsonNode node, SecurityUser user) throws JsonMappingException {
 		// TODO Auto-generated method stub
-		Behavior model;		
-		if(node.get("id") != null) {
-			// this is update
-			model = behaviorRepo.findOne(node.get("id").asLong());
+		
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+		Behavior webModel;
+		
+		try {
+			webModel = mapper.treeToValue(node, Behavior.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new JsonMappingException(e.getMessage() + "\n  JSON: " + node.toString());
+		}
+		
+		Behavior dbModel = null;
+				
+		if(webModel.getId() == null) {
+			dbModel = new Behavior();
 			
-			model.setCreateBy(user);
-			model.setCreateDate(new Date());
-			
-			model.setLastUpdateBy(user);
-			model.setLastUpdateDate(new Date());
+			dbModel.setCreateBy(user);
+			dbModel.setCreateDate(new Date());
 			
 		} else {
-			// this is new
-			model = new Behavior();
-			
-			model.setLastUpdateBy(user);
-			model.setLastUpdateDate(new Date());
-			
+			dbModel = behaviorRepo.findOne(webModel.getId());
 		}
 		
-		if(node.get("cause") != null && node.get("cause").asText() != null) {
-			model.setCause(node.get("cause").asText());
-		}
+		logger.debug(dbModel.getCreateBy().getUsername());
 		
-		if(node.get("year") != null) {
-			model.setYear(node.get("year").asInt());
-		}
-		
-		if(node.get("description") != null && node.get("description").asText() != null) {
-			model.setDescription(node.get("description").asText());
-		}
-		
-		if(node.get("symptom") != null && node.get("symptom").asText() != null) {
-			model.setSymptom(node.get("symptom").asText());
-		}
-		
-		if(node.get("riskFactor") != null && node.get("riskFactor").asText() != null) {
-			model.setRiskFactor(node.get("riskFactor").asText());
-		}
 
-		if(node.get("reference") != null && node.get("reference").asText() != null) {
-			model.setReference(node.get("reference").asText());
+		BeanUtils.copyProperties(webModel, dbModel, "impacts", "createBy", "createDate");
+		dbModel.setLastUpdateBy(user);
+		dbModel.setLastUpdateDate(new Date());
+		
+		
+		// now deal with impacts
+		for(BehaviorImpact webImpact: webModel.getImpacts()) {
+			BehaviorImpact dbImpact = new BehaviorImpact();
+			BeanUtils.copyProperties(webImpact, dbImpact, "behavior");
+			dbImpact.setBehavior(dbModel);
 		}
 		
-		if(node.get("place") != null && node.get("place").asText() != null) {
-			model.setPlace(node.get("place").asText());
-		}
-
-		if(node.get("name") != null && node.get("name").asText() != null) {
-			model.setName(node.get("name").asText());
-		}
-		
-		if(node.get("preventiveGuideline") != null && node.get("preventiveGuideline").asText() != null) {
-			model.setPreventiveGuideline(node.get("PreventiveGuideline").asText());
-		}
-		
-		if(node.get("endAge") != null) {
-			model.setEndAge(node.get("endAge").asInt());
-		}
-		
-		if(node.get("startAge") != null) {
-			model.setEndAge(node.get("startAge").asInt());
-		}
-		
-		
-		behaviorRepo.save(model);
-		
+		behaviorRepo.save(dbModel);
 		
 		ResponseJSend<Long> response = new ResponseJSend<Long>();
 		response.status = ResponseStatus.SUCCESS;
-		response.data = model.getId(); 
+		response.data = dbModel.getId(); 
 		return response;
 	}
 
