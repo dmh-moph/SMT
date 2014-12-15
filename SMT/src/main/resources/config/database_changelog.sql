@@ -44,6 +44,12 @@ alter table smt_behavior
   foreign key (DV_SITUATION_TYPE)
   REFERENCES GLB_VARIABLE;
 
+  
+alter table smt_behavior add (ZONE_ID number);
+alter table smt_behavior
+	add constraint ZONE_BEHAVIOR_FK
+	foreign key (ZONE_ID)
+	REFERENCES GLB_ZONE;
 
   
   

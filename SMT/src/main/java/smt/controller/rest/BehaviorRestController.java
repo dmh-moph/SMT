@@ -30,7 +30,7 @@ public static Logger logger = LoggerFactory.getLogger(BehaviorRestController.cla
 	
 	@RequestMapping(value = "/search/page/{pageNum}", method = {RequestMethod.POST}) 
 	public ResponseJSend<Page<Behavior>> findBehaviorByExample(
-			@RequestBody JsonNode node, @Activeuser SecurityUser user, @PathVariable Integer pageNum) {
+			@RequestBody JsonNode node, @Activeuser SecurityUser user, @PathVariable Integer pageNum) throws JsonMappingException {
 		return entityService.findBehaviorByExample(node, pageNum);
 	}
 

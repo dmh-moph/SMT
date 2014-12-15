@@ -53,7 +53,8 @@ smt.Model.Amphur = Backbone.RelationalModel.extend({
 	relations: [{
 		type: Backbone.HasOne,
 		key: 'province',
-		relatedModel: 'smt.Model.Province'
+		relatedModel: 'smt.Model.Province',
+		includeInJSON: 'id'
 	}]
 });
 
@@ -61,7 +62,9 @@ smt.Model.Province = Backbone.RelationalModel.extend({
 	relations: [{
 		type: Backbone.HasOne,
 		key: 'zone',
-		relatedModel: 'smt.Model.HealthZone'
+		relatedModel: 'smt.Model.HealthZone',
+		includeInJSON: Backbone.Model.prototype.idAttribute
+			
 	}],
 	urlRoot: appUrl('Province')
 });
@@ -95,7 +98,7 @@ smt.Model.OrganizationNetwork = Backbone.RelationalModel.extend({
 	urlRoot: appUrl('OrganizationNetwork')
 });
 
-smt.Model.Bahavior = Backbone.RelationalModel.extend({
+smt.Model.Behavior = Backbone.RelationalModel.extend({
 	relations: [{
 		type: Backbone.HasOne,
 		key: 'zone',
@@ -115,11 +118,20 @@ smt.Model.Bahavior = Backbone.RelationalModel.extend({
 	},{
 		type: Backbone.HasMany,
 		key: 'impacts',
+		collectionType: 'smt.Collection.BehaviorImpacts',
 		relatedModel: 'smt.Model.BehaviorImpact'
 	}],
 	urlRoot: appUrl('Behavior')
 });
+smt.Page.Behaviors = Backbone.PageCollection.extend({
+	model: smt.Model.Behavior,
+	url: appUrl('Behavior/search')
+});
+
 smt.Model.BehaviorImpact = Backbone.RelationalModel.extend({
+});
+smt.Collection.BehaviorImpacts = Backbone.Collection.extend({
+	model: smt.Model.BehaviorImpact
 });
 
 smt.Model.OrganizationPerson = Backbone.RelationalModel.extend({

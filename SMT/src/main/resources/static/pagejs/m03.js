@@ -20,9 +20,9 @@ var AppRouter = Backbone.Router.extend({
 		
 	},
 	routes: {
-        "newOrgnazationNetwork" : "newForm",
+        "newBehavior" : "newForm",
         "search" : "search",
-        "OrganizationNetwork/:id" : "editForm",
+        "Behavior/:id" : "editForm",
         "*actions": "defaultRoute" // Backbone will try match the route above first
     },
     
@@ -122,7 +122,7 @@ var SearchView = Backbone.View.extend({
     },
     onClicknewFormBtn : function(e) {
     	// we can simply navigate to newForm
-    	appRouter.navigate("newOrgnazationNetwork", {trigger: true});
+    	appRouter.navigate("newBehavior", {trigger: true});
     	
     },
     onChangeFormSlt: function(e) {
@@ -198,22 +198,21 @@ var SearchView = Backbone.View.extend({
 
 var TableResultView = Backbone.View.extend({ 
 	initialize: function(options){
-		this.searchResults = new smt.Page.OrganizationNetworks();
+		this.searchResults = new smt.Page.Behaviors();
 		this.tableResultViewTemplate = Handlebars.compile($("#tableResultViewTemplate").html());
 	},
 	events: {
-		"click .editOrganizationNetworkBtn" : "onClickEditOrganizationNetworkBtn",
-		"click .removeOrganizationNetworkBtn" : "onClickremoveOrganizationNetworkBtn",
+		"click .editBehaviorBtn" : "onClickEditBehaviorBtn",
+		"click .removeBehaviorBtn" : "onClickRemoveBehaviorBtn",
 	},
 	
-	onClickremoveOrganizationNetworkBtn: function(e) {
-		var organizationNetworkId = $(e.currentTarget).parents('tr').attr("data-id");
+	onClickRemoveBehaviorBtn: function(e) {
+		var behaviorId = $(e.currentTarget).parents('tr').attr("data-id");
+		var behavior = smt.Model.Behavior.findOrCreate({id: behaviorId});
 		
-		var orgNetwork = smt.Model.OrganizationNetwork.findOrCreate({id: organizationNetworkId});
-		
-		var r = confirm('คุณต้องการลบรายการ' + orgNetwork.get('orgName'));
+		var r = confirm('คุณต้องการลบรายการ' + behavior.get('name'));
 		if (r == true) {
-			orgNetwork.destroy({
+			behavior.destroy({
 				success: function(model, response) {
 					alert("ลบข้อมูลเรียบร้อยแล้ว")
 					appRouter.search();
@@ -228,9 +227,9 @@ var TableResultView = Backbone.View.extend({
 		
 	},
 	
-	onClickEditOrganizationNetworkBtn: function(e) {
-		var organizationNetworkId = $(e.currentTarget).parents('tr').attr("data-id");
-		appRouter.navigate("OrganizationNetwork/"+organizationNetworkId, {trigger: true});
+	onClickEditBehaviorBtn: function(e) {
+		var behaviorId = $(e.currentTarget).parents('tr').attr("data-id");
+		appRouter.navigate("Behavior/"+behaviorId, {trigger: true});
 	},
 	
 	renderWithSearchModel: function(searchModel, pageNum) {
@@ -246,17 +245,17 @@ var TableResultView = Backbone.View.extend({
 	
 	render: function() {
 		this.searchResults.fetch({
-			url: appUrl('OrganizationNetwork/search/page/' + this.pageNum),
+			url: appUrl('Behavior/search/page/' + this.pageNum),
     		type: 'POST',
     		data: JSON.stringify(this.searchModel.toJSON()),
     		dataType: 'json',
     		contentType: 'application/json',
     		success: _.bind(function(collection, response, options) {
     			
-			var json = {};
-			json.page = this.searchResults.page;
-			json.content = this.searchResults.toJSON();
-			this.$el.html(this.tableResultViewTemplate(json));
+				var json = {};
+				json.page = this.searchResults.page;
+				json.content = this.searchResults.toJSON();
+				this.$el.html(this.tableResultViewTemplate(json));
     		}, this)
     	});
 		return this;
@@ -337,19 +336,19 @@ var FormView = Backbone.View.extend({
 	},
 	onClickEditPersonBtn: function(e) {
 		var index=$(e.currentTarget).parents('tr').attr('data-index');
-    	var person = this.model.get('medicalStaffs').at(index);
+    	var impact = this.model.get('impact').at(index);
     	
-    	this.personModalView.setCurrentOrganizationNetwork(this.model);
-    	this.personModalView.setCurrentPersonAndRender(person);
+    	this.impactModalView.setCurrentBehavior(this.model);
+    	this.impactModalView.setCurrentImpactAndRender(person);
    	},
-	onClickRemovePersonBtn: function(e) {
+	onClickRemoveImpactBtn: function(e) {
 		var index=$(e.currentTarget).parents('tr').attr('data-index');
-		var item = this.model.get('medicalStaffs').at(index);
+		var item = this.model.get('impacts').at(index);
 		
-		var r = confirm('คุณต้องการลบรายการบุคลากรทางการแพทย์ ' + item.get('name'));
+		var r = confirm('คุณต้องการลบรายการผลกระทบ ' + item.get('description'));
 		if (r == true) {
-			this.model.get('medicalStaffs').remove(item);
-			this.renderPersonTbl();
+			this.model.get('impacts').remove(item);
+			this.renderImpactTbl();
 		} else {
 		    return false;
 		} 
@@ -402,6 +401,7 @@ var FormView = Backbone.View.extend({
     		
     	} else if(field == 'province') {
     		model = smt.Model.Province.findOrCreate({id:id});
+    	
     		
     		//update amphurSlt
         	this.amphurs.fetch({
@@ -423,6 +423,8 @@ var FormView = Backbone.View.extend({
     		model = smt.Model.DV_EducationLevel.findOrCreate({id:id});
     	} else if(field == 'amphur'){
     		model = smt.Model.Amphur.findOrCreate({id: id});
+    	} else if(field == 'sex') {
+    		model = id;
     	} else {
     		return;
     	}
@@ -432,14 +434,14 @@ var FormView = Backbone.View.extend({
 	
 	newForm: function() {
 		this.modelId = null;
-		this.model = new smt.Model.Bahavior();
+		this.model = new smt.Model.Behavior();
 		
 		this.render();
 	},
 	
 	
 	editForm: function(id) {
-		this.model = smt.Model.OrganizationNetwork.findOrCreate({id: id});
+		this.model = smt.Model.Behavior.findOrCreate({id: id});
 		var zoneId=this.model.get('zone').get('id');
 		var provinceId = this.model.get('province').get('id');
 		$.when(this.provinces.fetch({url: appUrl('Province/findAllByZone/'+zoneId)}),
@@ -450,7 +452,10 @@ var FormView = Backbone.View.extend({
 		
 	},
 	renderImpactTbl: function() {
-		var json = this.model.get('impacts').toJSON();
+		var json;
+		if(this.model.get('impacts').length >0) {
+			json = this.model.get('impacts').toJSON();
+		}
 		var html = this.impactsTbodyTemplate(json);
 		
 		this.$el.find('#impactsTbody').html(html);
@@ -478,14 +483,15 @@ var FormView = Backbone.View.extend({
 			
 			json.amphurs=new Array();
 			json.amphurs.push({id:0,name: 'กรุณาเลือกอำเภอ'});
+			
 		} else {
 			json.situationTypes=new Array();
 			$.merge(json.situationTypes, situationTypes.toJSON());
-			 __setSelect(json.situationTypes, this.model.get('situationType'));
+			 __setSelect(json.situationTypes, this.model.get('situationTypes'));
 			
 			json.educationLevels=new Array();
 			$.merge(json.educationLevels, educationLevels.toJSON());
-			__setSelect(json.educationLevels, this.model.get('educationLevel'));
+			__setSelect(json.educationLevels, this.model.get('educationLevels'));
 			
 			json.healthZones=new Array();
 			$.merge(json.healthZones, healthZones.toJSON());
@@ -498,6 +504,14 @@ var FormView = Backbone.View.extend({
 			json.amphurs=new Array();
 			$.merge(json.amphurs, this.amphurs.toJSON());
 			__setSelect(json.amphurs, this.model.get('amphur'));
+			
+			
+			
+			if(json.model.sex != null && json.model.sex == 'M') {
+				json.model.isMale = true;
+			} else {
+				json.model.isMale = false;
+			}
 		}
 		
 		console.log(json);
@@ -561,9 +575,9 @@ var ImpactModalView = Backbone.View.extend({
 			alert ('กรุณากรอกข้อมูลให้ครบถ้วน');
 			return false;
 		}
-		
+
 		 // do save
-		 this.currentBehavior.get('impacts').add(this.currentImpact);
+		 this.currentBehavior.get('impacts').push(this.currentImpact);
 		 
 		 this.parentView.renderImpactTbl();
 		 this.$el.modal('hide');
@@ -597,7 +611,7 @@ var ImpactModalView = Backbone.View.extend({
 		this.currentBehavior = behavior;
 	},
 	setCurrentImpactAndRender: function(impact){
-		this.currentImpact = person;
+		this.currentImpact = impact;
 		this.$el.find('.modal-header span').html("แก้ไขรายการข้อมูลผลกระทบ");
 		this.render();
 		

@@ -22,8 +22,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.neo4j.cypher.internal.compiler.v2_1.perty.docbuilders.scalaDocBuilder;
+
 import smt.auth.model.SecurityUser;
 import smt.model.glb.EducationLevel;
+import smt.model.glb.HealthZone;
 import smt.model.glb.Province;
 import smt.model.glb.Sex;
 import smt.model.glb.SituationType;
@@ -34,7 +37,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @Table(name="SMT_BEHAVIOR")
 @SequenceGenerator(name="SMT_BEHAVIOR_SEQ", sequenceName="SMT_BEHAVIOR_SEQ", allocationSize=1)
-@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope=Behavior.class)
 public class Behavior implements Serializable{
 
 	/**
@@ -65,6 +68,10 @@ public class Behavior implements Serializable{
 	@ManyToOne
 	@JoinColumn(name="PROVINCE_ID")
 	private Province province;
+	
+	@ManyToOne
+	@JoinColumn(name="ZONE_ID")
+	private HealthZone zone;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name="SEX")
@@ -119,8 +126,7 @@ public class Behavior implements Serializable{
 	private String reference;
 	
 	@OneToMany(mappedBy="behavior", cascade=CascadeType.ALL)
-	
-	 @OrderColumn(name="behavior_index")
+	 @OrderColumn(name="sequence")
 	 List<BehaviorImpact> impacts;
 	
 	@ManyToOne
@@ -313,6 +319,14 @@ public class Behavior implements Serializable{
 
 	public void setLastUpdateDate(Date lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
+	}
+
+	public HealthZone getZone() {
+		return zone;
+	}
+
+	public void setZone(HealthZone zone) {
+		this.zone = zone;
 	}
 	
 	

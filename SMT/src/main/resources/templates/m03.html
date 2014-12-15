@@ -160,13 +160,26 @@
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-					{{txtInput "quarter" "เพศ" "sex" model.sex}}
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-6 control-label">เพศ</label>
+					    <div class="col-md-6">
+					      <select class="form-control formSlt" id="sexSlt" data-field="sex">
+									<option value="M" {{#if model.isMale}}selected="selected"{{/if}}>ชาย</option>
+									<option value="F" {{#unless model.isMale}}selected="selected"{{/unless}}>หญิง</option>								
+							</select>	
+					    </div>
+					</div>
 				</div>
 				<div class="col-md-4">
 					{{txtInput "quarter" "ช่วงอายุ ตั้งแต่" "startAge" model.startAge}}
 				</div>
 				<div class="col-md-4">
 					{{txtInput "quarter" "ถึง" "endAge" model.endAge}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "ชื่อพฤติกรรมปัญหา" "name" model.name}}
 				</div>
 			</div>
 			<div class="row">
@@ -189,33 +202,7 @@
 					{{txtInput "full" "สถานที่เกิดของปัญหา" "place" model.place}}
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<b><i class="fa fa-pencil-square-o"></i> ข้อมูลเพื่อการติดต่อ</b>
-						</div>
-						<div class="panel-body">
-							<div class="row">
-								<div class="col-md-6">
-									{{txtInput "half" "ชื่อผู้ประสานงาน" "contactPerson" model.contactPerson}}
-								</div>
-								<div class="col-md-6">
-									{{txtInput "half" "เบอร์โทรศัพท์" "telephone" model.telephone}}
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									{{txtInput "half" "อีเมล์" "email" model.email}}
-								</div>
-								<div class="col-md-6">
-									{{txtInput "half" "เว็บไซต์" "website" model.website}}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			
 			<div class="row">
 				<div class="col-md-12">
 					<div class="panel panel-default">
@@ -328,6 +315,15 @@
 				    </div>
 				</div>
 			</div>
+			<div class="col-md-12">
+				<div class="form-group">
+				    <label for="inputEmail3" class="col-sm-2 control-label">รายละเอียดพฤติกรรม</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control formTxt" id="descriptionTxt" 
+							placeholder="ระบุรายละเอียดพฤติกรรมที่ต้องการค้นหา..." data-field="description" value="{{searchModel.description}}"/>
+				    </div>
+				</div>
+			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-12" style="text-align: center;">
@@ -352,23 +348,21 @@
 	<table class="table table-bordered table-hover">
 		<thead>
 			<tr>
-				<td style="width: 65px;text-align:center;"></td>
-				<td style="width: 120px;text-align:center;" class=""><b>ประเภทเครือข่าย</b></td>
-				<td style="width: 120px;text-align:center;" class=""><b>ประเภทหน่วยงาน</b></td>
-				<td style="text-align:center;"><b>ชื่อหน่วยงาน</b></td>
-				<td style="width: 60px;text-align:center;" class=""><b>เขต</b></td>
+				<td style="width: 25px;text-align:center;"></td>
+				<td style="width: 200px;text-align:center;" class=""><b>ชื่อพฤติกรรมปัญหา</b></td>
+				<td style="width: 200px;text-align:center;" class=""><b>รายละเอียดพฤติกรรมปัญหา</b></td>
+				<td style="width: 40px;text-align:center;" class=""><b>เขต</b></td>
 				<td style="width: 100px;text-align:center;" class=""><b>จังหวัด</b></td>
 			</tr>
 		</thead>
 		<tbody>
 			{{#each content}}
 			<tr data-id="{{id}}">
-				<td> <button type="button" class="btn btn-danger btn-xs removeOrganizationNetworkBtn"><i class="fa fa-trash"> </i></button> 
-					 <button type="button" class="btn btn-info btn-xs editOrganizationNetworkBtn"><i class="fa fa-edit"> </i></button>
+				<td> <button type="button" class="btn btn-danger btn-xs removeBehaviorBtn"><i class="fa fa-trash"> </i></button> 
+					 <button type="button" class="btn btn-info btn-xs editBehaviorBtn"><i class="fa fa-edit"> </i></button>
 				</td>
-				<td style="text-align:center;">{{networkType.description}}</td>
-				<td style="text-align:center;">{{orgType.description}}</a></td>
-				<td>{{orgName}}</td>
+				<td style="text-align:center;">{{name}}</td>
+				<td style="text-align:center;">{{description}}</td>
 				<td style="text-align:center;">{{zone.code}}</td>
 				<td style="text-align:center;">{{province.name}}</td>
 			</tr>

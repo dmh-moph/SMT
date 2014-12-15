@@ -44,7 +44,7 @@ public interface EntityService {
 	public Behavior findBehaviorById(Long id);
 
 	public ResponseJSend<Page<Behavior>> findBehaviorByExample(JsonNode node,
-			Integer pageNum);
+			Integer pageNum) throws JsonMappingException;
 
 	public ResponseJSend<Long> saveBehavior(JsonNode node, SecurityUser user) throws JsonMappingException;
 

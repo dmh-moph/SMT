@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.crsh.shell.impl.command.system.help;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -17,6 +18,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysema.query.BooleanBuilder;
 import com.mysema.query.types.expr.BooleanExpression;
 
 import smt.auth.model.SecurityUser;
@@ -25,6 +27,7 @@ import smt.model.Behavior;
 import smt.model.BehaviorImpact;
 import smt.model.OrganizationNetwork;
 import smt.model.OrganizationPerson;
+import smt.model.QBehavior;
 import smt.model.QOrganizationNetwork;
 import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
@@ -314,20 +317,68 @@ public class EntityServiceJPA implements EntityService {
 
 	@Override
 	public Behavior findBehaviorById(Long id) {
-		// TODO Auto-generated method stub
 		return behaviorRepo.findOne(id);
 	}
 
 	@Override
 	public ResponseJSend<Page<Behavior>> findBehaviorByExample(JsonNode node,
-			Integer pageNum) {
-		// TODO Auto-generated method stub
-		return null;
+			Integer pageNum) throws JsonMappingException {
+		logger.debug("findBehaviorByExample");
+		
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+		Behavior webModel;
+		
+		try {
+			webModel = mapper.treeToValue(node, Behavior.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new JsonMappingException(e.getMessage() + "\n  JSON: " + node.toString());
+		}
+		
+		QBehavior q = QBehavior.behavior;
+		
+		BooleanBuilder p = new BooleanBuilder();
+		
+		if(webModel.getDescription() != null && webModel.getDescription().trim().length() > 0) {
+			logger.debug("Searching description: %"+webModel.getDescription().trim()+"%");
+			p = p.and(q.description.like("%"+webModel.getDescription().trim()+"%"));
+		} 
+		
+		if(webModel.getYear() != null) {
+			logger.debug("Searching year : "+ webModel.getYear());
+			p = p.and(q.year.eq(webModel.getYear()));
+		}
+		
+		if(webModel.getProvince() != null) {
+			logger.debug("Searching Province : "+ webModel.getProvince().getId());
+			p = p.and(q.province.id.eq(webModel.getProvince().getId()));
+		}
+		
+		if(webModel.getZone() != null) {
+			logger.debug("Searching Zone : "+ webModel.getZone().getId());
+			p = p.and(q.zone.id.eq(webModel.getZone().getId()));
+		}
+		
+		PageRequest pageRequest =
+	            new PageRequest(pageNum -1, DefaultProperty.NUMBER_OF_ELEMENT_PER_PAGE, Sort.Direction.ASC, "description");
+		
+		Page<Behavior> behaviors = behaviorRepo.findAll(p, pageRequest); 
+		
+		for(Behavior behavior : behaviors) {
+			behavior.getImpacts().size();
+		}
+		
+		ResponseJSend<Page<Behavior>> response = new ResponseJSend<Page<Behavior>>();
+		response.data=behaviors;
+		response.status=ResponseStatus.SUCCESS;
+		
+		return response;
 	}
 
 	@Override
 	public ResponseJSend<Long> saveBehavior(JsonNode node, SecurityUser user) throws JsonMappingException {
-		// TODO Auto-generated method stub
 		
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -360,12 +411,27 @@ public class EntityServiceJPA implements EntityService {
 		dbModel.setLastUpdateBy(user);
 		dbModel.setLastUpdateDate(new Date());
 		
+		dbModel.setImpacts(new ArrayList<BehaviorImpact>());
+		
+		behaviorRepo.save(dbModel);
 		
 		// now deal with impacts
 		for(BehaviorImpact webImpact: webModel.getImpacts()) {
+			logger.debug("saving impact: " + webImpact.getDescription());
 			BehaviorImpact dbImpact = new BehaviorImpact();
 			BeanUtils.copyProperties(webImpact, dbImpact, "behavior");
+			
+			if(dbImpact.getId() == null) {
+				
+				dbImpact.setCreateBy(user);
+				dbImpact.setCreateDate(new Date());
+			}
+			
+			dbImpact.setLastUpdateBy(user);
+			dbImpact.setLastUpdateDate(new Date());
 			dbImpact.setBehavior(dbModel);
+			
+			dbModel.getImpacts().add(dbImpact);
 		}
 		
 		behaviorRepo.save(dbModel);

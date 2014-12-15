@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @Table(name="SMT_BEHAVIOR_IMPACT")
 @SequenceGenerator(name="SMT_BEHAVIOR_IMPACT_SEQ", sequenceName="SMT_BEHAVIOR_IMPACT_SEQ", allocationSize=1)
-@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope=BehaviorImpact.class)
 public class BehaviorImpact implements Serializable {
 	
 	/**

@@ -22,7 +22,6 @@ import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module.Feature;
 
 @Configuration
 @EnableWebMvc
-@EnableJpaRepositories
 public class WebConfig extends WebMvcConfigurerAdapter {
 
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {

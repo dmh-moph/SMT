@@ -4,6 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import smt.model.glb.HealthZone;
+import smt.model.glb.Province;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,13 +21,22 @@ public class BehaviorTest {
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		
 		Behavior b1 = new Behavior();
+		HealthZone zone = new HealthZone();
+		zone.setId(1L);
+		
+		Province province = new Province();
+		province.setId(1L);
+		province.setZone(zone);
+		
 		b1.setId(1L);
 		b1.setDescription("description");
+		b1.setZone(zone);
+		b1.setProvince(province);
 		
 		JsonNode node = mapper.valueToTree(b1);
 		((ObjectNode) node).put("test","test");
 		((ObjectNode) node).remove("endAge");
-		((ObjectNode) node).put("id", "XXX");
+		((ObjectNode) node).put("id", 1L);
 		
 		
 		System.out.println(node.toString());
