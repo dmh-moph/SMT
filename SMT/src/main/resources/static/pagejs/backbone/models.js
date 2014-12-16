@@ -119,6 +119,23 @@ smt.Page.Journals = Backbone.PageCollection.extend({
 	url: appUrl('Journal/search')
 });
 
+smt.Model.Research = Backbone.RelationalModel.extend({
+	relations: [{
+		type: Backbone.HasOne,
+		key: 'journalType',
+		relatedModel: 'smt.Model.DV_JournalType'
+	},{
+		type: Backbone.HasOne,
+		key: 'organization',
+		relatedModel: 'smt.Model.OrganizationNetwork'
+	}],
+	urlRoot: appUrl('Research')
+});
+smt.Page.Researchs = Backbone.PageCollection.extend({
+	model: smt.Model.Research,
+	url: appUrl('Research/search')
+});
+
 smt.Model.Behavior = Backbone.RelationalModel.extend({
 	relations: [{
 		type: Backbone.HasOne,

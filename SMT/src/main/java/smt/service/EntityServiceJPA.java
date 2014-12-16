@@ -31,6 +31,8 @@ import smt.model.OrganizationPerson;
 import smt.model.QBehavior;
 import smt.model.QJournal;
 import smt.model.QOrganizationNetwork;
+import smt.model.QResearch;
+import smt.model.Research;
 import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
 import smt.model.glb.HealthZone;
@@ -96,6 +98,9 @@ public class EntityServiceJPA implements EntityService {
 	
 	@Autowired
 	JournalRepo journalRepo;
+	
+	@Autowired
+	ResearchRepo researchRepo;
 	
 	@Override
 	public List<Province> findAllProvince() {
@@ -606,7 +611,127 @@ public class EntityServiceJPA implements EntityService {
 		return response;
 	}
 
-	
+	@Override
+	public ResponseJSend<Page<Research>> findResearchByExample(JsonNode node,
+			Integer pageNum) throws JsonMappingException {
+		logger.debug("findResearchByExample");
+		
+//		Long orgId = node.get("organization").get("id").asLong();
+//		OrganizationNetwork org = organizationNetworkRepo.findOne(orgId);
+		
+		ObjectNode object = (ObjectNode) node;
+		object.remove("organization");
+		Research webModel;
+		
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+		
+		try {
+			webModel = mapper.treeToValue(object, Research.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new JsonMappingException(e.getMessage() + "\n  JSON: " + node.toString());
+		}
+		
+		QResearch q = QResearch.research;
+		
+		BooleanBuilder p = new BooleanBuilder();
+		
+		if(webModel.getJournalType() != null) {
+			logger.debug("Searching for Journal Type:  " + webModel.getJournalType());
+			p = p.and(q.journalType.eq(webModel.getJournalType()));
+		}
+		
+		if(webModel.getNameTh() != null) {
+			p = p.and(q.nameTh.like(""+webModel.getNameTh().trim()+""));
+		}
+		
+		if(webModel.getNameEn() != null) {
+			p = p.and(q.nameEn.like(""+webModel.getNameEn().trim()+""));
+		}
+		
+		
+		
+		PageRequest pageRequest =
+	            new PageRequest(pageNum -1, DefaultProperty.NUMBER_OF_ELEMENT_PER_PAGE, Sort.Direction.ASC, "nameTh");
+		
+		Page<Research> research = researchRepo.findAll(p, pageRequest); 
+		
+		ResponseJSend<Page<Research>> response = new ResponseJSend<Page<Research>>();
+		response.data=research;
+		response.status=ResponseStatus.SUCCESS;
+		
+		return response;
+	}
+
+	@Override
+	public Research findResearchById(Long id) {
+		return researchRepo.findOne(id);
+	}
+
+	@Override
+	public ResponseJSend<Long> saveResearch(JsonNode node, SecurityUser user) throws JsonMappingException {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+		Long orgId = node.get("organization").get("id").asLong();
+		OrganizationNetwork org = organizationNetworkRepo.findOne(orgId);
+		
+		
+		ObjectNode object = (ObjectNode) node;
+		object.remove("organization");
+		Research webModel;
+		
+		try {
+			webModel = mapper.treeToValue(object, Research.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new JsonMappingException(e.getMessage() + "\n  JSON: " + node.toString());
+		}
+		
+		Research dbModel = null;
+				
+		if(webModel.getId() == null) {
+			dbModel = new Research();
+			
+			dbModel.setCreateBy(user);
+			dbModel.setCreateDate(new Date());
+			
+			
+			
+		} else {
+			dbModel = researchRepo.findOne(webModel.getId());
+		}
+		
+		BeanUtils.copyProperties(webModel, dbModel, "createBy", "createDate");
+
+		dbModel.setOrganization(org);
+		dbModel.setLastUpdateBy(user);
+		dbModel.setLastUpdateDate(new Date());
+		researchRepo.save(dbModel);
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.status = ResponseStatus.SUCCESS;
+		response.data = dbModel.getId(); 
+		return response;
+		
+	}
+
+	@Override
+	public ResponseJSend<Long> deleteResearch(Long id) {
+		Research research = researchRepo.findOne(id);
+		
+		if(research != null) {
+			researchRepo.delete(research);
+		}
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.data = id;
+		response.status = ResponseStatus.SUCCESS;
+		
+		return response;
+	}
 	
 	
 	

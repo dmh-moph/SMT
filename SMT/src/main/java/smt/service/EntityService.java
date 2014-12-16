@@ -11,6 +11,7 @@ import smt.auth.model.SecurityUser;
 import smt.model.Behavior;
 import smt.model.Journal;
 import smt.model.OrganizationNetwork;
+import smt.model.Research;
 import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
 import smt.model.glb.HealthZone;
@@ -59,5 +60,14 @@ public interface EntityService {
 	public ResponseJSend<Long> saveJournal(JsonNode node, SecurityUser user) throws JsonMappingException;
 
 	public ResponseJSend<Long> deleteJournal(Long id);
+	
+	public ResponseJSend<Page<Research>> findResearchByExample(JsonNode node,
+			Integer pageNum) throws JsonMappingException;
+
+	public Research findResearchById(Long id);
+
+	public ResponseJSend<Long> saveResearch(JsonNode node, SecurityUser user) throws JsonMappingException;
+
+	public ResponseJSend<Long> deleteResearch(Long id);
 
 }
