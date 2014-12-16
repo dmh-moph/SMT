@@ -59,6 +59,14 @@ alter table smt_journal
 	REFERENCES GLB_VARIABLE;
 		
 alter table smt_journal drop column JOURNAL_TYPE;
+
+alter table smt_research add (DV_JOURNAL_TYPE number);
+alter table smt_research
+	add constraint RESEARCH_DV_JOURNAL_TYPE_FK
+	foreign key (DV_JOURNAL_TYPE)
+	REFERENCES GLB_VARIABLE;
+		
+alter table smt_research drop column RESEARCH_TYPE;
   
   
 commit;
