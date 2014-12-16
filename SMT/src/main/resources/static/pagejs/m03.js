@@ -167,7 +167,7 @@ var SearchView = Backbone.View.extend({
     	
     },
     resetForm: function() {
-    	this.searchModel = new smt.Model.OrganizationNewtork();
+    	this.searchModel = new smt.Model.Behavior();
     	this.render();
     }, 
     
@@ -244,6 +244,8 @@ var TableResultView = Backbone.View.extend({
 	},
 	
 	render: function() {
+		this.searchModel.set('type', behaviorType);
+		
 		this.searchResults.fetch({
 			url: appUrl('Behavior/search/page/' + this.pageNum),
     		type: 'POST',
@@ -286,8 +288,8 @@ var FormView = Backbone.View.extend({
 		 "change .formTxt" : "onChangeTxtSlt",
 		 
 		 "click #newImpactBtn" : "onClickNewImpactBtn",
-		 "click .removePersonBtn" : "onClickRemovePersonBtn",
-		 "click .editPersonBtn" : "onClickEditPersonBtn",
+		 "click .removeImpactBtn" : "onClickRemoveImpactBtn",
+		 "click .editImpactBtn" : "onClickEditImpactBtn",
 		 
 		"click #saveFormBtn" : "onClickSaveFormBtn",
 		"click #backBtn" : "onClickBackBtn"
@@ -322,6 +324,9 @@ var FormView = Backbone.View.extend({
 			return false;
 		}
 		
+		// now set behaviorType
+		this.model.set('type', behaviorType);
+		
 		this.model.save(null, {
 			success:_.bind(function(model, response, options) {
 				if(response.status != 'SUCCESS') {
@@ -334,9 +339,9 @@ var FormView = Backbone.View.extend({
 	onClickBackBtn: function(e) {
 		appRouter.navigate("search", {trigger: true});
 	},
-	onClickEditPersonBtn: function(e) {
+	onClickEditImpactBtn: function(e) {
 		var index=$(e.currentTarget).parents('tr').attr('data-index');
-    	var impact = this.model.get('impact').at(index);
+    	var impact = this.model.get('impacts').at(index);
     	
     	this.impactModalView.setCurrentBehavior(this.model);
     	this.impactModalView.setCurrentImpactAndRender(person);
@@ -512,6 +517,17 @@ var FormView = Backbone.View.extend({
 			} else {
 				json.model.isMale = false;
 			}
+		}
+		
+		if(behaviorType == 'B') {
+			json.nameTxt = "ชื่อพฤติกรรมปัญหา"; 
+			json.causeTxt = "สาเหตุของปัญหา";
+			json.descTxt = "รายละเอียดของปัญหา";
+		} else if(behaviorType == 'R') {
+			json.nameTxt = "ชื่อพฤติกรรมเสี่ยง";
+			json.causeTxt = "สาเหตุของพฤติกรรมเสี่ยง";
+			json.descTxt = "รายละเอียดของพฤติกรรมเสี่ยง";
+			json.symptomTxt = "ลักษณะอาการที่เกิดพฤติกรรมเสี่ยง"
 		}
 		
 		console.log(json);

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -25,6 +26,7 @@ import smt.auth.model.SecurityUser;
 import smt.auth.service.SecUserRepository;
 import smt.model.Behavior;
 import smt.model.BehaviorImpact;
+import smt.model.BehaviorType;
 import smt.model.OrganizationNetwork;
 import smt.model.OrganizationPerson;
 import smt.model.QBehavior;
@@ -39,6 +41,7 @@ import smt.model.glb.PersonType;
 import smt.model.glb.Province;
 import smt.model.glb.SituationType;
 import smt.repository.AmphurRepo;
+import smt.repository.BehaviorImpactRepo;
 import smt.repository.BehaviorRepo;
 import smt.repository.DomainVariableRepo;
 import smt.repository.HealthZoneRepo;
@@ -68,6 +71,9 @@ public class EntityServiceJPA implements EntityService {
 	@Autowired
 	BehaviorRepo behaviorRepo; 
 
+	@Autowired
+	BehaviorImpactRepo behaviorImpactRepo;
+	
 	@Autowired
 	OrganizationPersonRepo organizationPersonRepo;
 	
@@ -341,6 +347,8 @@ public class EntityServiceJPA implements EntityService {
 		
 		BooleanBuilder p = new BooleanBuilder();
 		
+		p = p.and(q.type.eq(webModel.getType()));
+		
 		if(webModel.getDescription() != null && webModel.getDescription().trim().length() > 0) {
 			logger.debug("Searching description: %"+webModel.getDescription().trim()+"%");
 			p = p.and(q.description.like("%"+webModel.getDescription().trim()+"%"));
@@ -400,6 +408,8 @@ public class EntityServiceJPA implements EntityService {
 			dbModel.setCreateBy(user);
 			dbModel.setCreateDate(new Date());
 			
+			
+			
 		} else {
 			dbModel = behaviorRepo.findOne(webModel.getId());
 		}
@@ -410,28 +420,43 @@ public class EntityServiceJPA implements EntityService {
 		BeanUtils.copyProperties(webModel, dbModel, "impacts", "createBy", "createDate");
 		dbModel.setLastUpdateBy(user);
 		dbModel.setLastUpdateDate(new Date());
+		behaviorRepo.save(dbModel);
+		
+		
+		List<BehaviorImpact> oldImpacts = dbModel.getImpacts();
 		
 		dbModel.setImpacts(new ArrayList<BehaviorImpact>());
 		
-		behaviorRepo.save(dbModel);
+		
 		
 		// now deal with impacts
 		for(BehaviorImpact webImpact: webModel.getImpacts()) {
 			logger.debug("saving impact: " + webImpact.getDescription());
-			BehaviorImpact dbImpact = new BehaviorImpact();
-			BeanUtils.copyProperties(webImpact, dbImpact, "behavior");
 			
-			if(dbImpact.getId() == null) {
-				
+			BehaviorImpact dbImpact;
+			if(webImpact.getId() == null) {
+				dbImpact = new BehaviorImpact();
 				dbImpact.setCreateBy(user);
 				dbImpact.setCreateDate(new Date());
+			} else {
+				dbImpact = behaviorImpactRepo.findOne(webImpact.getId());
 			}
+			
+			BeanUtils.copyProperties(webImpact, dbImpact, "behavior", "createBy", "createDate");
 			
 			dbImpact.setLastUpdateBy(user);
 			dbImpact.setLastUpdateDate(new Date());
 			dbImpact.setBehavior(dbModel);
 			
+			if(oldImpacts!=null) {
+				oldImpacts.remove(dbImpact);
+			}
+			
 			dbModel.getImpacts().add(dbImpact);
+		}
+		
+		if(oldImpacts != null) {
+			behaviorImpactRepo.delete(oldImpacts);
 		}
 		
 		behaviorRepo.save(dbModel);

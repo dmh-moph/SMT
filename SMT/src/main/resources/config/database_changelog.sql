@@ -51,6 +51,19 @@ alter table smt_behavior
 	foreign key (ZONE_ID)
 	REFERENCES GLB_ZONE;
 
+	
+alter table smt_journal add (DV_JOURNAL_TYPE number, ZONE_ID number);
+alter table smt_journal
+	add constraint DV_JOURNAL_TYPE_FK
+	foreign key (DV_JOURNAL_TYPE)
+	REFERENCES GLB_VARIABLE;
+	
+alter table smt_journal
+	add constraint ZONE_BEHAVIOR_FK
+	foreign key (ZONE_ID)
+	REFERENCES GLB_ZONE;
+	
+alter table smt_journal drop column JOURNAL_TYPE;
   
   
 commit;

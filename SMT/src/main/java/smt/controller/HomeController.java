@@ -30,7 +30,17 @@ public class HomeController {
 	
 	@RequestMapping("/m03")
 	public String m03Handle(Model model) {
-		
+		model.addAttribute("behaviorType", "B");
+		model.addAttribute("title","m03: ข้อมูลด้านพฤติกรรมปัญหาของวัยรุ่น");
+		model.addAttribute("behaviorTypeTxt", "พฤติกรรมปัญหา");
+		return "m03";
+	}
+	
+	@RequestMapping("/m04")
+	public String m04Handle(Model model) {
+		model.addAttribute("behaviorType", "R");
+		model.addAttribute("title","m04: ข้อมูลด้านพฤติกรรมเสี่ยงของวัยรุ่น");
+		model.addAttribute("behaviorTypeTxt", "พฤติกรรมเสี่ยง");
 		return "m03";
 	}
 }

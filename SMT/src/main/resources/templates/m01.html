@@ -50,19 +50,19 @@
 <script type="text/javascript" src="../../static/pagejs/m01.js"
 			th:src="@{/static/pagejs/m01.js}"></script>
 
-<script id="defaultBreadCrumbTemplate" type="text/x-handlebars-template">
-<li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
+<script id="defaultBreadCrumbTemplate" type="text/x-handlebars-template" th:inline="text">
+<li><a href="[[@{/}]]"><i class="fa fa-home"></i> Home</a></li>
 <li id="rootBreadcrumb" class="active">m01: ข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น</li>
 </script>
 
-<script id="newFormBreadCrumbTemplate" type="text/x-handlebars-template">
-<li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
+<script id="newFormBreadCrumbTemplate" type="text/x-handlebars-template" th:inline="text">
+<li><a href="[[@{/}]]"><i class="fa fa-home"></i> Home</a></li>
 <li id="rootBreadcrumb"><a href="#">m01: ข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น</a></li>
 <li class="active">สร้างทะเบียนเครือข่ายใหม่</li>
 </script>
 
-<script id="editFormBreadCrumbTemplate" type="text/x-handlebars-template">
-<li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
+<script id="editFormBreadCrumbTemplate" type="text/x-handlebars-template" th:inline="text">
+<li><a href="[[@{/}]]"><i class="fa fa-home"></i> Home</a></li>
 <li id="rootBreadcrumb"><a href="#">m01: ข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น</a></li>
 <li class="active">แก้ไขเครือข่าย (#{{companyId}})</li>
 </script>			

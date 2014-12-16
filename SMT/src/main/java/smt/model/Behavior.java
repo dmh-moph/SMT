@@ -74,6 +74,10 @@ public class Behavior implements Serializable{
 	private HealthZone zone;
 	
 	@Enumerated(EnumType.STRING)
+	@Column(name="BEHAVIOR_TYPE")
+	private BehaviorType type;
+	
+	@Enumerated(EnumType.STRING)
 	@Column(name="SEX")
 	private Sex sex;
 	
@@ -328,6 +332,15 @@ public class Behavior implements Serializable{
 	public void setZone(HealthZone zone) {
 		this.zone = zone;
 	}
+
+	public BehaviorType getType() {
+		return type;
+	}
+
+	public void setType(BehaviorType type) {
+		this.type = type;
+	}
+	
 	
 	
 }

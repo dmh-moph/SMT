@@ -50,21 +50,21 @@
 <script type="text/javascript" src="../../static/pagejs/m03.js"
 			th:src="@{/static/pagejs/m03.js}"></script>
 
-<script id="defaultBreadCrumbTemplate" type="text/x-handlebars-template">
-<li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
-<li id="rootBreadcrumb" class="active">m03: ข้อมูลด้านพฤติกรรมปัญหาของวัยรุ่น</li>
+<script id="defaultBreadCrumbTemplate" type="text/x-handlebars-template" th:inline="text">
+<li><a href="[[@{/}]]"><i class="fa fa-home"></i> Home</a></li>
+<li id="rootBreadcrumb" class="active">[[${title}]]</li>
 </script>
 
-<script id="newFormBreadCrumbTemplate" type="text/x-handlebars-template">
+<script id="newFormBreadCrumbTemplate" type="text/x-handlebars-template" th:inline="text">
 <li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
-<li id="rootBreadcrumb"><a href="#">m03: ข้อมูลด้านพฤติกรรมปัญหาของวัยรุ่น</a></li>
-<li class="active">สร้างพฤติกรรมปัญหาใหม่</li>
+<li id="rootBreadcrumb"><a href="#">[[${title}]]</a></li>
+<li class="active">สร้าง[[${behaviorTypeTxt}]]ใหม่</li>
 </script>
 
-<script id="editFormBreadCrumbTemplate" type="text/x-handlebars-template">
+<script id="editFormBreadCrumbTemplate" type="text/x-handlebars-template" th:inline="text">
 <li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
-<li id="rootBreadcrumb"><a href="#">m03: ข้อมูลด้านพฤติกรรมปัญหาของวัยรุ่น</a></li>
-<li class="active">แก้ไขพฤติกรรมปัญหา(#{{companyId}})</li>
+<li id="rootBreadcrumb"><a href="#">[[${title}]]</a></li>
+<li class="active">แก้ไข[[${behaviorTypeTxt}]](#{{companyId}})</li>
 </script>			
 
 <script  id="provinceSltTemplate" type="text/x-handlebars-template">
@@ -179,7 +179,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "ชื่อพฤติกรรมปัญหา" "name" model.name}}
+					{{txtInput "full" nameTxt "name" model.name}}
 				</div>
 			</div>
 			<div class="row">
@@ -189,14 +189,21 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "สาเหตุของปัญหา" "cause" model.cause}}
+					{{txtInput "full" causeTxt "cause" model.cause}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "รายละเอียดของปัญหา" "description" model.description}}
+					{{txtInput "full" descTxt "description" model.description}}
 				</div>
 			</div>
+			{{#if symtomTxt}}
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" symptomTxt "symptom" model.symptom}}
+				</div>
+			</div>
+			{{/if}}
 			<div class="row">
 				<div class="col-md-12">
 					{{txtInput "full" "สถานที่เกิดของปัญหา" "place" model.place}}
@@ -259,10 +266,10 @@
 {{/each}}
 </script>
 
-<script  id="searchViewTemplate" type="text/x-handlebars-template">
+<script  id="searchViewTemplate" type="text/x-handlebars-template"  th:inline="text">
 <div class="panel panel-primary">
 <div class="panel-heading">
- 			<h4 class="panel-title">ค้นหาข้อมูลข้อมูลด้านพฤติการรมปัญหาของวัยรุ่น</h4>
+ 			<h4 class="panel-title">ค้นหาข้อมูลข้อมูลด้าน[[${behaviorTypeTxt}]]ของวัยรุ่น</h4>
 		</div>
 		<div class="panel-body">
 	<form class="form-horizontal" role="form" id="searchForm">
@@ -308,19 +315,19 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="form-group">
-				    <label for="inputEmail3" class="col-sm-2 control-label">ชื่อพฤติกรรมปัญหา</label>
+				    <label for="inputEmail3" class="col-sm-2 control-label">ชื่อ[[${behaviorTypeTxt}]]</label>
 				    <div class="col-sm-10">
 				      <input type="text" class="form-control formTxt" id="nameTxt" 
-							placeholder="ระบุชื่อพฤติกรรมที่ต้องการค้นหา..." data-field="name" value="{{searchModel.name}}"/>
+							placeholder="ระบุชื่อ[[${behaviorTypeTxt}]]ที่ต้องการค้นหา..." data-field="name" value="{{searchModel.name}}"/>
 				    </div>
 				</div>
 			</div>
 			<div class="col-md-12">
 				<div class="form-group">
-				    <label for="inputEmail3" class="col-sm-2 control-label">รายละเอียดพฤติกรรม</label>
+				    <label for="inputEmail3" class="col-sm-2 control-label">รายละเอียด[[${behaviorTypeTxt}]]</label>
 				    <div class="col-sm-10">
 				      <input type="text" class="form-control formTxt" id="descriptionTxt" 
-							placeholder="ระบุรายละเอียดพฤติกรรมที่ต้องการค้นหา..." data-field="description" value="{{searchModel.description}}"/>
+							placeholder="ระบุรายละเอียด[[${behaviorTypeTxt}]]ที่ต้องการค้นหา..." data-field="description" value="{{searchModel.description}}"/>
 				    </div>
 				</div>
 			</div>
@@ -328,7 +335,7 @@
 		<div class="row">
 			<div class="col-md-12" style="text-align: center;">
 					<button type="button" class="btn btn-default" id="newFormBtn">
-						<i class="fa fa-plus"></i> เพิ่มข้อมูลพฤติกรรม</button>
+						<i class="fa fa-plus"></i> เพิ่มข้อมูล[[${behaviorTypeTxt}]]</button>
 					<button type="button" class="btn btn-default" id="searchBtn">
 						<span class="glyphicon glyphicon-search"></span> ค้นหา</button>
 					<button type="button" class="btn btn-default" id="clearFormBtn">
@@ -340,7 +347,7 @@
 </div>
 </script>
 
-<script id="tableResultViewTemplate" type="text/x-handlebars-template">
+<script id="tableResultViewTemplate" type="text/x-handlebars-template" th:inline="text">
 <div class="panel panel-default">
 	<div class="panel-body">
 		<b>ผลการค้นหา</b>
@@ -349,8 +356,8 @@
 		<thead>
 			<tr>
 				<td style="width: 25px;text-align:center;"></td>
-				<td style="width: 200px;text-align:center;" class=""><b>ชื่อพฤติกรรมปัญหา</b></td>
-				<td style="width: 200px;text-align:center;" class=""><b>รายละเอียดพฤติกรรมปัญหา</b></td>
+				<td style="width: 200px;text-align:center;" class=""><b>ชื่อ[[${behaviorTypeTxt}]]</b></td>
+				<td style="width: 200px;text-align:center;" class=""><b>รายละเอียด[[${behaviorTypeTxt}]]</b></td>
 				<td style="width: 40px;text-align:center;" class=""><b>เขต</b></td>
 				<td style="width: 100px;text-align:center;" class=""><b>จังหวัด</b></td>
 			</tr>
@@ -391,6 +398,7 @@
 //<!--
 
 var appRouter;
+var behaviorType = [[${behaviorType}]]
 
 $( document ).ready(function() {
 	
