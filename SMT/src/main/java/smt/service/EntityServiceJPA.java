@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.crsh.shell.impl.command.system.help;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -12,13 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.types.expr.BooleanExpression;
 
@@ -26,25 +25,25 @@ import smt.auth.model.SecurityUser;
 import smt.auth.service.SecUserRepository;
 import smt.model.Behavior;
 import smt.model.BehaviorImpact;
-import smt.model.BehaviorType;
+import smt.model.Journal;
 import smt.model.OrganizationNetwork;
 import smt.model.OrganizationPerson;
 import smt.model.QBehavior;
+import smt.model.QJournal;
 import smt.model.QOrganizationNetwork;
 import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
-import smt.model.glb.EducationLevel;
 import smt.model.glb.HealthZone;
 import smt.model.glb.NetworkType;
 import smt.model.glb.OrgType;
 import smt.model.glb.PersonType;
 import smt.model.glb.Province;
-import smt.model.glb.SituationType;
 import smt.repository.AmphurRepo;
 import smt.repository.BehaviorImpactRepo;
 import smt.repository.BehaviorRepo;
 import smt.repository.DomainVariableRepo;
 import smt.repository.HealthZoneRepo;
+import smt.repository.JournalRepo;
 import smt.repository.NetworkTypeRepo;
 import smt.repository.OrgTypeRepo;
 import smt.repository.OrganizationNetworkRepo;
@@ -94,6 +93,9 @@ public class EntityServiceJPA implements EntityService {
 	
 	@Autowired
 	SecUserRepository secUserRepo;
+	
+	@Autowired
+	JournalRepo journalRepo;
 	
 	@Override
 	public List<Province> findAllProvince() {
@@ -473,6 +475,128 @@ public class EntityServiceJPA implements EntityService {
 		
 		if(behavior != null) {
 			behaviorRepo.delete(behavior);
+		}
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.data = id;
+		response.status = ResponseStatus.SUCCESS;
+		
+		return response;
+	}
+
+	@Override
+	public ResponseJSend<Page<Journal>> findJournalByExample(JsonNode node,
+			Integer pageNum) throws JsonMappingException {
+		logger.debug("findJournalByExample");
+		
+//		Long orgId = node.get("organization").get("id").asLong();
+//		OrganizationNetwork org = organizationNetworkRepo.findOne(orgId);
+		
+		ObjectNode object = (ObjectNode) node;
+		object.remove("organization");
+		Journal webModel;
+		
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+		
+		try {
+			webModel = mapper.treeToValue(object, Journal.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new JsonMappingException(e.getMessage() + "\n  JSON: " + node.toString());
+		}
+		
+		QJournal q = QJournal.journal;
+		
+		BooleanBuilder p = new BooleanBuilder();
+		
+		if(webModel.getJournalType() != null) {
+			logger.debug("Searching for Journal Type:  " + webModel.getJournalType());
+			p = p.and(q.journalType.eq(webModel.getJournalType()));
+		}
+		
+		if(webModel.getNameTh() != null) {
+			p = p.and(q.nameTh.like(""+webModel.getNameTh().trim()+""));
+		}
+		
+		if(webModel.getNameEn() != null) {
+			p = p.and(q.nameEn.like(""+webModel.getNameEn().trim()+""));
+		}
+		
+		
+		
+		PageRequest pageRequest =
+	            new PageRequest(pageNum -1, DefaultProperty.NUMBER_OF_ELEMENT_PER_PAGE, Sort.Direction.ASC, "nameTh");
+		
+		Page<Journal> journal = journalRepo.findAll(p, pageRequest); 
+		
+		ResponseJSend<Page<Journal>> response = new ResponseJSend<Page<Journal>>();
+		response.data=journal;
+		response.status=ResponseStatus.SUCCESS;
+		
+		return response;
+	}
+
+	@Override
+	public Journal findJournalById(Long id) {
+		return journalRepo.findOne(id);
+	}
+
+	@Override
+	public ResponseJSend<Long> saveJournal(JsonNode node, SecurityUser user) throws JsonMappingException {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+		Long orgId = node.get("organization").get("id").asLong();
+		OrganizationNetwork org = organizationNetworkRepo.findOne(orgId);
+		
+		
+		ObjectNode object = (ObjectNode) node;
+		object.remove("organization");
+		Journal webModel;
+		
+		try {
+			webModel = mapper.treeToValue(object, Journal.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new JsonMappingException(e.getMessage() + "\n  JSON: " + node.toString());
+		}
+		
+		Journal dbModel = null;
+				
+		if(webModel.getId() == null) {
+			dbModel = new Journal();
+			
+			dbModel.setCreateBy(user);
+			dbModel.setCreateDate(new Date());
+			
+			
+			
+		} else {
+			dbModel = journalRepo.findOne(webModel.getId());
+		}
+		
+		BeanUtils.copyProperties(webModel, dbModel, "createBy", "createDate");
+
+		dbModel.setOrganization(org);
+		dbModel.setLastUpdateBy(user);
+		dbModel.setLastUpdateDate(new Date());
+		journalRepo.save(dbModel);
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.status = ResponseStatus.SUCCESS;
+		response.data = dbModel.getId(); 
+		return response;
+		
+	}
+
+	@Override
+	public ResponseJSend<Long> deleteJournal(Long id) {
+		Journal journal = journalRepo.findOne(id);
+		
+		if(journal != null) {
+			journalRepo.delete(journal);
 		}
 		
 		ResponseJSend<Long> response = new ResponseJSend<Long>();

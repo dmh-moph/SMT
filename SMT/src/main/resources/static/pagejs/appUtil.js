@@ -23,7 +23,7 @@ Handlebars.registerHelper('formatNumber', function(number) {
 	return addCommas(number);
 });
 
-Handlebars.registerHelper('txtInput', function(size, label, field, defaultValue) {
+Handlebars.registerHelper('txtInput', function(size, label, field, defaultValue, readonly) {
 	
 	var aValue = "";
 	
@@ -41,11 +41,17 @@ Handlebars.registerHelper('txtInput', function(size, label, field, defaultValue)
 		mdTxt = 6;
 	}
 	
+	var readOnlyTxt = ""; 
+	
+	if(readonly == "readonly") {
+		readOnlyTxt = "readonly";
+	}
+	
 	var s = "" +
 			"<div class='form-group'> \n" +
 			"	<label for='"+ field+"Txt' class='col-md-"+mdLabel+" control-label'>"+label+"</label> \n" +
 			"	<div class='col-md-"+mdTxt+"'> \n" +
-			"		<input type='text' class='form-control formTxt' id='"+ field+"Txt' data-field='"+field+"' value='"+aValue+"'></input> \n" +
+			"		<input type='text' class='form-control formTxt' id='"+ field+"Txt' data-field='"+field+"' value='"+aValue+"' "+readOnlyTxt+"></input> \n" +
 			"	</div> \n" +
 			"</div>"; 
 	

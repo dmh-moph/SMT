@@ -43,4 +43,12 @@ public class HomeController {
 		model.addAttribute("behaviorTypeTxt", "พฤติกรรมเสี่ยง");
 		return "m03";
 	}
+	
+	@RequestMapping("/m05")
+	public String m05Handle(Model model) {
+		
+		model.addAttribute("title","m05: ข้อมูลทางวิชาการ");
+		model.addAttribute("typeTxt", "ข้อมูลวิชาการ");
+		return "m05";
+	}
 }

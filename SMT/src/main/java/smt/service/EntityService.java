@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import smt.auth.model.SecurityUser;
 import smt.model.Behavior;
+import smt.model.Journal;
 import smt.model.OrganizationNetwork;
 import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
@@ -49,5 +50,14 @@ public interface EntityService {
 	public ResponseJSend<Long> saveBehavior(JsonNode node, SecurityUser user) throws JsonMappingException;
 
 	public ResponseJSend<Long> deleteBehavior(Long id);
+
+	public ResponseJSend<Page<Journal>> findJournalByExample(JsonNode node,
+			Integer pageNum) throws JsonMappingException;
+
+	public Journal findJournalById(Long id);
+
+	public ResponseJSend<Long> saveJournal(JsonNode node, SecurityUser user) throws JsonMappingException;
+
+	public ResponseJSend<Long> deleteJournal(Long id);
 
 }

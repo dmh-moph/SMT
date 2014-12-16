@@ -16,9 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import smt.auth.model.SecurityUser;
-import smt.model.glb.HealthZone;
 import smt.model.glb.JournalType;
-import smt.model.glb.Province;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -58,12 +56,8 @@ public class Journal implements Serializable{
 	private String nameEn;
 	
 	@ManyToOne
-	@JoinColumn(name="PROVINCE_ID")
-	private Province province;
-	
-	@ManyToOne
-	@JoinColumn(name="ZONE_ID")
-	private HealthZone zone;
+	@JoinColumn(name="ORGANIZATION_ID")
+	OrganizationNetwork organization;
 	
 	@Basic
 	@Column(name="AUTHOR")
@@ -82,7 +76,7 @@ public class Journal implements Serializable{
 	private String keyword;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="PUBLISED_DATE")
+	@Column(name="PUBLISHED_DATE")
 	private Date publishDate;
 	
 	@Basic
@@ -106,7 +100,7 @@ public class Journal implements Serializable{
 	private String website;
 	
 	@Basic
-	@Column(name="REFERNECE")
+	@Column(name="REFERENCE")
 	private String reference;
 	
 	@ManyToOne
@@ -157,20 +151,12 @@ public class Journal implements Serializable{
 		this.nameEn = nameEn;
 	}
 
-	public Province getProvince() {
-		return province;
+		public OrganizationNetwork getOrganization() {
+		return organization;
 	}
 
-	public void setProvince(Province province) {
-		this.province = province;
-	}
-
-	public HealthZone getZone() {
-		return zone;
-	}
-
-	public void setZone(HealthZone zone) {
-		this.zone = zone;
+	public void setOrganization(OrganizationNetwork organization) {
+		this.organization = organization;
 	}
 
 	public String getAuthor() {

@@ -36,6 +36,10 @@ Backbone.PageCollection = Backbone.Collection.extend({
 
 smt.Model.DomainVariable = Backbone.RelationalModel.extend();
 
+smt.Model.DV_EducationLevel = Backbone.RelationalModel.extend({
+});
+smt.Model.DV_JournalType = Backbone.RelationalModel.extend({
+});
 smt.Model.DV_NetworkType = Backbone.RelationalModel.extend({
 });
 smt.Model.DV_OrgType = Backbone.RelationalModel.extend({
@@ -96,6 +100,23 @@ smt.Model.OrganizationNetwork = Backbone.RelationalModel.extend({
 		relatedModel: 'smt.Model.OrganizationPerson'
 	}],
 	urlRoot: appUrl('OrganizationNetwork')
+});
+
+smt.Model.Journal = Backbone.RelationalModel.extend({
+	relations: [{
+		type: Backbone.HasOne,
+		key: 'journalType',
+		relatedModel: 'smt.Model.DV_JournalType'
+	},{
+		type: Backbone.HasOne,
+		key: 'organization',
+		relatedModel: 'smt.Model.OrganizationNetwork'
+	}],
+	urlRoot: appUrl('Journal')
+});
+smt.Page.Journals = Backbone.PageCollection.extend({
+	model: smt.Model.Journal,
+	url: appUrl('Journal/search')
 });
 
 smt.Model.Behavior = Backbone.RelationalModel.extend({
@@ -168,6 +189,10 @@ smt.Collection.Amphurs = Backbone.Collection.extend({
 smt.Collection.NetworkTypes = Backbone.Collection.extend({
 	model: smt.Model.DV_NetworkType,
 	url: appUrl('DomainVariable/NETWORK_TYPE')
+});
+smt.Collection.JournalTypes = Backbone.Collection.extend({
+	model: smt.Model.DV_JournalType,
+	url: appUrl('DomainVariable/JOURNAL_TYPE')
 });
 
 smt.Collection.OrgTypes = Backbone.Collection.extend({

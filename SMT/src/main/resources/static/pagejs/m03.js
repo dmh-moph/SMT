@@ -244,22 +244,25 @@ var TableResultView = Backbone.View.extend({
 	},
 	
 	render: function() {
-		this.searchModel.set('type', behaviorType);
+		if(this.searchModel != null) {
 		
-		this.searchResults.fetch({
-			url: appUrl('Behavior/search/page/' + this.pageNum),
-    		type: 'POST',
-    		data: JSON.stringify(this.searchModel.toJSON()),
-    		dataType: 'json',
-    		contentType: 'application/json',
-    		success: _.bind(function(collection, response, options) {
-    			
-				var json = {};
-				json.page = this.searchResults.page;
-				json.content = this.searchResults.toJSON();
-				this.$el.html(this.tableResultViewTemplate(json));
-    		}, this)
-    	});
+			this.searchModel.set('type', behaviorType);
+			
+			this.searchResults.fetch({
+				url: appUrl('Behavior/search/page/' + this.pageNum),
+	    		type: 'POST',
+	    		data: JSON.stringify(this.searchModel.toJSON()),
+	    		dataType: 'json',
+	    		contentType: 'application/json',
+	    		success: _.bind(function(collection, response, options) {
+	    			
+					var json = {};
+					json.page = this.searchResults.page;
+					json.content = this.searchResults.toJSON();
+					this.$el.html(this.tableResultViewTemplate(json));
+	    		}, this)
+	    	});
+		}
 		return this;
 	}
 });
