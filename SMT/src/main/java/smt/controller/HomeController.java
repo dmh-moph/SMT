@@ -31,7 +31,7 @@ public class HomeController {
 	@RequestMapping("/m03")
 	public String m03Handle(Model model) {
 		model.addAttribute("behaviorType", "B");
-		model.addAttribute("title","m03: ข้อมูลด้านพฤติกรรมปัญหาของวัยรุ่น");
+		model.addAttribute("title","m03: ข้อมูลด้านพฤติกรรมปัญหาวัยรุ่น");
 		model.addAttribute("behaviorTypeTxt", "พฤติกรรมปัญหา");
 		return "m03";
 	}
@@ -39,16 +39,16 @@ public class HomeController {
 	@RequestMapping("/m04")
 	public String m04Handle(Model model) {
 		model.addAttribute("behaviorType", "R");
-		model.addAttribute("title","m04: ข้อมูลด้านพฤติกรรมเสี่ยงของวัยรุ่น");
+		model.addAttribute("title","m04: ข้อมูลด้านพฤติกรรมเสี่ยงวัยรุ่น");
 		model.addAttribute("behaviorTypeTxt", "พฤติกรรมเสี่ยง");
 		return "m03";
 	}
 	
-	@RequestMapping("/m05")
+	@RequestMapping("/m02")
 	public String m05Handle(Model model) {
 		
-		model.addAttribute("title","m05: ข้อมูลทางวิชาการ");
+		model.addAttribute("title","m02: ข้อมูลทางวิชาการ");
 		model.addAttribute("typeTxt", "ข้อมูลวิชาการ");
-		return "m05";
+		return "m02";
 	}
 }
