@@ -22,10 +22,10 @@ public class HomeController {
 		return "home";
 	}
 	
-	@RequestMapping("/m01")
+	@RequestMapping("/m06")
 	public String m01Handle(Model model) {
-		
-		return "m01";
+		model.addAttribute("title","m06: : ข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น");
+		return "m06";
 	}
 	
 	@RequestMapping("/m03")
