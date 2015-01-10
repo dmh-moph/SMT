@@ -161,12 +161,14 @@ public class EntityServiceJPA implements EntityService {
 		// now copy properties to model
 		model.setAddress(node.get("address").asText());
 		model.setOrgName(node.get("orgName").asText());
-		model.setOrgCode1(node.get("orgCode1").asText());
-		model.setOrgCode2(node.get("orgCode2").asText());
-		model.setContactPerson(node.get("contactPerson").asText());
-		model.setTelephone(node.get("telephone").asText());
-		model.setEmail(node.get("email").asText());
-		model.setWebsite(node.get("website").asText());
+		
+		model.setOrgCode1(node.path("orgCode1").asText());
+		model.setOrgCode2(node.path("orgCode2").asText());
+		model.setContactPerson(node.path("contactPerson").asText());
+		model.setTelephone(node.path("telephone").asText());
+		model.setEmail(node.path("email").asText());
+		model.setWebsite(node.path("website").asText());
+		model.setTeenFriendly(node.path("teenFriendly").asBoolean());
 		
 
 		// now the SLT

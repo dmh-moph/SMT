@@ -162,7 +162,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-6">
-					{{txtInput "half" "ชื่อหน่วยงาน" "orgName" this.model.orgName}}
+					{{txtInput "half" "ชื่อหน่วยงาน" "orgName" this.model.orgName  "readwrite" "required"}}
 				</div>
 				<div class="col-md-6">
 					<div class="form-group">
@@ -187,7 +187,20 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "สถานที่ตั้ง" "address" this.model.address}}					
+					{{txtInput "full" "สถานที่ตั้ง" "address" this.model.address  "readwrite" "required"}}					
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+				<div class="form-group">
+    				<div class="col-md-offset-2 col-md-10">
+      					<div class="checkbox">
+        					<label>
+          						<input type="checkbox" id="teenFriendly" {{#if this.model.teenFriendly}}checked=true{{/if}}> รพ.ที่ผ่านเกณฑ์คลินิกบริการที่เป็นมิตรกับวัยรุ่น
+        					</label>
+      					</div>
+    				</div>
+  				</div>
 				</div>
 			</div>
 			<div class="row">
@@ -377,6 +390,7 @@
 				<td style="text-align:center;"><b>ชื่อหน่วยงาน</b></td>
 				<td style="width: 60px;text-align:center;" class=""><b>เขต</b></td>
 				<td style="width: 100px;text-align:center;" class=""><b>จังหวัด</b></td>
+				<td style="width: 150px;text-align:center;" class=""><b>ผ่านเกณฑ์คลินิกบริการ<br/>ที่เป็นมิตรกับวัยรุ่น </b></td>
 			</tr>
 		</thead>
 		<tbody>
@@ -390,6 +404,7 @@
 				<td>{{orgName}}</td>
 				<td style="text-align:center;">{{zone.code}}</td>
 				<td style="text-align:center;">{{province.name}}</td>
+				<td style="text-align:center;font-size:14px;color:green">{{#if teenFriendly}}<i class="fa fa-check-square"> </i>{{/if}}</td>
 			</tr>
 			{{/each}}
 		</tbody>

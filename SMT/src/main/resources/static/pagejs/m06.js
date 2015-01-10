@@ -303,7 +303,10 @@ var FormView = Backbone.View.extend({
 		
 		// we'll validate 
 		this.$el.find('.formTxt').each(function(index, el){
-			if($(el).val() == null ||  $(el).val().length == 0) {
+			var id = $(el)
+			
+			if( ($(el).val() == null ||  $(el).val().length == 0) && 
+					$(el).attr('required') != null)	{
 				$(el).parents('.form-group').addClass('has-error has-feedback');
 				$(el).parent().after('<span class="fa fa-question-circle form-control-feedback"></span>');
 				
@@ -327,6 +330,8 @@ var FormView = Backbone.View.extend({
 			return false;
 		}
 		
+		this.model.set('teenFriendly', $('input#teenFriendly').is(':checked'));
+		
 		this.model.save(null, {
 			success:_.bind(function(model, response, options) {
 				if(response.status != 'SUCCESS') {
@@ -336,6 +341,7 @@ var FormView = Backbone.View.extend({
 				alert("บันทึกข้อมูลแล้ว");
 		},this)});
 	},
+	
 	onClickBackBtn: function(e) {
 		appRouter.navigate("search", {trigger: true});
 	},

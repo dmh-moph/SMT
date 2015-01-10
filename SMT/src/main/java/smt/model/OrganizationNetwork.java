@@ -92,6 +92,10 @@ public class OrganizationNetwork implements Serializable {
 	@Basic
 	@Column(name="ADDRESS")
 	private String address;
+	
+	@Basic
+	@Column(name="TEENFRIENDLY")
+	private Boolean teenFriendly;
 
 	@Basic
 	@Column(name="TELEPHONE")
@@ -287,5 +291,14 @@ public class OrganizationNetwork implements Serializable {
 			this.medicalStaffs.addAll(medicalStaffs);
 		}
 	}
+
+	public Boolean getTeenFriendly() {
+		return teenFriendly;
+	}
+
+	public void setTeenFriendly(Boolean teenFriendly) {
+		this.teenFriendly = teenFriendly;
+	}
+	
 	
 }

@@ -68,5 +68,7 @@ alter table smt_research
 		
 alter table smt_research drop column RESEARCH_TYPE;
   
+alter table SMT_ORGANIZATION_NETWORK add (
+  TEENFRIENDLY NUMBER(1));
   
 commit;
