@@ -303,7 +303,8 @@ var FormView = Backbone.View.extend({
 		
 		// we'll validate 
 		this.$el.find('.formTxt').each(function(index, el){
-			if($(el).val() == null ||  $(el).val().length == 0) {
+			if( ($(el).val() == null ||  $(el).val().length == 0) && 
+					$(el).attr('required') != null)	{
 				$(el).parents('.form-group').addClass('has-error has-feedback');
 				$(el).parent().after('<span class="fa fa-question-circle form-control-feedback"></span>');
 				

@@ -47,8 +47,8 @@
 	
 <div layout:fragment="pageScript">
 	
-<script type="text/javascript" src="../../static/pagejs/m03.js"
-			th:src="@{/static/pagejs/m03.js}"></script>
+<script type="text/javascript" src="../../static/pagejs/m0304.js"
+			th:src="@{/static/pagejs/m0304.js}"></script>
 
 <script id="defaultBreadCrumbTemplate" type="text/x-handlebars-template" th:inline="text">
 <li><a href="[[@{/}]]"><i class="fa fa-home"></i> Home</a></li>
@@ -103,7 +103,7 @@
 		<div class="panel-body">
 			<div class="row">
 				<div class="col-md-6">
-					{{txtInput "half" "ข้อมูลของปี" "year" model.year}}
+					{{txtInput "half" "ข้อมูลของปี" "year" model.year "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
@@ -171,42 +171,42 @@
 					</div>
 				</div>
 				<div class="col-md-4">
-					{{txtInput "quarter" "ช่วงอายุ ตั้งแต่" "startAge" model.startAge}}
+					{{txtInput "quarter" "ช่วงอายุ ตั้งแต่" "startAge" model.startAge "readwrite" "required"}}
 				</div>
 				<div class="col-md-4">
-					{{txtInput "quarter" "ถึง" "endAge" model.endAge}}
+					{{txtInput "quarter" "ถึง" "endAge" model.endAge "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" nameTxt "name" model.name}}
+					{{txtInput "full" nameTxt "name" model.name "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "ปัจจัยเสี่ยง" "riskFactor" model.riskFactor}}
+					{{txtInput "full" "ปัจจัยเสี่ยง" "riskFactor" model.riskFactor "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" causeTxt "cause" model.cause}}
+					{{txtInput "full" causeTxt "cause" model.cause "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" descTxt "description" model.description}}
+					{{txtInput "full" descTxt "description" model.description "readwrite" "required"}}
 				</div>
 			</div>
 			{{#if symtomTxt}}
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" symptomTxt "symptom" model.symptom}}
+					{{txtInput "full" symptomTxt "symptom" model.symptom "readwrite" "required"}}
 				</div>
 			</div>
 			{{/if}}
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "สถานที่เกิดของปัญหา" "place" model.place}}
+					{{txtInput "full" "สถานที่เกิดของปัญหา" "place" model.place "readwrite" "required"}}
 				</div>
 			</div>
 			
@@ -241,7 +241,17 @@
 						</div>
 					</div>
 				</div>
-			</div>			
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "แนวทางและมาตรการป้องกัน" "preventiveGuideline" model.preventiveGuideline "readwrite" "require"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "แหล่งขอ้มูลเอกสารอ้างอิง" "reference" this.model.reference "readwrite" "required"}}
+				</div>
+			</div>
 		</div>
 		<div class="panel-footer">
 			<button id="backBtn" type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i> กลับหน้าเดิม</button>

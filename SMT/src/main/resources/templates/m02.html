@@ -173,55 +173,42 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "ชื่อผลงานทางวิชาการ(ภาษาไทย)" "nameTh" model.nameTh}}
+					{{txtInput "full" "ชื่อผลงานทางวิชาการ(ภาษาไทย)" "nameTh" model.nameTh "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "ชื่อผลงานทางวิชาการ(ภาษาอังกฤษ)" "nameEn" model.nameEn}}
+					{{txtInput "full" "ชื่อผลงานทางวิชาการ(ภาษาอังกฤษ)" "nameEn" model.nameEn "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "ชื่อผู้เขียน/เรียบเรียง" "author" model.author}}
+					{{txtInput "full" "เจ้าของผลงาน/ผู้เขียน" "author" model.author "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "วัตถุประสงค์" "objective" model.objective}}
+					{{txtInput "full" "วัตถุประสงค์" "objective" model.objective "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "เนื้อหาโดยสรุป" "summaryContent" model.summaryContent}}
+					{{txtInput "full" "เนื้อหาโดยสรุป" "summaryContent" model.summaryContent  "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "คำสำคัญ" "keyword" model.keyword}}
+					{{txtInput "full" "คำสำคัญ" "keyword" model.keyword "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "ผลิต/เผยแพร่เมื่อวันที่" "publishDate" model.publishDate}}
+					{{txtInput "full" "ผลิต/เผยแพร่เมื่อวันที่" "publishDate" model.publishDate  "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row" style="margin-bottom: 8px">
 				<div class="col-md-12">
 					<button id="newOrgBtn" type="button" class="btn btn-primary btn-xs"><i class="fa fa-plus-circle"></i> แก้ไขหน่วยงาน</button>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					{{txtInput "full" "หน่วยงาน" "orgName" model.organization.orgName "readonly"}}
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-6">
-					{{txtInput "half" "เขตบริการสุขภาพ" "zone" model.organization.zone.name "readonly"}}
-				</div>
-				<div class="col-md-6">
-					{{txtInput "half" "จังหวัด" "province" model.organization.province.name "readonly"}}
 				</div>
 			</div>
 			<div class="row">
@@ -233,27 +220,32 @@
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-md-12">
-									{{txtInput "full" "ชื่อผู้ประสานงาน" "contactPerson" this.model.contactPerson}}
+									{{txtInput "full" "ชื่อผู้ประสานงาน" "contactPerson" this.model.contactPerson  "readwrite" "required"}}
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									{{txtInput "half" "สถานที่ตั้ง" "address" this.model.address}}
+									{{txtInput "half" "ชื่อหน่วยงาน" "address" this.model.address "readwrite" "required"}}
 								</div>
 								<div class="col-md-6">
-									{{txtInput "half" "เบอร์โทรศัพท์" "telephone" this.model.telephone}}
+									{{txtInput "half" "เบอร์โทรศัพท์" "telephone" this.model.telephone "readwrite" "required"}}
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									{{txtInput "half" "อีเมล์" "email" this.model.email}}
+									{{txtInput "half" "อีเมล์" "email" this.model.email "readwrite" "required"}}
 								</div>
 								<div class="col-md-6">
-									{{txtInput "half" "เว็บไซต์" "website" this.model.website}}
+									{{txtInput "half" "เว็บไซต์" "website" this.model.website "readwrite" "required"}}
 								</div>
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "แหล่งขอ้มูลเอกสารอ้างอิง" "reference" this.model.reference "readwrite" "required"}}
 				</div>
 			</div>
 		</div>

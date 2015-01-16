@@ -33,7 +33,7 @@ public class HomeController {
 		model.addAttribute("behaviorType", "B");
 		model.addAttribute("title","m03: ข้อมูลด้านพฤติกรรมปัญหาวัยรุ่น");
 		model.addAttribute("behaviorTypeTxt", "พฤติกรรมปัญหา");
-		return "m03";
+		return "m0304";
 	}
 	
 	@RequestMapping("/m04")
@@ -41,7 +41,7 @@ public class HomeController {
 		model.addAttribute("behaviorType", "R");
 		model.addAttribute("title","m04: ข้อมูลด้านพฤติกรรมเสี่ยงวัยรุ่น");
 		model.addAttribute("behaviorTypeTxt", "พฤติกรรมเสี่ยง");
-		return "m03";
+		return "m0304";
 	}
 	
 	@RequestMapping("/m02")
