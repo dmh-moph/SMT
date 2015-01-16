@@ -25,9 +25,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @SequenceGenerator(name="SMT_RESEARCH_SEQ", sequenceName="SMT_RESEARCH_SEQ", allocationSize=1)
 @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope=Research.class)
 public class Research implements Serializable{
-
-	
-
 	/**
 	 * 
 	 */
@@ -59,7 +56,7 @@ public class Research implements Serializable{
 	
 	@ManyToOne
 	@JoinColumn(name="ORGANIZATION_ID")
-	OrganizationNetwork organization;
+	private OrganizationNetwork organization;
 	
 	@Basic
 	@Column(name="RESEARCHER")
@@ -119,20 +116,8 @@ public class Research implements Serializable{
 	private String address;
 
 	@Basic
-	@Column(name="TELEPHONE")
-	private String telephone;
-	
-	@Basic
-	@Column(name="CONTACT_PERSON")
-	private String contactPerson;
-	
-	@Basic
 	@Column(name="EMAIL")
 	private String email;
-	
-	@Basic
-	@Column(name="WEBSITE")
-	private String website;
 	
 	@Basic
 	@Column(name="REFERENCE")
@@ -218,36 +203,12 @@ public class Research implements Serializable{
 		this.address = address;
 	}
 
-	public String getTelephone() {
-		return telephone;
-	}
-
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
-
-	public String getContactPerson() {
-		return contactPerson;
-	}
-
-	public void setContactPerson(String contactPerson) {
-		this.contactPerson = contactPerson;
-	}
-
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getWebsite() {
-		return website;
-	}
-
-	public void setWebsite(String website) {
-		this.website = website;
 	}
 
 	public String getReference() {

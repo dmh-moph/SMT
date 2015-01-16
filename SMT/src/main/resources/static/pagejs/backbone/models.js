@@ -131,7 +131,7 @@ smt.Model.Research = Backbone.RelationalModel.extend({
 	}],
 	urlRoot: appUrl('Research')
 });
-smt.Page.Researchs = Backbone.PageCollection.extend({
+smt.Page.Researches = Backbone.PageCollection.extend({
 	model: smt.Model.Research,
 	url: appUrl('Research/search')
 });

@@ -23,7 +23,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/m06")
-	public String m01Handle(Model model) {
+	public String m06Handle(Model model) {
 		model.addAttribute("title","m06: : ข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น");
 		return "m06";
 	}
@@ -45,10 +45,18 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/m02")
-	public String m05Handle(Model model) {
+	public String m02Handle(Model model) {
 		
 		model.addAttribute("title","m02: ข้อมูลทางวิชาการ");
 		model.addAttribute("typeTxt", "ข้อมูลวิชาการ");
 		return "m02";
+	}
+	
+	@RequestMapping("/m05")
+	public String m05Handle(Model model) {
+		
+		model.addAttribute("title","m05: ข้อมูลงานวิจัยและการสำรวจเฝ้าระวังปัญหาวัยรุ่น");
+		model.addAttribute("typeTxt", "ข้อมูลงานวิจัยและการสำรวจเฝ้าระวังปัญหาวัยรุ่น");
+		return "m05";
 	}
 }

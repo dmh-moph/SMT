@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
+<head>
+	<meta charset="utf-8" />
+	
+</head>
+<body>
+	<div layout:fragment="content">
+		<ol id="breadcrumb" class="breadcrumb">
+		</ol>
+		
+		<div id="mainContent">
+			<div id="searchView">
+			</div>
+			
+			<div class="row" id="tableResultView">
+
+			</div>
+			<div class="row" id="formView">
+		
+			</div>
+		</div>
+		
+		<div id="organizationModal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<span style="font-weight: bold;"></span>
+				</div>
+				<div class="modal-body">
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" id="impactModalCloseBtn"><i class="fa fa-times"></i>
+					ปิดหน้าต่าง</button>
+				</div>
+				</div>
+			</div>
+		</div>		
+	</div>
+	
+<div layout:fragment="pageScript">
+	
+<script type="text/javascript" src="../../static/pagejs/m02.js"
+			th:src="@{/static/pagejs/m02.js}"></script>
+
+<script id="defaultBreadCrumbTemplate" type="text/x-handlebars-template" th:inline="text">
+<li><a href="[[@{/}]]"><i class="fa fa-home"></i> Home</a></li>
+<li id="rootBreadcrumb" class="active">[[${title}]]</li>
+</script>
+
+<script id="newFormBreadCrumbTemplate" type="text/x-handlebars-template" th:inline="text">
+<li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
+<li id="rootBreadcrumb"><a href="#">[[${title}]]</a></li>
+<li class="active">สร้าง[[${typeTxt}]]ใหม่</li>
+</script>
+
+<script id="editFormBreadCrumbTemplate" type="text/x-handlebars-template" th:inline="text">
+<li><a href="#" th:href="@{/}"><i class="fa fa-home"></i> Home</a></li>
+<li id="rootBreadcrumb"><a href="#">[[${title}]]</a></li>
+<li class="active">แก้ไข[[${typeTxt}]](#{{companyId}})</li>
+</script>			
+
+<script  id="provinceSltTemplate" type="text/x-handlebars-template">
+<option value="0">กรุณาเลือกจังหวัด</option>
+{{#each this}}
+	<option value="{{id}}">{{name}}</option>
+{{/each}}
+</script>
+
+<script  id="amphurSltTemplate" type="text/x-handlebars-template">
+<option value="0">กรุณาเลือกอำเภอ</option>
+{{#each this}}
+	<option value="{{id}}">{{name}}</option>
+{{/each}}
+</script>
+
+
+
+<script  id="organizationModalBodyTemplate" type="text/x-handlebars-template">
+<form class="form-inline" role="form">
+<div class="row">
+	<div class="col-md-12">
+		<div class="form-group">
+    		<div class="input-group">
+    		  	<div class="input-group-addon">ชื่อหน่วยงาน</div>
+      				<input type="text"  style="width:600px;" class="form-control" id="orgNameTxt" placeholder="ระบุคำค้นหา">
+    		</div>
+  		</div>
+	 	<button type="submit" id="searchBtn" class="btn btn-default">ค้นหา</button>
+	</div>
+</div>
+</form>
+</div>
+<div class="row">
+	<div class="col-md-12" id="organizationTableResultDiv">
+		
+	</div>
+</div>
+</script>
+<script id="organizationTableResultTemplate" type="text/x-handlebars-template">
+<div class="panel panel-default" style="margin-top: 8px;">
+	<div class="panel-body">
+		<b>ผลการค้นหา</b>
+	</div>
+	<table class="table table-bordered table-hover">
+		<thead>
+			<tr>
+				<td style="width: 65px;text-align:center;"></td>
+				<td style="width: 120px;text-align:center;" class=""><b>ประเภทเครือข่าย</b></td>
+				<td style="width: 120px;text-align:center;" class=""><b>ประเภทหน่วยงาน</b></td>
+				<td style="text-align:center;"><b>ชื่อหน่วยงาน</b></td>
+				<td style="width: 60px;text-align:center;" class=""><b>เขต</b></td>
+				<td style="width: 100px;text-align:center;" class=""><b>จังหวัด</b></td>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each content}}
+			<tr data-id="{{id}}">
+				<td> <button type="button" class="btn btn-info btn-xs chooseOrganizationNetworkBtn"><i class="fa fa-check"> </i></button>
+				</td>
+				<td style="text-align:center;">{{networkType.description}}</td>
+				<td style="text-align:center;">{{orgType.description}}</a></td>
+				<td>{{orgName}}</td>
+				<td style="text-align:center;">{{zone.code}}</td>
+				<td style="text-align:center;">{{province.name}}</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+	<form class="form-inline">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-md-6">
+				1-15 จาก {{page.totalElements}} รายการ  
+			</div>
+			<div class="col-md-6" style="text-align: right;">
+				{{#unless page.firstPage}}<button class="btn btn-default btn-sm companyPageNav" data-targetPage="{{page.prevPage}}" type="button"><i class="fa fa-chevron-left"></i></button>{{/unless}}
+				หน้าที่ <input class="form-control input-sm" size="2" type="text" id="companyPageTxt" value="{{page.pageNumber}}"></input> จาก {{page.totalPages}} หน้า
+				{{#unless page.lastPage}}<button class="btn btn-default btn-sm companyPageNav" data-targetPage="{{page.nextPage}}" type="button"><i class="fa fa-chevron-right"></i></button>{{/unless}}
+			</div>
+		</div>
+	</div>
+	</form>
+</div>
+</script>
+
+<script  id="formViewTemplate" type="text/x-handlebars-template">
+<div class="col-md-12">
+	<form class="form-horizontal" role="form">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<b><i class="fa fa-pencil-square-o"></i> กรุณาระบุข้อมูลด้านล่างให้ครบถ้วน</b>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-4 control-label">ประเภทข้อมูลทางวิชาการ</label>
+					    <div class="col-md-8">
+							<select class="form-control formSlt" id="journalTypesSlt" data-field="journalType">
+								{{#each this.journalTypes}}
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
+								{{/each}}
+							</select>				      
+					    </div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "ชื่อผลงานทางวิชาการ(ภาษาไทย)" "nameTh" model.nameTh "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "ชื่อผลงานทางวิชาการ(ภาษาอังกฤษ)" "nameEn" model.nameEn "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "เจ้าของผลงาน/ผู้เขียน" "author" model.author "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "วัตถุประสงค์" "objective" model.objective "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "เนื้อหาโดยสรุป" "summaryContent" model.summaryContent  "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "คำสำคัญ" "keyword" model.keyword "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "ผลิต/เผยแพร่เมื่อวันที่" "publishDate" model.publishDate  "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row" style="margin-bottom: 8px">
+				<div class="col-md-12">
+					<button id="newOrgBtn" type="button" class="btn btn-primary btn-xs"><i class="fa fa-plus-circle"></i> แก้ไขหน่วยงาน</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<b><i class="fa fa-pencil-square-o"></i> ข้อมูลเพื่อการติดต่อ</b>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+									{{txtInput "full" "ชื่อผู้ประสานงาน" "contactPerson" this.model.contactPerson  "readwrite" "required"}}
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									{{txtInput "half" "ชื่อหน่วยงาน" "address" this.model.address "readwrite" "required"}}
+								</div>
+								<div class="col-md-6">
+									{{txtInput "half" "เบอร์โทรศัพท์" "telephone" this.model.telephone "readwrite" "required"}}
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									{{txtInput "half" "อีเมล์" "email" this.model.email "readwrite" "required"}}
+								</div>
+								<div class="col-md-6">
+									{{txtInput "half" "เว็บไซต์" "website" this.model.website "readwrite" "required"}}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "แหล่งขอ้มูลเอกสารอ้างอิง" "reference" this.model.reference "readwrite" "required"}}
+				</div>
+			</div>
+		</div>
+		<div class="panel-footer">
+			<button id="backBtn" type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i> กลับหน้าเดิม</button>
+			<button id="saveFormBtn" type="button" class="btn btn-default"><i class="fa fa-floppy-o"></i> บันทึกข้อมูล</button>
+			<button id="clearFormBtn" type="button" class="btn btn-default"><i class="fa fa-times-circle"></i> ล้างข้อมูล</button>
+		</div>
+	</div>
+	</form>
+</div>
+</script>
+
+<script  id="searchViewTemplate" type="text/x-handlebars-template"  th:inline="text">
+<div class="panel panel-primary">
+<div class="panel-heading">
+ 			<h4 class="panel-title">ค้นหา[[${typeTxt}]]</h4>
+		</div>
+		<div class="panel-body">
+	<form class="form-horizontal" role="form" id="searchForm">
+		
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+				    <label for="inputEmail3" class="col-sm-2 control-label">ชื่อ[[${typeTxt}]] (ภาษาไทย)</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control formTxt" id="nameThTxt" 
+							placeholder="ระบุชื่อ[[${typeTxt}]]ที่ต้องการค้นหา (ภาษาไทย)..." data-field="nameTh" value="{{searchModel.nameTh}}"/>
+				    </div>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="form-group">
+				    <label for="inputEmail3" class="col-sm-2 control-label">ชื่อ[[${typeTxt}]] (ภาษาอังกฤษ)</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control formTxt" id="nameEnTxt" 
+							placeholder="ระบุชื่อ[[${typeTxt}]]ที่ต้องการค้นหา (ภาษาอังกฤษ)..." data-field="nameEn" value="{{searchModel.nameEn}}"/>
+				    </div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12" style="text-align: center;">
+					<button type="button" class="btn btn-default" id="newFormBtn">
+						<i class="fa fa-plus"></i> เพิ่มข้อมูล[[${typeTxt}]]</button>
+					<button type="button" class="btn btn-default" id="searchBtn">
+						<span class="glyphicon glyphicon-search"></span> ค้นหา</button>
+					<button type="button" class="btn btn-default" id="clearFormBtn">
+						<i class="fa fa-times-circle"></i> ล้างข้อมูลค้นหา</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</script>
+
+<script id="tableResultViewTemplate" type="text/x-handlebars-template" th:inline="text">
+<div class="panel panel-default">
+	<div class="panel-body">
+		<b>ผลการค้นหา</b>
+	</div>
+	<table class="table table-bordered table-hover">
+		<thead>
+			<tr>
+				<td style="width: 25px;text-align:center;"></td>
+				<td style="width: 200px;text-align:center;" class=""><b>ชื่อ[[${typeTxt}]] (ภาษาไทย)</b></td>
+				<td style="width: 200px;text-align:center;" class=""><b>ชื่อ[[${typeTxt}]] (ภาษาอังกฤษ)</b></td>
+				<td style="width: 100px;text-align:center;" class=""><b>หน่วยงาน</b></td>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each content}}
+			<tr data-id="{{id}}">
+				<td> <button type="button" class="btn btn-danger btn-xs removeResearchBtn"><i class="fa fa-trash"> </i></button> 
+					 <button type="button" class="btn btn-info btn-xs editResearchBtn"><i class="fa fa-edit"> </i></button>
+				</td>
+				<td style="text-align:center;">{{nameTh}}</td>
+				<td style="text-align:center;">{{nameEn}}</td>
+				<td style="text-align:center;">{{organization.orgName}}</td>
+			</tr>
+			{{/each}}
+		</tbody>
+	</table>
+	<form class="form-inline">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-md-6">
+				1-15 จาก {{page.totalElements}} รายการ  
+			</div>
+			<div class="col-md-6" style="text-align: right;">
+				{{#unless page.firstPage}}<button class="btn btn-default btn-sm companyPageNav" data-targetPage="{{page.prevPage}}" type="button"><i class="fa fa-chevron-left"></i></button>{{/unless}}
+				หน้าที่ <input class="form-control input-sm" size="2" type="text" id="companyPageTxt" value="{{page.pageNumber}}"></input> จาก {{page.totalPages}} หน้า
+				{{#unless page.lastPage}}<button class="btn btn-default btn-sm companyPageNav" data-targetPage="{{page.nextPage}}" type="button"><i class="fa fa-chevron-right"></i></button>{{/unless}}
+			</div>
+		</div>
+	</div>
+	</form>
+</div>
+</script>
+
+
+<script type="text/javascript" th:inline="javascript">
+//<!--
+
+var appRouter;
+var behaviorType = [[${behaviorType}]]
+
+$( document ).ready(function() {
+	
+	//initialize things
+	
+	journalTypes = new smt.Collection.JournalTypes();
+	
+	$.when(journalTypes.fetch()).done(function(x) {
+		
+		searchView = new SearchView({
+			journalTypes: journalTypes,
+			el: "#searchView"
+		});
+		
+		tableResultView = new TableResultView({
+			el: "#tableResultView"
+		});
+		
+		formView = new FormView({
+			journalTypes: journalTypes,
+			el: "#formView"
+		})
+		
+		
+		
+		appRouter = new AppRouter({
+			searchView: searchView,
+			tableResultView: tableResultView,
+			formView: formView
+		});
+		Backbone.history.start();
+
+	});
+	
+	
+});
+
+
+//-->
+</script>			
+</div>	
+</body>
+</html>
