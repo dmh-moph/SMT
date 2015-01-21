@@ -186,7 +186,7 @@ var SearchView = Backbone.View.extend({
 
 var TableResultView = Backbone.View.extend({ 
 	initialize: function(options){
-		this.searchResults = new smt.Page.Researchs();
+		this.searchResults = new smt.Page.Researches();
 		this.tableResultViewTemplate = Handlebars.compile($("#tableResultViewTemplate").html());
 	},
 	events: {
@@ -296,11 +296,11 @@ var FormView = Backbone.View.extend({
 			}
 		});
 		
-		if(this.model.get('organization') == null) {
-			alert ('กรุณาเลือกหน่วยงาน');
-			return false;
-		}
-		
+//		if(this.model.get('organization') == null) {
+//			alert ('กรุณาเลือกหน่วยงาน');
+//			return false;
+//		}
+//		
 		
 		if(!validated) {
 			alert ('กรุณากรอกข้อมูลให้ครบถ้วน');

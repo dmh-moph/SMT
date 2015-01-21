@@ -45,8 +45,8 @@
 	
 <div layout:fragment="pageScript">
 	
-<script type="text/javascript" src="../../static/pagejs/m02.js"
-			th:src="@{/static/pagejs/m02.js}"></script>
+<script type="text/javascript" src="../../static/pagejs/m05.js"
+			th:src="@{/static/pagejs/m05.js}"></script>
 
 <script id="defaultBreadCrumbTemplate" type="text/x-handlebars-template" th:inline="text">
 <li><a href="[[@{/}]]"><i class="fa fa-home"></i> Home</a></li>
@@ -160,7 +160,7 @@
 			<div class="row">
 				<div class="col-md-6">
 					<div class="form-group">
-					    <label for="inputEmail3" class="col-md-4 control-label">ประเภทข้อมูลทางวิชาการ</label>
+					    <label for="inputEmail3" class="col-md-4 control-label">ประเภทงานวิจัย</label>
 					    <div class="col-md-8">
 							<select class="form-control formSlt" id="journalTypesSlt" data-field="journalType">
 								{{#each this.journalTypes}}
@@ -173,74 +173,74 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "ชื่อผลงานทางวิชาการ(ภาษาไทย)" "nameTh" model.nameTh "readwrite" "required"}}
+					{{txtInput "full" "ชื่อผลงานวิจัย (ภาษาไทย)" "nameTh" model.nameTh "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "ชื่อผลงานทางวิชาการ(ภาษาอังกฤษ)" "nameEn" model.nameEn "readwrite" "required"}}
+					{{txtInput "full" "ชื่อผลงานวิจัย (ภาษาอังกฤษ)" "nameEn" model.nameEn "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "เจ้าของผลงาน/ผู้เขียน" "author" model.author "readwrite" "required"}}
+					{{txtInput "full" "ผู้นิพนธ์/ผู้วิจัย" "researcher" model.researcher "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					{{txtInput "half" "ผลผลิตที่ได้" "researchOutput" model.researchOutput "readwrite" "required"}}
+				</div>
+				<div class="col-md-6">
+					{{txtInput "half" "หน่วยนับ" "unit" model.unit "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "วัตถุประสงค์" "objective" model.objective "readwrite" "required"}}
+					{{txtInput "full" "ชื่อผลผลิตที่ได้" "outputName" model.outputName "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "เนื้อหาโดยสรุป" "summaryContent" model.summaryContent  "readwrite" "required"}}
+					{{txtInput "full" "คำสำคัญ/Keyword" "keyword" model.keyword "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "คำสำคัญ" "keyword" model.keyword "readwrite" "required"}}
+					{{txtInput "full" "เจ้าของวารสาร/หน่วยงานที่ผลิต/สำนักพิมพ์" "owner" model.owner  "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					{{txtInput "quarter" "ปี" "year" model.year "readwrite" "required"}}
+				</div>
+				<div class="col-md-2">
+					{{txtInput "quarter" "ฉบับ" "copyNo" model.copyNo "readwrite" "required"}}
+				</div>
+				<div class="col-md-2">
+					{{txtInput "quarter" "ปีที่ตีพิมพ์" "printedYear" model.printedYear "readwrite" "required"}}
+				</div>
+				<div class="col-md-2">
+					{{txtInput "quarter" "ปีที่เผยแพร่" "publishYear" model.publishYear "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "ผลิต/เผยแพร่เมื่อวันที่" "publishDate" model.publishDate  "readwrite" "required"}}
-				</div>
-			</div>
-			<div class="row" style="margin-bottom: 8px">
-				<div class="col-md-12">
-					<button id="newOrgBtn" type="button" class="btn btn-primary btn-xs"><i class="fa fa-plus-circle"></i> แก้ไขหน่วยงาน</button>
+					{{txtInput "full" "บทคัดย่อ (ภาษาไทย)" "abstractTh" model.abstractTh  "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<b><i class="fa fa-pencil-square-o"></i> ข้อมูลเพื่อการติดต่อ</b>
-						</div>
-						<div class="panel-body">
-							<div class="row">
-								<div class="col-md-12">
-									{{txtInput "full" "ชื่อผู้ประสานงาน" "contactPerson" this.model.contactPerson  "readwrite" "required"}}
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									{{txtInput "half" "ชื่อหน่วยงาน" "address" this.model.address "readwrite" "required"}}
-								</div>
-								<div class="col-md-6">
-									{{txtInput "half" "เบอร์โทรศัพท์" "telephone" this.model.telephone "readwrite" "required"}}
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									{{txtInput "half" "อีเมล์" "email" this.model.email "readwrite" "required"}}
-								</div>
-								<div class="col-md-6">
-									{{txtInput "half" "เว็บไซต์" "website" this.model.website "readwrite" "required"}}
-								</div>
-							</div>
-						</div>
-					</div>
+					{{txtInput "full" "บทคัดย่อ (ภาษาอังกฤษ)" "abstractEn" model.abstractEn  "readwrite" "required"}}
+				</div>
+			</div>			
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "สถานที่ติดต่อและหมายเลขโทรศัพท์" "address" this.model.address "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "อีเมล์" "email" this.model.email "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">

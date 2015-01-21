@@ -677,7 +677,7 @@ public class EntityServiceJPA implements EntityService {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		
-		Long orgId = node.get("organization").get("id").asLong();
+		Long orgId = node.path("organization").path("id").asLong();
 		OrganizationNetwork org = organizationNetworkRepo.findOne(orgId);
 		
 		
