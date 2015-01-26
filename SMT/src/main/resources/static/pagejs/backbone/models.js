@@ -131,9 +131,23 @@ smt.Model.Research = Backbone.RelationalModel.extend({
 	}],
 	urlRoot: appUrl('Research')
 });
+
 smt.Page.Researches = Backbone.PageCollection.extend({
 	model: smt.Model.Research,
 	url: appUrl('Research/search')
+});
+
+smt.Model.Situation = Backbone.RelationalModel.extend({
+	relations: [{
+		type: Backbone.HasOne,
+		key: 'situationType',
+		relatedModel: 'smt.Model.DV_SituationType'
+	}],
+	urlRoot: appUrl('Situation')
+});
+smt.Page.Situations = Backbone.PageCollection.extend({
+	model: smt.Model.Situation,
+	url: appUrl('Situation/search')
 });
 
 smt.Model.Behavior = Backbone.RelationalModel.extend({

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.CrudRepository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -32,7 +33,9 @@ import smt.model.QBehavior;
 import smt.model.QJournal;
 import smt.model.QOrganizationNetwork;
 import smt.model.QResearch;
+import smt.model.QSituation;
 import smt.model.Research;
+import smt.model.Situation;
 import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
 import smt.model.glb.HealthZone;
@@ -40,6 +43,7 @@ import smt.model.glb.NetworkType;
 import smt.model.glb.OrgType;
 import smt.model.glb.PersonType;
 import smt.model.glb.Province;
+import smt.model.glb.SituationType;
 import smt.repository.AmphurRepo;
 import smt.repository.BehaviorImpactRepo;
 import smt.repository.BehaviorRepo;
@@ -52,6 +56,8 @@ import smt.repository.OrganizationNetworkRepo;
 import smt.repository.OrganizationPersonRepo;
 import smt.repository.PersonTypeRepo;
 import smt.repository.ProvinceRepo;
+import smt.repository.SituationRepo;
+import smt.repository.SituationTypeRepo;
 import smt.webUI.DefaultProperty;
 import smt.webUI.ResponseJSend;
 import smt.webUI.ResponseStatus;
@@ -101,6 +107,12 @@ public class EntityServiceJPA implements EntityService {
 	
 	@Autowired
 	ResearchRepo researchRepo;
+
+	@Autowired
+	SituationRepo situationRepo;
+
+	@Autowired
+	SituationTypeRepo situationTypeRepo;
 	
 	@Override
 	public List<Province> findAllProvince() {
@@ -721,6 +733,119 @@ public class EntityServiceJPA implements EntityService {
 		
 		if(research != null) {
 			researchRepo.delete(research);
+		}
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.data = id;
+		response.status = ResponseStatus.SUCCESS;
+		
+		return response;
+	}
+
+	@Override
+	public ResponseJSend<Page<Situation>> findSituationByExample(JsonNode node,
+			Integer pageNum) throws JsonMappingException {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+		
+		
+		
+		ObjectNode object = (ObjectNode) node;
+		object.remove("organization");
+		Situation webModel;
+		
+		try {
+			webModel = mapper.treeToValue(object, Situation.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new JsonMappingException(e.getMessage() + "\n  JSON: " + node.toString());
+		}
+		
+		QSituation q = QSituation.situation;
+		
+		BooleanBuilder p = new BooleanBuilder();
+		
+		if(webModel.getSituationType() != null) {
+			logger.debug("Searching for Situation Type:  " + webModel.getSituationType());
+			p = p.and(q.situationType.eq(webModel.getSituationType()));
+		}
+		
+		if(webModel.getCode() != null) {
+			p = p.and(q.code.like(""+webModel.getCode().trim()+""));
+		}
+		
+		if(webModel.getName() != null) {
+			p = p.and(q.name.like(""+webModel.getName().trim()+""));
+		}
+		
+		
+		
+		PageRequest pageRequest =
+	            new PageRequest(pageNum -1, DefaultProperty.NUMBER_OF_ELEMENT_PER_PAGE, Sort.Direction.ASC, "code");
+		
+		Page<Situation> situation = situationRepo.findAll(p, pageRequest); 
+		
+		ResponseJSend<Page<Situation>> response = new ResponseJSend<Page<Situation>>();
+		response.data=situation;
+		response.status=ResponseStatus.SUCCESS;
+		
+		return response;
+		
+	}
+
+	@Override
+	public Situation findSituationById(Long id) {
+		return situationRepo.findOne(id);
+	}
+
+	@Override
+	public ResponseJSend<Long> saveSituation(JsonNode node, SecurityUser user) throws JsonMappingException {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		
+		Long situationTypeId = node.path("situationType").path("id").asLong();
+		SituationType situationType = situationTypeRepo.findOne(situationTypeId);
+		
+		
+		ObjectNode object = (ObjectNode) node;
+		object.remove("organization");
+		Situation webModel;
+		
+		try {
+			webModel = mapper.treeToValue(object, Situation.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new JsonMappingException(e.getMessage() + "\n  JSON: " + node.toString());
+		}
+		
+		Situation dbModel = null;
+				
+		if(webModel.getId() == null) {
+			dbModel = new Situation();
+		} else {
+			dbModel = situationRepo.findOne(webModel.getId());
+		}
+		
+		dbModel.setCode(webModel.getCode());
+		dbModel.setSituationType(situationType);
+		dbModel.setName(webModel.getName());
+		
+		
+		situationRepo.save(dbModel);
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.status = ResponseStatus.SUCCESS;
+		response.data = dbModel.getId(); 
+		return response;
+	}
+
+	@Override
+	public ResponseJSend<Long> deleteSituation(Long id) {
+		Situation situation = situationRepo.findOne(id);
+		
+		if(situation != null) {
+			situationRepo.delete(situation);
 		}
 		
 		ResponseJSend<Long> response = new ResponseJSend<Long>();

@@ -59,4 +59,13 @@ public class HomeController {
 		model.addAttribute("typeTxt", "ข้อมูลงานวิจัยและการสำรวจเฝ้าระวังปัญหาวัยรุ่น");
 		return "m05";
 	}
+	
+	@RequestMapping("/m09")
+	public String m09Handle(Model model) {
+		
+		model.addAttribute("title","m09: ข้อมูสถานการณ์ปัญหา");
+		model.addAttribute("typeTxt", "ข้อมูสถานการณ์ปัญหา");
+		return "m09";
+	}
+	
 }

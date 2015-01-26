@@ -71,4 +71,20 @@ alter table smt_research drop column RESEARCH_TYPE;
 alter table SMT_ORGANIZATION_NETWORK add (
   TEENFRIENDLY NUMBER(1));
   
+  
+create table SMT_SITUATION (
+    id number(19,0) not null,
+    DV_SITUATION_TYPE number,
+    code varchar2(255 char),
+    name varchar2(255 char),
+    primary key (id)
+);
+
+alter table SMT_SITUATION 
+  add CONSTRAINT SITUATION_DV_SITUATION_TYPE_FK 
+  foreign key (DV_SITUATION_TYPE)
+  REFERENCES GLB_VARIABLE;
+    
+create sequence SMT_SITUATION_SEQ START WITH 1 INCREMENT by 1 MAXVALUE 9999999999 MINVALUE 1 NOCYCLE;
+  
 commit;
