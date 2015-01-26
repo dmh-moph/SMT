@@ -296,12 +296,6 @@ var FormView = Backbone.View.extend({
 			}
 		});
 		
-		if(this.model.get('organization') == null) {
-			alert ('กรุณาเลือกหน่วยงาน');
-			return false;
-		}
-		
-		
 		if(!validated) {
 			alert ('กรุณากรอกข้อมูลให้ครบถ้วน');
 			return false;

@@ -206,11 +206,6 @@
 					{{txtInput "full" "ผลิต/เผยแพร่เมื่อวันที่" "publishDate" model.publishDate  "readwrite" "required"}}
 				</div>
 			</div>
-			<div class="row" style="margin-bottom: 8px">
-				<div class="col-md-12">
-					<button id="newOrgBtn" type="button" class="btn btn-primary btn-xs"><i class="fa fa-plus-circle"></i> แก้ไขหน่วยงาน</button>
-				</div>
-			</div>
 			<div class="row">
 				<div class="col-md-12">
 					<div class="panel panel-default">
@@ -245,7 +240,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "แหล่งขอ้มูลเอกสารอ้างอิง" "reference" this.model.reference "readwrite" "required"}}
+					{{txtInput "full" "แหล่งข้อมูล/เอกสารอ้างอิง" "reference" this.model.reference "readwrite" "required"}}
 				</div>
 			</div>
 		</div>
@@ -313,7 +308,7 @@
 				<td style="width: 25px;text-align:center;"></td>
 				<td style="width: 200px;text-align:center;" class=""><b>ชื่อ[[${typeTxt}]] (ภาษาไทย)</b></td>
 				<td style="width: 200px;text-align:center;" class=""><b>ชื่อ[[${typeTxt}]] (ภาษาอังกฤษ)</b></td>
-				<td style="width: 100px;text-align:center;" class=""><b>หน่วยงาน</b></td>
+				
 			</tr>
 		</thead>
 		<tbody>
@@ -324,7 +319,7 @@
 				</td>
 				<td style="text-align:center;">{{nameTh}}</td>
 				<td style="text-align:center;">{{nameEn}}</td>
-				<td style="text-align:center;">{{organization.orgName}}</td>
+				
 			</tr>
 			{{/each}}
 		</tbody>

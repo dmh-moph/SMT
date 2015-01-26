@@ -555,10 +555,6 @@ public class EntityServiceJPA implements EntityService {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		
-		Long orgId = node.get("organization").get("id").asLong();
-		OrganizationNetwork org = organizationNetworkRepo.findOne(orgId);
-		
-		
 		ObjectNode object = (ObjectNode) node;
 		object.remove("organization");
 		Journal webModel;
@@ -586,7 +582,6 @@ public class EntityServiceJPA implements EntityService {
 		
 		BeanUtils.copyProperties(webModel, dbModel, "createBy", "createDate");
 
-		dbModel.setOrganization(org);
 		dbModel.setLastUpdateBy(user);
 		dbModel.setLastUpdateDate(new Date());
 		journalRepo.save(dbModel);
