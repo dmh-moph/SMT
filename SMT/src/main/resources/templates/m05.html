@@ -173,17 +173,22 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "ชื่อผลงานวิจัย (ภาษาไทย)" "nameTh" model.nameTh "readwrite" "required"}}
+					{{txtInput "full" "ชื่อผลงานวิจัย<br/>(ภาษาไทย)" "nameTh" model.nameTh "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "ชื่อผลงานวิจัย (ภาษาอังกฤษ)" "nameEn" model.nameEn "readwrite" "required"}}
+					{{txtInput "full" "ชื่อผลงานวิจัย<br/>(ภาษาอังกฤษ)" "nameEn" model.nameEn "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
 					{{txtInput "full" "ผู้นิพนธ์/ผู้วิจัย" "researcher" model.researcher "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "วัตถุประสงค์" "objective" model.objective "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
@@ -213,13 +218,15 @@
 				<div class="col-md-4">
 					{{txtInput "quarter" "ปี" "year" model.year "readwrite" "required"}}
 				</div>
-				<div class="col-md-2">
-					{{txtInput "quarter" "ฉบับ" "copyNo" model.copyNo "readwrite" "required"}}
+				<div class="col-md-4">
+					{{txtInput "quarter" "ฉบับที่" "copyNo" model.copyNo "readwrite" "required"}}
 				</div>
-				<div class="col-md-2">
+			</div>
+			<div class="row">
+				<div class="col-md-4">
 					{{txtInput "quarter" "ปีที่ตีพิมพ์" "printedYear" model.printedYear "readwrite" "required"}}
 				</div>
-				<div class="col-md-2">
+				<div class="col-md-4">
 					{{txtInput "quarter" "ปีที่เผยแพร่" "publishYear" model.publishYear "readwrite" "required"}}
 				</div>
 			</div>
@@ -245,7 +252,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtInput "full" "แหล่งขอ้มูลเอกสารอ้างอิง" "reference" this.model.reference "readwrite" "required"}}
+					{{txtInput "full" "แหล่งข้อมูล/เอกสารอ้างอิง" "reference" this.model.reference "readwrite" "required"}}
 				</div>
 			</div>
 		</div>
@@ -313,7 +320,6 @@
 				<td style="width: 25px;text-align:center;"></td>
 				<td style="width: 200px;text-align:center;" class=""><b>ชื่อ[[${typeTxt}]] (ภาษาไทย)</b></td>
 				<td style="width: 200px;text-align:center;" class=""><b>ชื่อ[[${typeTxt}]] (ภาษาอังกฤษ)</b></td>
-				<td style="width: 100px;text-align:center;" class=""><b>หน่วยงาน</b></td>
 			</tr>
 		</thead>
 		<tbody>
@@ -324,7 +330,6 @@
 				</td>
 				<td style="text-align:center;">{{nameTh}}</td>
 				<td style="text-align:center;">{{nameEn}}</td>
-				<td style="text-align:center;">{{organization.orgName}}</td>
 			</tr>
 			{{/each}}
 		</tbody>
