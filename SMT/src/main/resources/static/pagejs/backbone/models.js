@@ -145,6 +145,10 @@ smt.Model.Situation = Backbone.RelationalModel.extend({
 	}],
 	urlRoot: appUrl('Situation')
 });
+smt.Collection.Situations = Backbone.Collection.extend({
+	model: smt.Model.Situation,
+	url: appUrl('Situation/findAllSituation')
+});
 smt.Page.Situations = Backbone.PageCollection.extend({
 	model: smt.Model.Situation,
 	url: appUrl('Situation/search')
@@ -163,6 +167,10 @@ smt.Model.Behavior = Backbone.RelationalModel.extend({
 		type: Backbone.HasOne,
 		key: 'situationType',
 		relatedModel: 'smt.Model.DV_SituationType'
+	}, {
+		type: Backbone.HasOne,
+		key: 'situation',
+		relatedModel: 'smt.Model.Situation'
 	}, {
 		type: Backbone.HasOne,
 		key: 'targetEducationLevel',

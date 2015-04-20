@@ -80,7 +80,6 @@ var AppRouter = Backbone.Router.extend({
 var SearchView = Backbone.View.extend({
     initialize: function(options){
     	this.searchViewTemplate = Handlebars.compile($("#searchViewTemplate").html());
-    	this.provinceSltTemplate = Handlebars.compile($("#provinceSltTemplate").html());
     	this.searchModel = new smt.Model.OrganizationNetwork();
     	
     	// the three must have option!

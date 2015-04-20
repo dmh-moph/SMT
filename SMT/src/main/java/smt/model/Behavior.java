@@ -97,6 +97,10 @@ public class Behavior implements Serializable{
 	@JoinColumn(name="DV_SITUATION_TYPE")
 	private SituationType situationType;
 	
+	@ManyToOne
+	@JoinColumn(name="SITUATION_ID")
+	private Situation situation;
+	
 	@Basic
 	@Column(name="RISK_FACTOR")
 	private String riskFactor;
@@ -340,6 +344,15 @@ public class Behavior implements Serializable{
 	public void setType(BehaviorType type) {
 		this.type = type;
 	}
+
+	public Situation getSituation() {
+		return situation;
+	}
+
+	public void setSituation(Situation situation) {
+		this.situation = situation;
+	}
+	
 	
 	
 	

@@ -87,4 +87,10 @@ alter table SMT_SITUATION
     
 create sequence SMT_SITUATION_SEQ START WITH 1 INCREMENT by 1 MAXVALUE 9999999999 MINVALUE 1 NOCYCLE;
   
+
+alter table smt_situation add (type varchar2(255 char));
+alter table smt_behavior 
+  add CONSTRAINT BEHAVIOR_SITUATION_FK
+  FOREIGN KEY (SITUATION_ID) REFERENCES SMT_SITUATION;
+alter table smt_behavior drop CONSTRAINT smt_behavior_situation_FK;
 commit;

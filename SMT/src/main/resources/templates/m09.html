@@ -65,19 +65,6 @@
 <li class="active">แก้ไข[[${typeTxt}]](#{{companyId}})</li>
 </script>			
 
-<script  id="provinceSltTemplate" type="text/x-handlebars-template">
-<option value="0">กรุณาเลือกจังหวัด</option>
-{{#each this}}
-	<option value="{{id}}">{{name}}</option>
-{{/each}}
-</script>
-
-<script  id="amphurSltTemplate" type="text/x-handlebars-template">
-<option value="0">กรุณาเลือกอำเภอ</option>
-{{#each this}}
-	<option value="{{id}}">{{name}}</option>
-{{/each}}
-</script>
 
 
 <script  id="formViewTemplate" type="text/x-handlebars-template">
@@ -94,17 +81,8 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-6">
-					<div class="form-group">
-					    <label for="inputEmail3" class="col-md-4 control-label">ประเภทสถานการณ์ปัญหา</label>
-					    <div class="col-md-8">
-							<select class="form-control formSlt" id="situationTypesSlt" data-field="situationType">
-								{{#each this.situationTypes}}
-									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
-								{{/each}}
-							</select>				      
-					    </div>
-					</div>
+				<div class="col-md-12">
+					{{txtInput "full" "ประเภทสถานการณ์ปัญหา" "type" model.type "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
@@ -133,21 +111,12 @@
 		
 		<div class="row">
 			<div class="col-md-12">
-				{{txtInput "full" "รหัส" "name" model.code "readwrite" "required"}}
+				{{txtInput "full" "รหัส" "code" model.code "readwrite" "required"}}
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-6">
-				<div class="form-group">
-				    <label for="inputEmail3" class="col-md-4 control-label">ประเภทสถานการณ์ปัญหา</label>
-				    <div class="col-md-8">
-						<select class="form-control formSlt" id="situationTypesSlt" data-field="situationType">
-							{{#each this.situationTypes}}
-								<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
-							{{/each}}
-						</select>				      
-				    </div>
-				</div>
+			<div class="col-md-12">
+				{{txtInput "full" "ประเภทสถานการณ์ปัญหา" "type" model.type "readwrite" "required"}}
 			</div>
 		</div>
 		<div class="row">	
@@ -191,7 +160,7 @@
 					 <button type="button" class="btn btn-info btn-xs editSituationBtn"><i class="fa fa-edit"> </i></button>
 				</td>
 				<td style="text-align:center;">{{code}}</td>
-				<td style="text-align:center;">{{situationType.description}}</td>
+				<td style="text-align:center;">{{type}}</td>
 				<td style="text-align:center;">{{name}}</td>
 			</tr>
 			{{/each}}

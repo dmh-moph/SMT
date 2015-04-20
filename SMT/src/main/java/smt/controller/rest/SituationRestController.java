@@ -1,5 +1,7 @@
 package smt.controller.rest;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,11 @@ public static Logger logger = LoggerFactory.getLogger(SituationRestController.cl
 	
 	@Autowired
 	private EntityService entityService;
+	
+	@RequestMapping(value="/findAllSituation") 
+	public List<Situation> findAllSituation() {
+		return entityService.findAllSituation();
+	}
 	
 	@RequestMapping(value = "/search/page/{pageNum}", method = {RequestMethod.POST}) 
 	public ResponseJSend<Page<Situation>> findSituationByExample(

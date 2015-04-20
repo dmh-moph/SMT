@@ -137,9 +137,9 @@
 					<div class="form-group">
 					    <label for="inputEmail3" class="col-md-4 control-label">สถานการณ์ของปัญหา</label>
 					    <div class="col-md-8">
-					      <select class="form-control formSlt" id="situationTypeSlt" data-field="situationType">
-								{{#each this.situationTypes}}
-									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
+					      <select class="form-control formSlt" id="situationSlt" data-field="situation">
+								{{#each this.situations}}
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}</option>
 								{{/each}}
 							</select>	
 					    </div>
@@ -416,12 +416,12 @@ $( document ).ready(function() {
 	
 	healthZones = new smt.Collection.HealthZones();
 	educationLevels = new smt.Collection.EducationLevels();
-	situationTypes = new smt.Collection.SituationTypes();
+	situations = new smt.Collection.Situations();
 	
-	$.when(situationTypes.fetch(), educationLevels.fetch(), healthZones.fetch()).done(function(x) {
+	$.when(situations.fetch(), educationLevels.fetch(), healthZones.fetch()).done(function(x) {
 		
 		searchView = new SearchView({
-			situationTypes: situationTypes,
+			situations: situations,
 			educationLevels: educationLevels,
 			healthZones: healthZones,
 			el: "#searchView"
@@ -432,7 +432,7 @@ $( document ).ready(function() {
 		});
 		
 		formView = new FormView({
-			situationTypes: situationTypes,
+			situations: situations,
 			educationLevels: educationLevels,
 			healthZones: healthZones,
 			el: "#formView"

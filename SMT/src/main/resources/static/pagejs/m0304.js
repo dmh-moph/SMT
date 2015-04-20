@@ -85,7 +85,7 @@ var SearchView = Backbone.View.extend({
     	
     	// the three must have option!
     	this.heathZones = options.healthZones;
-		 this.situationTypes = options.situationTypes;
+		 this.situations = options.situations;
 		 this.educationLevels = options.educationLevels;
 
     	this.provinces = new smt.Collection.Provinces();
@@ -175,8 +175,8 @@ var SearchView = Backbone.View.extend({
     	var json = {};
     	json.searchModel = this.searchModel.toJSON();
     	
-    	json.situationTypes = this.situationTypes.toJSON();
-    	__setSelect(json.situationTypes, this.searchModel.get('situationType'));
+    	json.situations = this.situations.toJSON();
+    	__setSelect(json.situations, this.searchModel.get('situationType'));
     	
     	json.educationLevels = this.educationLevels.toJSON();
     	__setSelect(json.educationLevels, this.searchModel.get('educationLevel'));
@@ -276,7 +276,7 @@ var FormView = Backbone.View.extend({
 		 
 		
 		 // the three must have option!
-		 this.situationTypes = options.situationTypes;
+		 this.situations = options.situations;
 		 this.educationLevels = options.educationLevels;
 		 this.heathZones = options.healthZones;
 		
@@ -426,8 +426,8 @@ var FormView = Backbone.View.extend({
         		}, this)
         	})
     		
-    	} else if(field == 'situationType') {
-    		model = smt.Model.DV_SituationType.findOrCreate({id:id});
+    	} else if(field == 'situation') {
+    		model = smt.Model.Situation.findOrCreate({id:id});
     	} else if(field == 'targetEducationLevel') {
     		model = smt.Model.DV_EducationLevel.findOrCreate({id:id});
     	} else if(field == 'amphur'){
@@ -475,9 +475,9 @@ var FormView = Backbone.View.extend({
 		json.model = this.model.toJSON();
 		
 		if(this.model.get('id') == null) {
-			json.situationTypes=new Array();
-			json.situationTypes.push({id:0,description: 'กรุณาเลือกประเภทสถานการณ์'});
-			$.merge(json.situationTypes, situationTypes.toJSON());
+			json.situations=new Array();
+			json.situations.push({id:0,name: 'กรุณาเลือกประเภทสถานการณ์'});
+			$.merge(json.situations, situations.toJSON());
 			
 			json.educationLevels=new Array();
 			json.educationLevels.push({id:0,description: 'กรุณาเลือกระดับการศึกษา'});
@@ -494,9 +494,9 @@ var FormView = Backbone.View.extend({
 			json.amphurs.push({id:0,name: 'กรุณาเลือกอำเภอ'});
 			
 		} else {
-			json.situationTypes=new Array();
-			$.merge(json.situationTypes, situationTypes.toJSON());
-			 __setSelect(json.situationTypes, this.model.get('situationTypes'));
+			json.situations=new Array();
+			$.merge(json.situations, situations.toJSON());
+			 __setSelect(json.situations, this.model.get('situation'));
 			
 			json.educationLevels=new Array();
 			$.merge(json.educationLevels, educationLevels.toJSON());

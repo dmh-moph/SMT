@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Table(name="GLB_VARIABLE")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="DOMAIN", discriminatorType = DiscriminatorType.STRING)
-@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope=DomainVariable.class)
 public class DomainVariable implements Serializable {
 
 	/**

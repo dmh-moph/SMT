@@ -80,4 +80,6 @@ public interface EntityService {
 
 	public ResponseJSend<Long> deleteSituation(Long id);
 
+	public List<Situation> findAllSituation();
+
 }

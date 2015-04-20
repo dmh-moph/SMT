@@ -439,8 +439,18 @@ public class EntityServiceJPA implements EntityService {
 		
 
 		BeanUtils.copyProperties(webModel, dbModel, "impacts", "createBy", "createDate");
+		
+		logger.debug("webModel situationID: " + webModel.getSituation().getId());
+		
+		Situation situation = null;
+		if(webModel.getSituation()!=null && webModel.getSituation().getId() != null) {
+			 situation = situationRepo.findOne(webModel.getSituation().getId());
+		}
+		
+		
 		dbModel.setLastUpdateBy(user);
 		dbModel.setLastUpdateDate(new Date());
+		dbModel.setSituation(situation);
 		behaviorRepo.save(dbModel);
 		
 		
@@ -772,13 +782,16 @@ public class EntityServiceJPA implements EntityService {
 		}
 		
 		if(webModel.getCode() != null) {
-			p = p.and(q.code.like(""+webModel.getCode().trim()+""));
+			p = p.and(q.code.like("%"+webModel.getCode().trim()+"%"));
 		}
 		
 		if(webModel.getName() != null) {
-			p = p.and(q.name.like(""+webModel.getName().trim()+""));
+			p = p.and(q.name.like("%"+webModel.getName().trim()+"%"));
 		}
 		
+		if(webModel.getType() != null) {
+			p = p.and(q.type.like("%"+webModel.getType().trim()+"%"));
+		}
 		
 		
 		PageRequest pageRequest =
@@ -797,6 +810,13 @@ public class EntityServiceJPA implements EntityService {
 	@Override
 	public Situation findSituationById(Long id) {
 		return situationRepo.findOne(id);
+	}
+
+	
+	
+	@Override
+	public List<Situation> findAllSituation() {
+		return situationRepo.findAll();
 	}
 
 	@Override
@@ -830,6 +850,10 @@ public class EntityServiceJPA implements EntityService {
 		dbModel.setCode(webModel.getCode());
 		dbModel.setSituationType(situationType);
 		dbModel.setName(webModel.getName());
+		
+		logger.debug(node.toString());
+		logger.debug(webModel.getType());
+		dbModel.setType(webModel.getType());
 		
 		
 		situationRepo.save(dbModel);

@@ -67,6 +67,10 @@ public class Situation implements Serializable{
 	private SituationType situationType;
 	
 	@Basic
+	@Column(name="TYPE")
+	private String type;
+	
+	@Basic
 	@Column(name="NAME")
 	private String name;
 
@@ -102,6 +106,16 @@ public class Situation implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	
 	
 	
 }
