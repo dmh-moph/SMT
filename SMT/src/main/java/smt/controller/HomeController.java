@@ -43,6 +43,22 @@ public class HomeController {
 		model.addAttribute("behaviorTypeTxt", "พฤติกรรมเสี่ยง");
 		return "m0304";
 	}
+
+	@RequestMapping("/m01")
+	public String m01Handle(Model model) {
+		
+		model.addAttribute("title","m01: ข้อมูลสถานการณ์ปัญหาสุขภาพจิตวัยรุ่น");
+		model.addAttribute("typeTxt", "ข้อมูลสถานการณ์ปัญหาสุขภาพจิตวัยรุ่น");
+		return "m01";
+	}
+	
+	@RequestMapping("/m07")
+	public String m07Handle(Model model) {
+		
+		model.addAttribute("title","m07: ข้อมูลงานวิจัยสถานการณ์ปัญหาวัยรุ่น");
+		model.addAttribute("typeTxt", "ข้อมูลงานวิจัยสถานการณ์ปัญหาวัยรุ่น");
+		return "m07";
+	}
 	
 	@RequestMapping("/m02")
 	public String m02Handle(Model model) {

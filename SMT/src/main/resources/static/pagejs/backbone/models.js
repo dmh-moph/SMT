@@ -118,6 +118,22 @@ smt.Page.Journals = Backbone.PageCollection.extend({
 	model: smt.Model.Journal,
 	url: appUrl('Journal/search')
 });
+smt.Model.JournalSituation = Backbone.RelationalModel.extend({
+	relations: [{
+		type: Backbone.HasOne,
+		key: 'situation',
+		relatedModel: 'smt.Model.Situation'
+	},{
+		type: Backbone.HasOne,
+		key: 'journal',
+		relatedModel: 'smt.Model.Journal'
+	}],
+	urlRoot: appUrl('JournalSituation')
+});
+smt.Page.JournalSituations = Backbone.PageCollection.extend({
+	model: smt.Model.JournalSituation,
+	url: appUrl('JournalSituation/search')
+});
 
 smt.Model.Research = Backbone.RelationalModel.extend({
 	relations: [{
@@ -135,6 +151,23 @@ smt.Model.Research = Backbone.RelationalModel.extend({
 smt.Page.Researches = Backbone.PageCollection.extend({
 	model: smt.Model.Research,
 	url: appUrl('Research/search')
+});
+
+smt.Model.ResearchSituation = Backbone.RelationalModel.extend({
+	relations: [{
+		type: Backbone.HasOne,
+		key: 'situation',
+		relatedModel: 'smt.Model.Situation'
+	},{
+		type: Backbone.HasOne,
+		key: 'research',
+		relatedModel: 'smt.Model.Research'
+	}],
+	urlRoot: appUrl('ResearchSituation')
+});
+smt.Page.ResearchSituations = Backbone.PageCollection.extend({
+	model: smt.Model.ResearchSituation,
+	url: appUrl('ResearchSituation/search')
 });
 
 smt.Model.Situation = Backbone.RelationalModel.extend({

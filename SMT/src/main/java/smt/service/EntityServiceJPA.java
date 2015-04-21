@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.neo4j.cypher.internal.compiler.v2_1.planner.logical.findShortestPaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -27,14 +28,18 @@ import smt.auth.service.SecUserRepository;
 import smt.model.Behavior;
 import smt.model.BehaviorImpact;
 import smt.model.Journal;
+import smt.model.JournalSituation;
 import smt.model.OrganizationNetwork;
 import smt.model.OrganizationPerson;
 import smt.model.QBehavior;
 import smt.model.QJournal;
+import smt.model.QJournalSituation;
 import smt.model.QOrganizationNetwork;
 import smt.model.QResearch;
+import smt.model.QResearchSituation;
 import smt.model.QSituation;
 import smt.model.Research;
+import smt.model.ResearchSituation;
 import smt.model.Situation;
 import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
@@ -50,12 +55,14 @@ import smt.repository.BehaviorRepo;
 import smt.repository.DomainVariableRepo;
 import smt.repository.HealthZoneRepo;
 import smt.repository.JournalRepo;
+import smt.repository.JournalSituationRepo;
 import smt.repository.NetworkTypeRepo;
 import smt.repository.OrgTypeRepo;
 import smt.repository.OrganizationNetworkRepo;
 import smt.repository.OrganizationPersonRepo;
 import smt.repository.PersonTypeRepo;
 import smt.repository.ProvinceRepo;
+import smt.repository.ResearchSituationRepo;
 import smt.repository.SituationRepo;
 import smt.repository.SituationTypeRepo;
 import smt.webUI.DefaultProperty;
@@ -113,6 +120,12 @@ public class EntityServiceJPA implements EntityService {
 
 	@Autowired
 	SituationTypeRepo situationTypeRepo;
+	
+	@Autowired
+	JournalSituationRepo journalSituationRepo;
+	
+	@Autowired
+	ResearchSituationRepo researchSituationRepo;
 	
 	@Override
 	public List<Province> findAllProvince() {
@@ -878,7 +891,194 @@ public class EntityServiceJPA implements EntityService {
 		
 		return response;
 	}
+
+	@Override
+	public ResponseJSend<Page<JournalSituation>> findJournalSituationByExample(
+			JsonNode node, Integer pageNum) {
+		
+		JournalSituation webModel = new JournalSituation();
+		
+		if(node.path("situation").path("id") != null) {
+			Situation situation = situationRepo.findOne(node.path("situation").path("id").asLong());
+			webModel.setSituation(situation);
+		}
+		
+		if(node.path("journal").path("id") != null) {
+			Journal journal = journalRepo.findOne(node.path("journal").path("id").asLong());
+			webModel.setJournal(journal);
+		}
+		
+		QJournalSituation q = QJournalSituation.journalSituation;
+		
+		BooleanBuilder p = new BooleanBuilder();
+		
+		
+		if(webModel.getSituation() != null) {
+			logger.debug("Searching for Situation :  " + webModel.getSituation().getId());
+			p = p.and(q.situation.eq(webModel.getSituation()));
+		}
+		
+		if(webModel.getJournal() != null) {
+			p = p.and(q.journal.eq(webModel.getJournal()));
+		}
+		
+		
+		PageRequest pageRequest =
+	            new PageRequest(pageNum -1, DefaultProperty.NUMBER_OF_ELEMENT_PER_PAGE, Sort.Direction.ASC, "situation.id");
+		
+		Page<JournalSituation> journalSituations = journalSituationRepo.findAll(p, pageRequest); 
+		
+		ResponseJSend<Page<JournalSituation>> response = new ResponseJSend<Page<JournalSituation>>();
+		response.data=journalSituations;
+		response.status=ResponseStatus.SUCCESS;
+		
+		return response;
+	}
+
+	@Override
+	public JournalSituation findJournalSituationById(Long id) {
+		return journalSituationRepo.findOne(id);
+	}
+
+	@Override
+	public ResponseJSend<Long> saveJournalSituation(JsonNode node,
+			SecurityUser user) {
+		
+		JournalSituation dbModel = null;
+		if(node.path("id") == null  || node.path("id").asLong() == 0L) {
+			dbModel = new JournalSituation();
+		} else {
+			dbModel = journalSituationRepo.findOne(node.path("id").asLong());
+		}
+		
+		if(node.path("situation").path("id") != null) {
+			Situation situation = situationRepo.findOne(node.path("situation").path("id").asLong());
+			dbModel.setSituation(situation);
+		}
+		
+		if(node.path("journal").path("id") != null) {
+			Journal journal = journalRepo.findOne(node.path("journal").path("id").asLong());
+			dbModel.setJournal(journal);
+		}
+		
+		journalSituationRepo.save(dbModel);
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.status = ResponseStatus.SUCCESS;
+		response.data = dbModel.getId(); 
+		return response;
+			
+	}
+
+	@Override
+	public ResponseJSend<Long> deleteJournalSituation(Long id) {
+		JournalSituation journalSituation = journalSituationRepo.findOne(id);
+		
+		if(journalSituation != null) {
+			journalSituationRepo.delete(journalSituation);
+		}
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.data = id;
+		response.status = ResponseStatus.SUCCESS;
+		
+		return response;
+	}
 	
+	@Override
+	public ResponseJSend<Page<ResearchSituation>> findResearchSituationByExample(
+			JsonNode node, Integer pageNum) {
+		
+		ResearchSituation webModel = new ResearchSituation();
+		
+		if(node.path("situation").path("id") != null) {
+			Situation situation = situationRepo.findOne(node.path("situation").path("id").asLong());
+			webModel.setSituation(situation);
+		}
+		
+		if(node.path("research").path("id") != null) {
+			Research research = researchRepo.findOne(node.path("research").path("id").asLong());
+			webModel.setResearch(research);
+		}
+		
+		QResearchSituation q = QResearchSituation.researchSituation;
+		
+		BooleanBuilder p = new BooleanBuilder();
+		
+		
+		if(webModel.getSituation() != null) {
+			logger.debug("Searching for Situation :  " + webModel.getSituation().getId());
+			p = p.and(q.situation.eq(webModel.getSituation()));
+		}
+		
+		if(webModel.getResearch() != null) {
+			p = p.and(q.research.eq(webModel.getResearch()));
+		}
+		
+		
+		PageRequest pageRequest =
+	            new PageRequest(pageNum -1, DefaultProperty.NUMBER_OF_ELEMENT_PER_PAGE, Sort.Direction.ASC, "situation.id");
+		
+		Page<ResearchSituation> researchSituation = researchSituationRepo.findAll(p, pageRequest); 
+		
+		ResponseJSend<Page<ResearchSituation>> response = new ResponseJSend<Page<ResearchSituation>>();
+		response.data=researchSituation;
+		response.status=ResponseStatus.SUCCESS;
+		
+		return response;
+	}
+
+	@Override
+	public ResearchSituation findResearchSituationById(Long id) {
+		return researchSituationRepo.findOne(id);
+	}
+
+	@Override
+	public ResponseJSend<Long> saveResearchSituation(JsonNode node,
+			SecurityUser user) {
+		
+		ResearchSituation dbModel = null;
+		if(node.path("id") == null || node.path("id").asLong() == 0L ) {
+			logger.debug("create new dbModel");
+			dbModel = new ResearchSituation();
+		} else {
+			logger.debug("find dbModel with id=" + node.path("id").asLong());
+			dbModel = researchSituationRepo.findOne(node.path("id").asLong());
+		}
+		
+		if(node.path("situation").path("id") != null) {
+			Situation situation = situationRepo.findOne(node.path("situation").path("id").asLong());
+			dbModel.setSituation(situation);
+		}
+		
+		if(node.path("research").path("id") != null) {
+			Research research = researchRepo.findOne(node.path("research").path("id").asLong());
+			dbModel.setResearch(research);
+		}
+		
+		researchSituationRepo.save(dbModel);
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.status = ResponseStatus.SUCCESS;
+		response.data = dbModel.getId(); 
+		return response;
+			
+	}
+
+	@Override
+	public ResponseJSend<Long> deleteResearchSituation(Long id) {
+		ResearchSituation researchSituation = researchSituationRepo.findOne(id);
+		
+		if(researchSituation != null) {
+			researchSituationRepo.delete(researchSituation);
+		}
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.data = id;
+		response.status = ResponseStatus.SUCCESS;
+		
+		return response;
+	}
 	
 	
 }

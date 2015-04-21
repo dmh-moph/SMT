@@ -10,8 +10,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import smt.auth.model.SecurityUser;
 import smt.model.Behavior;
 import smt.model.Journal;
+import smt.model.JournalSituation;
 import smt.model.OrganizationNetwork;
 import smt.model.Research;
+import smt.model.ResearchSituation;
 import smt.model.Situation;
 import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
@@ -81,5 +83,26 @@ public interface EntityService {
 	public ResponseJSend<Long> deleteSituation(Long id);
 
 	public List<Situation> findAllSituation();
+
+	public ResponseJSend<Page<JournalSituation>> findJournalSituationByExample(
+			JsonNode node, Integer pageNum);
+
+	public JournalSituation findJournalSituationById(Long id);
+
+	public ResponseJSend<Long> saveJournalSituation(JsonNode node,
+			SecurityUser user);
+
+	public ResponseJSend<Long> deleteJournalSituation(Long id);
+	
+	
+	public ResponseJSend<Page<ResearchSituation>> findResearchSituationByExample(
+			JsonNode node, Integer pageNum);
+
+	public ResearchSituation findResearchSituationById(Long id);
+
+	public ResponseJSend<Long> saveResearchSituation(JsonNode node,
+			SecurityUser user);
+
+	public ResponseJSend<Long> deleteResearchSituation(Long id);
 
 }
