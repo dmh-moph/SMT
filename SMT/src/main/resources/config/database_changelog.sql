@@ -125,4 +125,16 @@ alter table SMT_RESEARCHSITUATION
   FOREIGN KEY (RESEARCH_ID) REFERENCES SMT_RESEARCH;
 
 
+create table SMT_FILEMETA (
+    id number(19,0) not null,
+    domain varchar2(255 char),
+    domainId number(19,0),
+    fileIndex number(4,0),
+    fileName varchar2(255 char),
+    fileSize number(19,0),
+    fileType varchar2(255 char),
+    primary key (id)
+);
+create sequence SMT_FILEMETA_SEQ START WITH 1 INCREMENT by 1 MAXVALUE 9999999999 MINVALUE 1 NOCYCLE; 
+
 commit;

@@ -361,6 +361,7 @@ var FormView = Backbone.View.extend({
 	
 	editForm: function(id) {
 		this.model = smt.Model.Journal.findOrCreate({id: id});
+		
 		this.render();	
 		
 	},
@@ -384,6 +385,24 @@ var FormView = Backbone.View.extend({
 		
 		console.log(json);
 		this.$el.html(this.formViewTemplate(json));
+		
+		$('#fileupload').fileupload({
+	        dataType: 'json',
+	 
+	        done: function (e, data) {
+	            $.each(data.result, function (index, file) {
+	            	console.log(file);
+	            }); 
+	        },	 
+	        progressall: function (e, data) {
+	            var progress = parseInt(data.loaded / data.total * 100, 10);
+	            $('#progress .bar').css(
+	                'width',
+	                progress + '%'
+	            );
+	        }
+		});
+		
 		
 		return this;
 	}
