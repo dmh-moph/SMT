@@ -254,6 +254,10 @@ var TableResultView = Backbone.View.extend({
 });
 
 var FormView = Backbone.View.extend({
+	/**
+	 * @memberOf FormView
+	 */
+	 
 	 initialize: function(options){
 		 this.formViewTemplate = Handlebars.compile($("#formViewTemplate").html());
 		
@@ -261,6 +265,10 @@ var FormView = Backbone.View.extend({
 		 this.journalTypes = options.journalTypes;
 		 
 		 this.organizationModalView = new OrganizationModalView({el : '#organizationModal', parentView: this});
+		 
+		 this.trFilesTemplate = Handlebars.compile($("#trFilesTemplate").html());
+		 
+		 Handlebars.registerPartial("trFilesTemplate", $("#trFilesTemplate").html());
 	 },
 	 events: {
 		 "change .formSlt": "onChangeFormSlt",
@@ -269,9 +277,37 @@ var FormView = Backbone.View.extend({
 		 "click #newOrgBtn" : "onClickNewOrgBtn",
 		 
 		"click #saveFormBtn" : "onClickSaveFormBtn",
-		"click #backBtn" : "onClickBackBtn"
+		"click #backBtn" : "onClickBackBtn",
 			 
-	},
+		"click .fileDeleteLnk" : "onClickFileDeleteLnk"
+				 
+		},
+		onClickFileDeleteLnk: function(e){
+			var fileId = $(e.currentTarget).attr('data-id');
+			var file = smt.Model.FileMeta.findOrCreate(fileId);
+			
+			var r = confirm("คุณต้องการลบไฟล์ " + file.get('fileName'));
+			if (r == true) {
+			    
+				file.destroy({
+					success: _.bind(function(model, response) {
+						alert("ลบข้อมูลเรียบร้อยแล้ว")
+						
+						this.model.get('files').remove(file);
+						
+						var json= {};
+						json.model = this.model.toJSON();
+						
+						$('#filesTbl tbody').empty();
+						$('#filesTbl tbody').html(this.trFilesTemplate(json));
+						
+					},this)
+				});
+				
+			} 
+			
+			return false;
+		},	
 	onClickSaveFormBtn: function(e) {
 		var validated = true;
 		
@@ -316,7 +352,10 @@ var FormView = Backbone.View.extend({
 					alert(response.status + " :" + response.message);
 				}
 				this.model.set('id', response.data);
+				this.model.set('domainName', 'RESEARCH');
+				
 				alert("บันทึกข้อมูลแล้ว");
+				this.render();
 		},this)});
 	},
 	onClickBackBtn: function(e) {
@@ -367,7 +406,11 @@ var FormView = Backbone.View.extend({
 	
 	editForm: function(id) {
 		this.model = smt.Model.Research.findOrCreate({id: id});
-		this.render();	
+		this.model.fetch({
+			success: _.bind(function() {
+				this.render();		
+			},this)
+		});
 		
 	},
 	render: function() {
@@ -390,7 +433,27 @@ var FormView = Backbone.View.extend({
 		
 		console.log(json);
 		this.$el.html(this.formViewTemplate(json));
-		
+		$('#fileupload').fileupload({
+	        dataType: 'json',
+	 
+	        done: _.bind(function (e, data) {
+	            $.each(data.result, _.bind(function (index, file) {
+	            	var file = new smt.Model.FileMeta(file);
+	            	this.model.get('files').add(file);
+	            	var json = {};
+	            	json.model = this.model.toJSON();
+	            	$('#filesTbl tbody').empty();
+	            	$('#filesTbl tbody').html(this.trFilesTemplate(json));
+	            },this)); 
+	        },this),	 
+	        progressall: function (e, data) {
+	            var progress = parseInt(data.loaded / data.total * 100, 10);
+	            $('#progress .bar').css(
+	                'width',
+	                progress + '%'
+	            );
+	        }
+		});
 		return this;
 	}
 });

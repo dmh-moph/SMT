@@ -357,7 +357,16 @@ public class EntityServiceJPA implements EntityService {
 
 	@Override
 	public Behavior findBehaviorById(Long id) {
-		return behaviorRepo.findOne(id);
+		Behavior behavior =behaviorRepo.findOne(id);
+		behavior.getZone().getId();
+		behavior.getProvince().getId();
+		behavior.getFiles().size();
+		if(behavior.getSituationType() != null) {
+			behavior.getSituationType().getId();
+		}
+		behavior.getImpacts().size();
+		behavior.getTargetEducationLevel().getId();
+		return behavior; 
 	}
 
 	@Override
@@ -703,7 +712,11 @@ public class EntityServiceJPA implements EntityService {
 
 	@Override
 	public Research findResearchById(Long id) {
-		return researchRepo.findOne(id);
+		Research research =researchRepo.findOne(id);
+		research.getFiles().size();
+		research.getJournalType().getId();
+		
+		return research;
 	}
 
 	@Override

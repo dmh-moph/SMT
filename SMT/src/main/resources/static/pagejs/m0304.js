@@ -268,6 +268,9 @@ var TableResultView = Backbone.View.extend({
 });
 
 var FormView = Backbone.View.extend({
+	/**
+	 * @memberOf FormView
+	 */
 	 initialize: function(options){
 		 this.formViewTemplate = Handlebars.compile($("#formViewTemplate").html());
 		 this.provinceSltTemplate = Handlebars.compile($("#provinceSltTemplate").html());
@@ -285,6 +288,10 @@ var FormView = Backbone.View.extend({
 		 this.amphurs = new smt.Collection.Amphurs();
 		 
 		 this.impactModalView = new ImpactModalView({el : '#impactModal', parentView: this});
+		 
+		 this.trFilesTemplate = Handlebars.compile($("#trFilesTemplate").html());
+		 
+		 Handlebars.registerPartial("trFilesTemplate", $("#trFilesTemplate").html());
 	 },
 	 events: {
 		 "change .formSlt": "onChangeFormSlt",
@@ -295,9 +302,37 @@ var FormView = Backbone.View.extend({
 		 "click .editImpactBtn" : "onClickEditImpactBtn",
 		 
 		"click #saveFormBtn" : "onClickSaveFormBtn",
-		"click #backBtn" : "onClickBackBtn"
+		"click #backBtn" : "onClickBackBtn",
+		
+		"click .fileDeleteLnk" : "onClickFileDeleteLnk"
 			 
 	},
+	onClickFileDeleteLnk: function(e){
+		var fileId = $(e.currentTarget).attr('data-id');
+		var file = smt.Model.FileMeta.findOrCreate(fileId);
+		
+		var r = confirm("คุณต้องการลบไฟล์ " + file.get('fileName'));
+		if (r == true) {
+		    
+			file.destroy({
+				success: _.bind(function(model, response) {
+					alert("ลบข้อมูลเรียบร้อยแล้ว")
+					
+					this.model.get('files').remove(file);
+					
+					var json= {};
+					json.model = this.model.toJSON();
+					
+					$('#filesTbl tbody').empty();
+					$('#filesTbl tbody').html(this.trFilesTemplate(json));
+					
+				},this)
+			});
+			
+		} 
+		
+		return false;
+	},	
 	onClickSaveFormBtn: function(e) {
 		var validated = true;
 		
@@ -337,7 +372,9 @@ var FormView = Backbone.View.extend({
 					alert(response.status + " :" + response.message);
 				}
 				this.model.set('id', response.data);
+				this.model.set('domainName', 'BEHAVIOR');
 				alert("บันทึกข้อมูลแล้ว");
+				this.render();
 		},this)});
 	},
 	onClickBackBtn: function(e) {
@@ -451,13 +488,25 @@ var FormView = Backbone.View.extend({
 	
 	editForm: function(id) {
 		this.model = smt.Model.Behavior.findOrCreate({id: id});
-		var zoneId=this.model.get('zone').get('id');
-		var provinceId = this.model.get('province').get('id');
-		$.when(this.provinces.fetch({url: appUrl('Province/findAllByZone/'+zoneId)}),
-				this.amphurs.fetch({url: appUrl('Province/'+provinceId +'/Amphur')}))
-				.done(_.bind(function(x) {
-			this.render();	
-		},this));
+		this.model.fetch({
+			success: _.bind(function() {
+				var zoneId=this.model.get('zone').get('id');
+				var provinceId = this.model.get('province').get('id');
+				
+
+				$.when(this.model.fetch,
+						this.provinces.fetch({url: appUrl('Province/findAllByZone/'+zoneId)}),
+						this.amphurs.fetch({url: appUrl('Province/'+provinceId +'/Amphur')}))
+						.done(_.bind(function(x) {
+					
+							this.render();		
+						},this));
+				
+			},this)
+		})
+		
+		
+		
 		
 	},
 	renderImpactTbl: function() {
@@ -534,10 +583,33 @@ var FormView = Backbone.View.extend({
 			json.symptomTxt = "ลักษณะอาการที่เกิดพฤติกรรมเสี่ยง"
 		}
 		
-		console.log(json);
+		
 		this.$el.html(this.formViewTemplate(json));
 		
 		this.renderImpactTbl();
+		
+		$('#fileupload').fileupload({
+	        dataType: 'json',
+	 
+	        done: _.bind(function (e, data) {
+	            $.each(data.result, _.bind(function (index, file) {
+	            	var file = new smt.Model.FileMeta(file);
+	            	this.model.get('files').add(file);
+	            	var json = {};
+	            	json.model = this.model.toJSON();
+	            	$('#filesTbl tbody').empty();
+	            	$('#filesTbl tbody').html(this.trFilesTemplate(json));
+	            },this)); 
+	        },this),	 
+	        progressall: function (e, data) {
+	            var progress = parseInt(data.loaded / data.total * 100, 10);
+	            $('#progress .bar').css(
+	                'width',
+	                progress + '%'
+	            );
+	        }
+		});
+		
 		return this;
 	}
 });

@@ -152,6 +152,10 @@ smt.Model.Research = Backbone.RelationalModel.extend({
 		type: Backbone.HasOne,
 		key: 'organization',
 		relatedModel: 'smt.Model.OrganizationNetwork'
+	},{
+		type: Backbone.HasMany,
+		key: 'files',
+		relatedModel: 'smt.Model.FileMeta'
 	}],
 	urlRoot: appUrl('Research')
 });
@@ -221,6 +225,10 @@ smt.Model.Behavior = Backbone.RelationalModel.extend({
 		key: 'impacts',
 		collectionType: 'smt.Collection.BehaviorImpacts',
 		relatedModel: 'smt.Model.BehaviorImpact'
+	},{
+		type: Backbone.HasMany,
+		key: 'files',
+		relatedModel: 'smt.Model.FileMeta'
 	}],
 	urlRoot: appUrl('Behavior')
 });

@@ -347,6 +347,7 @@ var FormView = Backbone.View.extend({
 					alert(response.status + " :" + response.message);
 				}
 				this.model.set('id', response.data);
+				this.model.set('domainName', 'JOURNAL');
 				
 				alert("บันทึกข้อมูลแล้ว");
 				this.render();
@@ -426,7 +427,6 @@ var FormView = Backbone.View.extend({
 			
 		}
 		
-		console.log(json);
 		this.$el.html(this.formViewTemplate(json));
 		
 		$('#fileupload').fileupload({

@@ -2,6 +2,8 @@ package smt.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,13 +12,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Where;
+
 import smt.auth.model.SecurityUser;
 import smt.model.glb.JournalType;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -29,6 +35,9 @@ public class Research implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -2327790821232340317L;
+	private static final String domainName = "RESEARCH";
+	
+	
 
 	@Override
 	public int hashCode() {
@@ -138,6 +147,11 @@ public class Research implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="LAST_UPDATE_DATE")
 	private Date lastUpdateDate;
+	
+	@OneToMany
+	@JoinColumn(name="domainId", referencedColumnName="Id")
+	@Where(clause="domain='"+domainName+"'")
+	private List<FileMeta> files;
 
 	public Long getId() {
 		return id;
@@ -339,6 +353,16 @@ public class Research implements Serializable{
 		this.abstractEn = abstractEn;
 	}
 
-	
+	public List<FileMeta> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<FileMeta> files) {
+		this.files = files;
+	}
+
+	public String getDomainName() {
+		return domainName;
+	}
 	
 }

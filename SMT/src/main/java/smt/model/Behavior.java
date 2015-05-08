@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Where;
 import org.neo4j.cypher.internal.compiler.v2_1.perty.docbuilders.scalaDocBuilder;
 
 import smt.auth.model.SecurityUser;
@@ -44,6 +45,7 @@ public class Behavior implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 8188407395419621249L;
+	private static final String domainName = "BEHAVIOR";
 
 	@Override
 	public int hashCode() {
@@ -153,6 +155,11 @@ public class Behavior implements Serializable{
 	@Column(name="LAST_UPDATE_DATE")
 	private Date lastUpdateDate;
 
+	@OneToMany
+	@JoinColumn(name="domainId", referencedColumnName="Id")
+	@Where(clause="domain='"+domainName+"'")
+	private List<FileMeta> files;
+	
 	public Long getId() {
 		return id;
 	}
@@ -353,7 +360,17 @@ public class Behavior implements Serializable{
 		this.situation = situation;
 	}
 	
-	
+	public List<FileMeta> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<FileMeta> files) {
+		this.files = files;
+	}
+
+	public String getDomainName() {
+		return domainName;
+	}
 	
 	
 }
