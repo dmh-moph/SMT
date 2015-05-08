@@ -253,9 +253,17 @@ var TableResultView = Backbone.View.extend({
 	}
 });
 
+
+
 var FormView = Backbone.View.extend({
+	/**
+	 * @memberOf FormView
+	 */
 	 initialize: function(options){
 		 this.formViewTemplate = Handlebars.compile($("#formViewTemplate").html());
+		 this.trFilesTemplate = Handlebars.compile($("#trFilesTemplate").html());
+		 
+		 Handlebars.registerPartial("trFilesTemplate", $("#trFilesTemplate").html());
 		
 		 // the three must have option!
 		 this.journalTypes = options.journalTypes;
@@ -269,9 +277,38 @@ var FormView = Backbone.View.extend({
 		 "click #newOrgBtn" : "onClickNewOrgBtn",
 		 
 		"click #saveFormBtn" : "onClickSaveFormBtn",
-		"click #backBtn" : "onClickBackBtn"
+		"click #backBtn" : "onClickBackBtn",
+		
+		"click .fileDeleteLnk" : "onClickFileDeleteLnk"
 			 
 	},
+	onClickFileDeleteLnk: function(e){
+		var fileId = $(e.currentTarget).attr('data-id');
+		var file = smt.Model.FileMeta.findOrCreate(fileId);
+		
+		var r = confirm("คุณต้องการลบไฟล์ " + file.get('fileName'));
+		if (r == true) {
+		    
+			file.destroy({
+				success: _.bind(function(model, response) {
+					alert("ลบข้อมูลเรียบร้อยแล้ว")
+					
+					this.model.get('files').remove(file);
+					
+					var json= {};
+					json.model = this.model.toJSON();
+					
+					$('#filesTbl tbody').empty();
+					$('#filesTbl tbody').html(this.trFilesTemplate(json));
+					
+				},this)
+			});
+			
+		} 
+		
+		return false;
+	},	
+	
 	onClickSaveFormBtn: function(e) {
 		var validated = true;
 		
@@ -310,7 +347,9 @@ var FormView = Backbone.View.extend({
 					alert(response.status + " :" + response.message);
 				}
 				this.model.set('id', response.data);
+				
 				alert("บันทึกข้อมูลแล้ว");
+				this.render();
 		},this)});
 	},
 	onClickBackBtn: function(e) {
@@ -361,8 +400,12 @@ var FormView = Backbone.View.extend({
 	
 	editForm: function(id) {
 		this.model = smt.Model.Journal.findOrCreate({id: id});
-		
-		this.render();	
+		this.model.fetch({
+			success: _.bind(function() {
+				this.render();		
+			},this)
+		});
+			
 		
 	},
 	render: function() {
@@ -389,11 +432,16 @@ var FormView = Backbone.View.extend({
 		$('#fileupload').fileupload({
 	        dataType: 'json',
 	 
-	        done: function (e, data) {
-	            $.each(data.result, function (index, file) {
-	            	console.log(file);
-	            }); 
-	        },	 
+	        done: _.bind(function (e, data) {
+	            $.each(data.result, _.bind(function (index, file) {
+	            	var file = new smt.Model.FileMeta(file);
+	            	this.model.get('files').add(file);
+	            	var json = {};
+	            	json.model = this.model.toJSON();
+	            	$('#filesTbl tbody').empty();
+	            	$('#filesTbl tbody').html(this.trFilesTemplate(json));
+	            },this)); 
+	        },this),	 
 	        progressall: function (e, data) {
 	            var progress = parseInt(data.loaded / data.total * 100, 10);
 	            $('#progress .bar').css(

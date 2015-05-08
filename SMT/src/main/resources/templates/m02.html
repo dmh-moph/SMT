@@ -243,39 +243,38 @@
 					{{txtInput "full" "แหล่งข้อมูล/เอกสารอ้างอิง" "reference" this.model.reference "readwrite" "required"}}
 				</div>
 			</div>
+			{{#if model.id}}
 			<div class="row">
 				<div class="col-md-12">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<b>ไฟล์ทีเกี่ยวข้อง</b> 
+							
+						</div>
+						<div class="panel-body">
 							<span class="btn btn-success fileinput-button">
                     			<i class="glyphicon glyphicon-plus"></i>
                     			<span>Add files...</span>
                     			<input id="fileupload" type="file" name="files[]" data-url="/smt/FILES/upload/JOURNAL/{{model.id}}" multiple>
                 			</span>
-						</div>
-						<div class="panel-body">
 							 <div id="progress">
 						        <div style="width: 0%;"></div>
     						</div>
 						</div>
-						<table class="table">
+						<table class="table" id="filesTbl">
 							<thead>
+								<th style="width:40px;"></th>
 								<th>Filename</th>
-								<th>Size</th>
+								<th style="width:200px;">Size (KB)</th>
 							</thead>
 							<tbody>
-								{{#each model.files}}
-								<tr>
-									<td><a href="/smt/FILES/get/JOURNAL/{{../id}}/{{fileName}}">{{fileName}}</a></td>
-									<td>{{fileSize}}</td>
-								</tr>
-								{{/each}}
+								{{> trFilesTemplate}}
 							</tbody>
 						</table>
 					</div>
 				</div>
 			</div>
+			{{/if}}
 		</div>
 		<div class="panel-footer">
 			<button id="backBtn" type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i> กลับหน้าเดิม</button>
@@ -285,6 +284,20 @@
 	</div>
 	</form>
 </div>
+</script>
+
+<script  id="trFilesTemplate" type="text/x-handlebars-template"  th:inline="text">
+{{#each model.files}}
+	<tr>
+		<td style="text-align:center;">
+			<a href="#" class="fileDeleteLnk" data-id="{{id}}"><i class="fa fa-trash"></i></a>
+		</td>
+		<td>
+			<a href="/smt/FILES/get/{{../model.domainName}}/{{../model.id}}/{{fileName}}">{{fileName}}</a>
+		</td>
+		<td>{{formatNumber fileSize}}</td>
+	</tr>
+{{/each}}
 </script>
 
 <script  id="searchViewTemplate" type="text/x-handlebars-template"  th:inline="text">

@@ -20,7 +20,7 @@ Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
 });
 
 Handlebars.registerHelper('formatNumber', function(number) {
-	return addCommas(number);
+	return __addCommas(number);
 });
 
 Handlebars.registerHelper('txtInput', function(size, label, field, defaultValue, readonly, required) {

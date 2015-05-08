@@ -2,6 +2,8 @@ package smt.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,13 +12,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Where;
+
 import smt.auth.model.SecurityUser;
 import smt.model.glb.JournalType;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -30,6 +36,8 @@ public class Journal implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1152936322423117290L;
+
+	private static final String domainName = "JOURNAL";
 
 	@Override
 	public int hashCode() {
@@ -118,7 +126,12 @@ public class Journal implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="LAST_UPDATE_DATE")
 	private Date lastUpdateDate;
-
+	
+	@OneToMany
+	@JoinColumn(name="domainId", referencedColumnName="Id")
+	@Where(clause="domain='"+domainName+"'")
+	private List<FileMeta> files;
+	
 	public Long getId() {
 		return id;
 	}
@@ -279,6 +292,17 @@ public class Journal implements Serializable{
 		this.lastUpdateDate = lastUpdateDate;
 	}
 
+	public List<FileMeta> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<FileMeta> files) {
+		this.files = files;
+	}
+
+	public String getDomainName() {
+		return domainName;
+	}
 	
 	
 }

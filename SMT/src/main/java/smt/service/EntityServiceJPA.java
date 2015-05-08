@@ -582,7 +582,11 @@ public class EntityServiceJPA implements EntityService {
 
 	@Override
 	public Journal findJournalById(Long id) {
-		return journalRepo.findOne(id);
+		Journal journal = journalRepo.findOne(id);
+		
+		journal.getFiles().size();
+		
+		return journal;
 	}
 
 	@Override

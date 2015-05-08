@@ -5,12 +5,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.util.buf.Utf8Encoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +92,6 @@ public class FileController {
 	                 fileMetaRepo.save(fileMeta);
 	                 list.add(fileMeta);
 	            } catch (IOException e) {
-	                // TODO Auto-generated catch block
 	                e.printStackTrace();
 	            }
 	             
@@ -112,6 +113,35 @@ public class FileController {
 		 return list;
 	 }
 	 
+	 @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+     public @ResponseBody String deleteFile(@PathVariable Long id){
+		 
+		 QFileMeta q = QFileMeta.fileMeta;
+		 BooleanExpression p = q.id.eq(id);
+		 try {  
+			 FileMeta fileMeta = fileMetaRepo.findOne(p);
+			 if(fileMeta == null) throw new FileNotFoundException();
+			 fileMetaRepo.delete(fileMeta);
+			 
+			 File file = new File(fileUploadDirectory +"/"
+					 + fileMeta.getDomain() + "/" 
+					 + fileMeta.getDomainId()+"/"
+					 + fileMeta.getFileName());
+			 
+			 logger.debug("deleting file : " + file.getAbsolutePath());
+			 
+			 if(file.delete()) {
+				 return "success";
+			 } else {
+				 return "failed";
+			 }
+         }catch (IOException e) {
+        	 e.printStackTrace();
+         }
+		 
+		 return "failed";
+     }
+	 
 	 @RequestMapping(value = "/get/{domain}/{domainId}/{filename:.+}", method = RequestMethod.GET)
      public void getFile(HttpServletResponse response,
     		 @PathVariable String filename,
@@ -127,9 +157,12 @@ public class FileController {
 		 try {  
 			 FileMeta fileMeta = fileMetaRepo.findOne(p);
 			 if(fileMeta == null) throw new FileNotFoundException();
-			 
-             response.setContentType(fileMeta.getFileType());
-        	 response.setHeader("Content-disposition", "attachment; filename=\""+fileMeta.getFileName()+"\"");
+			 String fileName = URLEncoder.encode(fileMeta.getFileName(),"UTF-8");
+			 response.setCharacterEncoding("UTF-8");
+             response.setContentType(fileMeta.getFileType() + ";charset=UTF-8");
+        	 
+        	 response.setHeader("Content-Disposition","attachment; filename*=UTF-8''"+fileName);
+        	 
         	 FileCopyUtils.copy(new FileInputStream(file), response.getOutputStream());
          }catch (IOException e) {
         	 e.printStackTrace();

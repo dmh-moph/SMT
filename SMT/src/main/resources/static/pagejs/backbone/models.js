@@ -53,6 +53,10 @@ smt.Model.DV_EducationLevel = Backbone.RelationalModel.extend({
 
 smt.Model.HealthZone = Backbone.RelationalModel.extend();
  
+smt.Model.FileMeta = Backbone.RelationalModel.extend({
+	urlRoot: '/smt/FILES'
+});
+
 smt.Model.Amphur = Backbone.RelationalModel.extend({
 	relations: [{
 		type: Backbone.HasOne,
@@ -111,6 +115,10 @@ smt.Model.Journal = Backbone.RelationalModel.extend({
 		type: Backbone.HasOne,
 		key: 'organization',
 		relatedModel: 'smt.Model.OrganizationNetwork'
+	},{
+		type: Backbone.HasMany,
+		key: 'files',
+		relatedModel: 'smt.Model.FileMeta'
 	}],
 	urlRoot: appUrl('Journal')
 });
