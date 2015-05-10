@@ -1,5 +1,6 @@
 package smt.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -602,6 +603,8 @@ public class EntityServiceJPA implements EntityService {
 	public ResponseJSend<Long> saveJournal(JsonNode node, SecurityUser user) throws JsonMappingException {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		mapper.setDateFormat(sdf);
 		
 		ObjectNode object = (ObjectNode) node;
 		object.remove("organization");

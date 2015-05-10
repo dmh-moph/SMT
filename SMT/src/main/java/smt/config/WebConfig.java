@@ -1,6 +1,7 @@
 package smt.config;
 
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
@@ -46,7 +47,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	        // Registering Hibernate4Module to support lazy objects
 	        mapper.registerModule(hm);
 
-	        messageConverter.setObjectMapper(mapper);
+	        // Register default dateformat
+	        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			mapper.setDateFormat(sdf);
+			
+			messageConverter.setObjectMapper(mapper);
 	        return messageConverter;
 
 	    }

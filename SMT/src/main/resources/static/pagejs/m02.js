@@ -429,6 +429,14 @@ var FormView = Backbone.View.extend({
 		
 		this.$el.html(this.formViewTemplate(json));
 		
+		$('#publishDateTxt').datepicker({
+			format: 'dd/mm/yyyy',
+			todayBtn: 'linked',
+			autoclose : true,
+			language: "th",
+			orientation: "top auto"
+		});
+		
 		$('#fileupload').fileupload({
 	        dataType: 'json',
 	 
