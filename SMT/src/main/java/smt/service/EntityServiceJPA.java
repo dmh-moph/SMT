@@ -432,8 +432,7 @@ public class EntityServiceJPA implements EntityService {
 	@Override
 	public ResponseJSend<Long> saveBehavior(JsonNode node, SecurityUser user) throws JsonMappingException {
 		
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		ObjectMapper mapper = getObjectMapper();
 		
 		Behavior webModel;
 		
@@ -568,15 +567,18 @@ public class EntityServiceJPA implements EntityService {
 			p = p.and(q.journalType.eq(webModel.getJournalType()));
 		}
 		
-		if(webModel.getNameTh() != null) {
-			p = p.and(q.nameTh.like(""+webModel.getNameTh().trim()+""));
+		BooleanBuilder nameP = new BooleanBuilder();
+		
+		logger.debug("Searching for nameTh:  " + webModel.getNameTh());
+		if(webModel.getNameTh() != null ) {
+			nameP = nameP.or(q.nameTh.like("%"+webModel.getNameTh().trim()+"%"));
 		}
 		
 		if(webModel.getNameEn() != null) {
-			p = p.and(q.nameEn.like(""+webModel.getNameEn().trim()+""));
+			nameP = nameP.or(q.nameEn.like("%"+webModel.getNameEn().trim()+"%"));
 		}
 		
-		
+		p = p.and(nameP);
 		
 		PageRequest pageRequest =
 	            new PageRequest(pageNum -1, DefaultProperty.NUMBER_OF_ELEMENT_PER_PAGE, Sort.Direction.ASC, "nameTh");
@@ -599,12 +601,17 @@ public class EntityServiceJPA implements EntityService {
 		return journal;
 	}
 
-	@Override
-	public ResponseJSend<Long> saveJournal(JsonNode node, SecurityUser user) throws JsonMappingException {
+	private ObjectMapper getObjectMapper() {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		mapper.setDateFormat(sdf);
+		return mapper;
+	}
+	
+	@Override
+	public ResponseJSend<Long> saveJournal(JsonNode node, SecurityUser user) throws JsonMappingException {
+		ObjectMapper mapper = getObjectMapper();
 		
 		ObjectNode object = (ObjectNode) node;
 		object.remove("organization");
@@ -691,15 +698,16 @@ public class EntityServiceJPA implements EntityService {
 			p = p.and(q.journalType.eq(webModel.getJournalType()));
 		}
 		
+		BooleanBuilder nameP = new BooleanBuilder();
 		if(webModel.getNameTh() != null) {
-			p = p.and(q.nameTh.like(""+webModel.getNameTh().trim()+""));
+			nameP = nameP.or(q.nameTh.like(""+webModel.getNameTh().trim()+""));
 		}
 		
 		if(webModel.getNameEn() != null) {
-			p = p.and(q.nameEn.like(""+webModel.getNameEn().trim()+""));
+			nameP = nameP.or(q.nameEn.like(""+webModel.getNameEn().trim()+""));
 		}
 		
-		
+		p = p.and(nameP);
 		
 		PageRequest pageRequest =
 	            new PageRequest(pageNum -1, DefaultProperty.NUMBER_OF_ELEMENT_PER_PAGE, Sort.Direction.ASC, "nameTh");
@@ -724,8 +732,7 @@ public class EntityServiceJPA implements EntityService {
 
 	@Override
 	public ResponseJSend<Long> saveResearch(JsonNode node, SecurityUser user) throws JsonMappingException {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		ObjectMapper mapper = getObjectMapper();
 		
 		Long orgId = node.path("organization").path("id").asLong();
 		OrganizationNetwork org = organizationNetworkRepo.findOne(orgId);
@@ -854,8 +861,7 @@ public class EntityServiceJPA implements EntityService {
 
 	@Override
 	public ResponseJSend<Long> saveSituation(JsonNode node, SecurityUser user) throws JsonMappingException {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		ObjectMapper mapper = getObjectMapper();
 		
 		Long situationTypeId = node.path("situationType").path("id").asLong();
 		SituationType situationType = situationTypeRepo.findOne(situationTypeId);

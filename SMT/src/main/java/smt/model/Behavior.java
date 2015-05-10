@@ -277,7 +277,7 @@ public class Behavior implements Serializable{
 	}
 
 	public void setPreventiveGuideline(String preventiveGuideline) {
-		preventiveGuideline = preventiveGuideline;
+		this.preventiveGuideline = preventiveGuideline;
 	}
 
 	public String getAttachFile() {

@@ -385,7 +385,7 @@ var FormView = Backbone.View.extend({
     	var impact = this.model.get('impacts').at(index);
     	
     	this.impactModalView.setCurrentBehavior(this.model);
-    	this.impactModalView.setCurrentImpactAndRender(person);
+    	this.impactModalView.setCurrentImpactAndRender(impact);
    	},
 	onClickRemoveImpactBtn: function(e) {
 		var index=$(e.currentTarget).parents('tr').attr('data-index');

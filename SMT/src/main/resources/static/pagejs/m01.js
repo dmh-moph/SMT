@@ -409,7 +409,8 @@ var JournalModalView = Backbone.View.extend({
 		return false;
 	},
 	onClickSeachBtn: function() {
-		this.searchModel.set('name', this.$el.find('#journalNameTxt').val());
+		this.searchModel.set('nameTh', this.$el.find('#journalNameTxt').val());
+		this.searchModel.set('nameEn', this.$el.find('#journalNameTxt').val());
 		
 		this.searchResults.fetch({
 			url: appUrl('Journal/search/page/' + this.pageNum),

@@ -409,7 +409,8 @@ var ResearchModalView = Backbone.View.extend({
 		return false;
 	},
 	onClickSeachBtn: function() {
-		this.searchModel.set('name', this.$el.find('#researchNameTxt').val());
+		this.searchModel.set('nameTh', this.$el.find('#researchNameTxt').val());
+		this.searchModel.set('nameEn', this.$el.find('#researchNameTxt').val());
 		
 		this.searchResults.fetch({
 			url: appUrl('Research/search/page/' + this.pageNum),
