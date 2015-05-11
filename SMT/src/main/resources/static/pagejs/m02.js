@@ -343,8 +343,8 @@ var FormView = Backbone.View.extend({
 		
 		// set keyword lob
 		this.model.set('keyword', CKEDITOR.instances.keywordTxa.getData());
-		this.model.set('summaryContent', CKEDITOR.instances.keywordTxa.getData());
-		this.model.set('objective', CKEDITOR.instances.keywordTxa.getData());
+		this.model.set('summaryContent', CKEDITOR.instances.summaryContentTxa.getData());
+		this.model.set('objective', CKEDITOR.instances.objectiveTxa.getData());
 		
 		this.model.save(null, {
 			success:_.bind(function(model, response, options) {
