@@ -114,7 +114,7 @@ public class OrganizationNetwork implements Serializable {
 	private String website;
 	
 	 @OneToMany(mappedBy="organizationNetwork", cascade=CascadeType.ALL)
-	 @OrderColumn(name="organizationNetwork_index")
+	 @OrderColumn(name="organization_Network_index")
 	 List<OrganizationPerson> medicalStaffs;
 	
 	@ManyToOne
