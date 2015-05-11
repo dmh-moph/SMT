@@ -243,6 +243,20 @@ smt.Collection.BehaviorImpacts = Backbone.Collection.extend({
 	model: smt.Model.BehaviorImpact
 });
 
+smt.Model.PsychoSocialReport = Backbone.RelationalModel.extend({
+	relations: [{
+		type: Backbone.HasOne,
+		key: 'organizationNetwork',
+		relatedModel: 'smt.Model.OrganizationNetwork'
+	}],
+	urlRoot: appUrl('PsychoSocialReport')
+});
+
+smt.Page.PsychoSocialReports = Backbone.PageCollection.extend({
+	model: smt.Model.PsychoSocialReport,
+	url: appUrl('PsychoSocialReport/search')
+});
+
 smt.Model.OrganizationPerson = Backbone.RelationalModel.extend({
 	relations: [{
 		type: Backbone.HasOne,
@@ -259,6 +273,10 @@ smt.Model.OrganizationPerson = Backbone.RelationalModel.extend({
 smt.Page.OrganizationNetworks = Backbone.PageCollection.extend({
 	model: smt.Model.OrganizationNetwork,
 	url: appUrl('OrganizationNetwork/search')
+});
+
+smt.Collection.OrganizationNetworks = Backbone.Collection.extend({
+	model: smt.Model.OrganizationNetwork
 });
 
 smt.Collection.HealthZones = Backbone.Collection.extend({

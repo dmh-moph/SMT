@@ -22,6 +22,12 @@ public class HomeController {
 		return "home";
 	}
 	
+	@RequestMapping("/m08")
+	public String m08Handle(Model model) {
+		model.addAttribute("title","m08: ข้อมูลรายงานผลการดำเนินงานศูนย์ให้คำปรึกษาคุณภาพ (Psychosocial Clinic)");
+		return "m08";
+	}
+	
 	@RequestMapping("/m06")
 	public String m06Handle(Model model) {
 		model.addAttribute("title","m06: : ข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น");

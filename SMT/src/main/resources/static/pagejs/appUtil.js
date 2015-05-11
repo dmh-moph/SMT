@@ -65,6 +65,31 @@ Handlebars.registerHelper('txtAreaInput', function(size, label, field, defaultVa
 	return new Handlebars.SafeString(s);
 });
 
+Handlebars.registerHelper('simpleTxtInput', function(field, defaultValue, readonly, required) {
+	
+	var aValue = "";
+	
+	if(defaultValue != null) {
+		aValue = defaultValue;
+	}
+	
+	var readOnlyTxt = ""; 
+	
+	if(readonly == "readonly") {
+		readOnlyTxt = "readonly";
+	}
+	
+	var requiredTxt = "";
+	if(required == "required") {
+		requiredTxt = " required='required' ";
+	}
+	
+	var s = "" +
+			
+			"		<input type='text' class='form-control formTxt' id='"+ field+"Txt' data-field='"+field+"' value='"+aValue+"' "+readOnlyTxt+requiredTxt+"></input> \n"; 
+	
+	return new Handlebars.SafeString(s);
+});
 
 Handlebars.registerHelper('txtInput', function(size, label, field, defaultValue, readonly, required) {
 	

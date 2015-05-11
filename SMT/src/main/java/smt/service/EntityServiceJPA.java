@@ -32,10 +32,12 @@ import smt.model.Journal;
 import smt.model.JournalSituation;
 import smt.model.OrganizationNetwork;
 import smt.model.OrganizationPerson;
+import smt.model.PsychoSocialReport;
 import smt.model.QBehavior;
 import smt.model.QJournal;
 import smt.model.QJournalSituation;
 import smt.model.QOrganizationNetwork;
+import smt.model.QPsychoSocialReport;
 import smt.model.QResearch;
 import smt.model.QResearchSituation;
 import smt.model.QSituation;
@@ -63,6 +65,7 @@ import smt.repository.OrganizationNetworkRepo;
 import smt.repository.OrganizationPersonRepo;
 import smt.repository.PersonTypeRepo;
 import smt.repository.ProvinceRepo;
+import smt.repository.PsychoSocailReportRepo;
 import smt.repository.ResearchSituationRepo;
 import smt.repository.SituationRepo;
 import smt.repository.SituationTypeRepo;
@@ -128,6 +131,9 @@ public class EntityServiceJPA implements EntityService {
 	@Autowired
 	ResearchSituationRepo researchSituationRepo;
 	
+	@Autowired
+	PsychoSocailReportRepo psychoSocailReportRepo;
+	
 	@Override
 	public List<Province> findAllProvince() {
 		return provinceRepo.findAll();
@@ -136,6 +142,13 @@ public class EntityServiceJPA implements EntityService {
 	@Override
 	public List<Amphur> findAllAmphurByProvinceId(Long provinceId) {
 		return provinceRepo.findAllAmphurByProvinceId(provinceId);
+	}
+	
+	@Override
+	public Iterable<OrganizationNetwork> findAllOrganizationByProvinceId(
+			Long provinceId) {
+		QOrganizationNetwork q = QOrganizationNetwork.organizationNetwork;
+		return organizationNetworkRepo.findAll(q.province.id.eq(provinceId));
 	}
 
 	@Override
@@ -1104,6 +1117,101 @@ public class EntityServiceJPA implements EntityService {
 		response.status = ResponseStatus.SUCCESS;
 		
 		return response;
+	}
+
+	@Override
+	public ResponseJSend<Page<PsychoSocialReport>> findPsychoSocialReportByExample(
+			JsonNode node, Integer pageNum) throws JsonMappingException {
+		ObjectMapper mapper = getObjectMapper();
+		
+		PsychoSocialReport webModel;
+		
+		try {
+			webModel = mapper.treeToValue(node, PsychoSocialReport.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new JsonMappingException(e.getMessage() + "\n  JSON: " + node.toString());
+		}
+		
+		
+		logger.debug("findPsychoSocialReportByExample");
+
+		QPsychoSocialReport q = QPsychoSocialReport.psychoSocialReport;
+		BooleanBuilder p = new BooleanBuilder();
+		
+		if(webModel.getOrganization() != null) {
+			p = p.and(q.organization.id.eq(webModel.getOrganization().getId()));
+		}
+		
+		PageRequest pageRequest =
+	            new PageRequest(pageNum -1, DefaultProperty.NUMBER_OF_ELEMENT_PER_PAGE, Sort.Direction.DESC, "id");
+		
+		Page<PsychoSocialReport> reports = psychoSocailReportRepo.findAll(p, pageRequest); 
+		
+		
+		ResponseJSend<Page<PsychoSocialReport>> response = new ResponseJSend<Page<PsychoSocialReport>>();
+		response.data=reports;
+		response.status=ResponseStatus.SUCCESS;
+		
+		return response;
+
+	}
+
+	@Override
+	public PsychoSocialReport findPsychoSocialReportById(Long id) {
+		return psychoSocailReportRepo.findOne(id);
+	}
+
+	@Override
+	public ResponseJSend<Long> savePsychoSocialReport(JsonNode node,
+			SecurityUser user) throws JsonMappingException {
+
+		PsychoSocialReport dbModel = null;
+		if(node.path("id") == null || node.path("id").asLong() == 0L ) {
+			logger.debug("create new dbModel");
+			dbModel = new PsychoSocialReport();
+		} else {
+			logger.debug("find dbModel with id=" + node.path("id").asLong());
+			dbModel = psychoSocailReportRepo.findOne(node.path("id").asLong());
+		}
+
+		Long orgId = node.path("organization").path("id").asLong();
+		
+		logger.debug("orgId: " + orgId);
+		OrganizationNetwork organization = organizationNetworkRepo.findOne(orgId);
+		
+		
+		ObjectMapper mapper = getObjectMapper();
+		ObjectNode object = (ObjectNode) node;
+		object.remove("organization");
+		PsychoSocialReport webModel;
+		try {
+			webModel = mapper.treeToValue(object, PsychoSocialReport.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new JsonMappingException(e.getMessage() + "\n  JSON: " + node.toString());
+		}
+
+		BeanUtils.copyProperties(webModel, dbModel, "organization");
+		
+		dbModel.setOrganization(organization);
+		dbModel.setReportDate(new Date());
+		dbModel.setReportUser(user);
+		
+		
+		psychoSocailReportRepo.save(dbModel);
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.status = ResponseStatus.SUCCESS;
+		response.data = dbModel.getId(); 
+		return response;
+
+	}
+
+	@Override
+	public ResponseJSend<Long> deletePsychoSocialReport(Long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

@@ -12,6 +12,7 @@ import smt.model.Behavior;
 import smt.model.Journal;
 import smt.model.JournalSituation;
 import smt.model.OrganizationNetwork;
+import smt.model.PsychoSocialReport;
 import smt.model.Research;
 import smt.model.ResearchSituation;
 import smt.model.Situation;
@@ -104,5 +105,18 @@ public interface EntityService {
 			SecurityUser user);
 
 	public ResponseJSend<Long> deleteResearchSituation(Long id);
+
+	public ResponseJSend<Page<PsychoSocialReport>> findPsychoSocialReportByExample(
+			JsonNode node, Integer pageNum) throws JsonMappingException;
+
+	public PsychoSocialReport findPsychoSocialReportById(Long id);
+
+	public ResponseJSend<Long> savePsychoSocialReport(JsonNode node,
+			SecurityUser user) throws JsonMappingException;
+
+	public ResponseJSend<Long> deletePsychoSocialReport(Long id);
+
+	public Iterable<OrganizationNetwork> findAllOrganizationByProvinceId(
+			Long provinceId);
 
 }

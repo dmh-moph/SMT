@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import smt.model.OrganizationNetwork;
 import smt.model.glb.Amphur;
 import smt.model.glb.HealthZone;
 import smt.model.glb.Province;
@@ -28,6 +29,11 @@ public class ProvinceRestController {
 	@RequestMapping("/{provinceId}/Amphur")
 	public List<Amphur> findAllAmphurByProvince(@PathVariable Long provinceId) {
 		return entityService.findAllAmphurByProvinceId(provinceId);
+	}
+	
+	@RequestMapping("/{provinceId}/Organization")
+	public Iterable<OrganizationNetwork> findAllOrganizationByProvince(@PathVariable Long provinceId) {
+		return entityService.findAllOrganizationByProvinceId(provinceId);
 	}
 	
 	@RequestMapping("/findAllZone")

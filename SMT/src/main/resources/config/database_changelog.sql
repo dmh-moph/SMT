@@ -156,5 +156,30 @@ update smt_journal set temp=OBJECTIVE;
 alter table smt_journal drop column OBJECTIVE;
 alter table smt_journal rename column temp to OBJECTIVE;
 
-
+create table SMT_PSYCHO_REPORT (
+    id number(19,0) not null,
+    month number(4,0),
+    year number(4,0),
+    begin_Report_Date date,
+    end_Report_Date date,
+    target_Age varchar2(20),
+    pragnant_Count number(19,0),
+    pragnant_Service number(19,0),
+    alcohol_Count number(19,0),
+    alcohol_Service number(19,0),
+    violence_count number(19,0),
+    violence_service number(19,0),
+    gambling_count number(19,0),
+    gambling_service number(19,0),
+    drug_count number(19,0),
+    drug_service  number(19,0),
+    report_date timestamp,
+    reprot_user_id number(19,0),
+    ORG_ID number(19,0),
+    primary key (id)
+);
+create sequence SMT_PSYCHO_REPORT_SEQ START WITH 1 INCREMENT by 1 MAXVALUE 9999999999 MINVALUE 1 NOCYCLE; 
+alter table SMT_PSYCHO_REPORT 
+  add CONSTRAINT SMT_PSYCHO_REPORT_ORG_FK
+  FOREIGN KEY (ORG_ID) REFERENCES SMT_ORGANIZATION_NETWORK;
 commit;
