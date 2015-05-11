@@ -341,6 +341,11 @@ var FormView = Backbone.View.extend({
 		// now set behaviorType
 		this.model.set('type', behaviorType);
 		
+		// set keyword lob
+		this.model.set('keyword', CKEDITOR.instances.keywordTxa.getData());
+		this.model.set('summaryContent', CKEDITOR.instances.keywordTxa.getData());
+		this.model.set('objective', CKEDITOR.instances.keywordTxa.getData());
+		
 		this.model.save(null, {
 			success:_.bind(function(model, response, options) {
 				if(response.status != 'SUCCESS') {
@@ -459,6 +464,10 @@ var FormView = Backbone.View.extend({
 	        }
 		});
 		
+		
+		CKEDITOR.replace('objectiveTxa')
+		CKEDITOR.replace('summaryContentTxa');
+		CKEDITOR.replace('keywordTxa');
 		
 		return this;
 	}

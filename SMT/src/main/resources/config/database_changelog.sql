@@ -137,4 +137,24 @@ create table SMT_FILEMETA (
 );
 create sequence SMT_FILEMETA_SEQ START WITH 1 INCREMENT by 1 MAXVALUE 9999999999 MINVALUE 1 NOCYCLE; 
 
+
+/** 11 May 2015
+ * 
+ */
+alter table smt_journal add (temp clob);
+update smt_journal set temp=KEYWORD;
+alter table smt_journal drop column keyword;
+alter table smt_journal rename column temp to keyword;
+
+alter table smt_journal add (temp clob);
+update smt_journal set temp=SUMMARY_CONTENT;
+alter table smt_journal drop column SUMMARY_CONTENT;
+alter table smt_journal rename column temp to SUMMARY_CONTENT;
+
+alter table smt_journal add (temp clob);
+update smt_journal set temp=OBJECTIVE;
+alter table smt_journal drop column OBJECTIVE;
+alter table smt_journal rename column temp to OBJECTIVE;
+
+
 commit;
