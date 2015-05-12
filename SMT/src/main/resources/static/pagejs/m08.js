@@ -22,7 +22,7 @@ var AppRouter = Backbone.Router.extend({
 	routes: {
         "newReport" : "newForm",
         "search" : "search",
-        "PsycoSocialReport/:id" : "editForm",
+        "PsychoSocialReport/:id" : "editForm",
         "*actions": "defaultRoute" // Backbone will try match the route above first
     },
     
@@ -83,6 +83,10 @@ var SearchView = Backbone.View.extend({
     	this.searchViewTemplate = Handlebars.compile($("#searchViewTemplate").html());
     	this.provinceSltTemplate = Handlebars.compile($("#provinceSltTemplate").html());
     	this.searchModel = new smt.Model.PsychoSocialReport();
+    	this.healthZoneModel = new smt.Model.HealthZone();
+    	this.provinceModel = new smt.Model.Province();
+    	this.organizationModel = new smt.Model.OrganizationNetwork();
+    	this.dummyOrg = new smt.Model.OrganizationNetwork({id: 0});
     	
     	this.organizationSltTemplate = Handlebars.compile($("#organizationSltTemplate").html());
      	
@@ -117,6 +121,17 @@ var SearchView = Backbone.View.extend({
 		this.searchModel.set(field, value);
     },
     onClickSearchBtn:function(e) {
+    	if(this.organizationModel.get('id') != null && this.organizationModel.get('id') != 0) {
+    		this.organizationModel.set('lastUpdateBy', null);
+    		this.organizationModel.set('createBy', null);
+    		this.searchModel.set('organization', this.organizationModel);
+    	} else if(this.provinceModel.get('id') != null && this.provinceModel.get('id') != 0) {
+    		this.searchModel.set('organization', this.dummyOrg);
+    		this.searchModel.get('organization').set('province', this.provinceModel);
+    	} else if(this.healthZoneModel.get('id') != null && this.healthZoneModel.get('id') != 0) {
+     		this.searchModel.set('organization', this.dummyOrg);
+     		this.searchModel.get('organization').set('zone', this.healthZoneModel);
+     	}    	
     	appRouter.searchWithModelAndPage(this.searchModel, 1);
     },
     onClicknewFormBtn : function(e) {
@@ -133,6 +148,7 @@ var SearchView = Backbone.View.extend({
     	
     	if(field == 'zone') {
     		model = smt.Model.HealthZone.findOrCreate({id:id});
+    		this.healthZoneModel = model;
     		
     		//update provinceSlt
         	this.provinces.fetch({
@@ -150,6 +166,7 @@ var SearchView = Backbone.View.extend({
     		
     	} else if(field == 'province') {
     		model = smt.Model.Province.findOrCreate({id:id});
+    		this.provinceModel = model;
     		
     		//update amphurSlt
         	this.organizations.fetch({
@@ -169,14 +186,19 @@ var SearchView = Backbone.View.extend({
     		
     	} else if (field == 'organization') {
     		model = smt.Model.OrganizationNetwork.findOrCreate({id:id});
-    		this.searchModel.set('organization', model);
+    		this.organizationModel=model;
+    		
     		
     	}
     		
     	
     },
     resetForm: function() {
-    	this.searchModel = new smt.Model.OrganizationNewtork();
+    	this.searchModel = new smt.Model.PsychoSocialReport();
+    	this.healthZoneModel = new smt.Model.HealthZone();
+    	this.provinceModel = new smt.Model.Province();
+    	this.organizationModel = new smt.Model.OrganizationNetwork();
+    	
     	this.render();
     }, 
     
@@ -204,6 +226,9 @@ var SearchView = Backbone.View.extend({
 });
 
 var TableResultView = Backbone.View.extend({ 
+	/**
+	 * @memberOf TableResultView
+	 */
 	initialize: function(options){
 		this.searchResults = new smt.Page.PsychoSocialReports();
 		this.tableResultViewTemplate = Handlebars.compile($("#tableResultViewTemplate").html());
@@ -218,7 +243,7 @@ var TableResultView = Backbone.View.extend({
 		
 		var psychoSocialReport = smt.Model.PsychoSocialReport.findOrCreate({id: reportId});
 		
-		var r = confirm('คุณต้องการลบรายการ' + psychoSocialReport.get('reportId'));
+		var r = confirm('คุณต้องการลบรายการ: ' + psychoSocialReport.get('organization').get('orgName'));
 		if (r == true) {
 			psychoSocialReport.destroy({
 				success: function(model, response) {
@@ -419,13 +444,11 @@ var FormView = Backbone.View.extend({
 	
 	editForm: function(id) {
 		this.model = smt.Model.PsychoSocialReport.findOrCreate({id: id});
-		var zoneId=this.model.get('organization').get('zone').get('id');
-		var provinceId = this.model.get('organization').get('province').get('id');
-		$.when(this.provinces.fetch({url: appUrl('Province/findAllByZone/'+zoneId)}),
-				this.organizations.fetch({url: appUrl('Province/'+provinceId +'/Organization')}))
-				.done(_.bind(function(x) {
-			this.render();	
-		},this));
+		this.model.fetch({
+			success: _.bind(function() {
+				this.render();
+			},this)
+		});
 		
 	},
 	render: function() {
@@ -442,16 +465,12 @@ var FormView = Backbone.View.extend({
 			
 			json.organizations=new Array();
 			json.organizations.push({id:0,name: 'กรุณาเลือกหน่วยงาน'});
+			json.newForm = true;
 		} else {
-			json.provinces=new Array();
-			$.merge(json.provinces, this.provinces.toJSON());
-			__setSelect(json.provinces, this.model.get('province'));
-			
-			json.organizations=new Array();
-			$.merge(json.organizations, this.organizations.toJSON());
-			__setSelect(json.organizations, this.model.get('organizations'));
+			json.newForm = false;
 		}
 		
+		console.log(json);
 		
 		this.$el.html(this.formViewTemplate(json));
 		$('#beginReportDateTxt').datepicker({

@@ -5,7 +5,9 @@ function appUrl(url) {
 (function(){
 
 window.smt = {
-  Model: {},
+  Model: {
+	  Auth: {}
+  },
   Collection: {},
   Page: {},
   View: {}
@@ -77,6 +79,9 @@ smt.Model.Province = Backbone.RelationalModel.extend({
 	urlRoot: appUrl('Province')
 });
 
+smt.Model.Auth.User = Backbone.RelationalModel.extend({
+	
+});
 smt.Model.OrganizationNetwork = Backbone.RelationalModel.extend({
 	relations: [{
 		type: Backbone.HasOne,
@@ -98,6 +103,14 @@ smt.Model.OrganizationNetwork = Backbone.RelationalModel.extend({
 		type: Backbone.HasOne,
 		key: 'orgType',
 		relatedModel: 'smt.Model.DV_OrgType'
+	},{
+		type: Backbone.HasOne,
+		key: 'createBy',
+		relatedModel: 'smt.Model.Auth.User'
+	},{
+		type: Backbone.HasOne,
+		key: 'lastUpdateBy',
+		relatedModel: 'smt.Model.Auth.User'
 	},{
 		type: Backbone.HasMany,
 		key: 'medicalStaffs',
@@ -246,8 +259,12 @@ smt.Collection.BehaviorImpacts = Backbone.Collection.extend({
 smt.Model.PsychoSocialReport = Backbone.RelationalModel.extend({
 	relations: [{
 		type: Backbone.HasOne,
-		key: 'organizationNetwork',
+		key: 'organization',
 		relatedModel: 'smt.Model.OrganizationNetwork'
+	},{
+		type: Backbone.HasOne,
+		key: 'reportUser',
+		relatedModel: 'smt.Model.Auth.User'
 	}],
 	urlRoot: appUrl('PsychoSocialReport')
 });

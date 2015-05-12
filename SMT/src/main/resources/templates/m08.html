@@ -96,11 +96,15 @@
 					<div class="form-group">
 					    <label for="inputEmail3" class="col-md-4 control-label">เขตบริการสุขภาพ</label>
 					    <div class="col-md-8">
+						{{#if newForm}}
 							<select class="form-control formSlt" id="healthZoneSlt" data-field="zone">
 								{{#each this.healthZones}}
 									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}</option>
 								{{/each}}
-							</select>				      
+							</select>
+						{{else}}
+							<p class="form-control-static">{{model.organization.zone.name}}</p>
+						{{/if}}		      
 					    </div>
 					</div>
 				</div>
@@ -108,11 +112,15 @@
 					<div class="form-group">
 				    	<label for="inputEmail3" class="col-md-4 control-label">จังหวัด</label>
 				    	<div class="col-md-8">
+						{{#if newForm}}
 							<select class="form-control formSlt" id="provinceSlt" data-field="province">
 								{{#each this.provinces}}
 									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}</option>
 								{{/each}}
-							</select>				      
+							</select>	
+						{{else}}
+							<p class="form-control-static">{{model.organization.province.name}}</p>
+						{{/if}}			      
 				    	</div>
 					</div>
 				</div>
@@ -122,11 +130,15 @@
 					<div class="col-md-12">
 				    	<label for="inputEmail3" class="col-md-2 control-label">หน่วยงาน</label>
 				    	<div class="col-md-10">
+						{{#if newForm}}
 							<select class="form-control formSlt" id="organizationSlt" data-field="organization">
 								{{#each this.organizations}}
 									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{orgName}}</option>
 								{{/each}}
-							</select>				      
+							</select>	
+						{{else}}
+							<p class="form-control-static">{{model.organization.orgName}}</p>
+						{{/if}}			      
 				    	</div>
 					</div>
 				</div>
@@ -279,7 +291,7 @@
 							{{#each this.healthZones}}
 								<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}</option>
 							{{/each}}
-						</select>				      
+						</select>
 				    </div>
 				</div>
 			</div>
@@ -334,28 +346,51 @@
 	<table class="table table-bordered table-hover">
 		<thead>
 			<tr>
-				<td style="width: 65px;text-align:center;"></td>
-				<td style="width: 120px;text-align:center;" class=""><b>ประเภทเครือข่าย</b></td>
-				<td style="width: 120px;text-align:center;" class=""><b>ประเภทหน่วยงาน</b></td>
-				<td style="text-align:center;"><b>ชื่อหน่วยงาน</b></td>
-				<td style="width: 60px;text-align:center;" class=""><b>เขต</b></td>
-				<td style="width: 100px;text-align:center;" class=""><b>จังหวัด</b></td>
-				<td style="width: 150px;text-align:center;" class=""><b>ผ่านเกณฑ์คลินิกบริการ<br/>ที่เป็นมิตรกับวัยรุ่น </b></td>
+				<td rowspan="2" style="width: 65px;text-align:center;"></td>
+				<td rowspan="2"  style="text-align:center;" class=""><b>หน่วยงาน</b></td>
+				<td rowspan="2"  style="width: 120px;text-align:center;" class=""><b>กลุ่มวัย</b></td>
+				<td colspan="2" style="width: 100px;text-align:center;" class=""><b>ท้องไม่พร้อม</b></td>
+				<td colspan="2" style="width: 100px;text-align:center;" class=""><b>สุรา</b></td>
+				<td colspan="2" style="width: 100px;text-align:center;" class=""><b>ความรุนแรง</b></td>
+				<td colspan="2" style="width: 100px;text-align:center;" class=""><b>ติดเกมการพนัน</b></td>
+				<td colspan="2" style="width: 100px;text-align:center;" class=""><b>ยาเสพติด</b></td>
+				<td rowspan="2"  style="width: 120px;text-align:center;" class=""><b>วันที่ปรับปรุงข้อมูล</b></td>
+				<td rowspan="2"  style="width: 120px;text-align:center;" class=""><b>ผู้รายงาน</b></td>
+			</tr>
+			<tr>
+				<td style="width: 50px;text-align:center;" class="">บริการ</td>
+				<td style="width: 50px;text-align:center;" class="">จำนวน</td>
+				<td style="width: 50px;text-align:center;" class="">บริการ</td>
+				<td style="width: 50px;text-align:center;" class="">จำนวน</td>
+				<td style="width: 50px;text-align:center;" class="">บริการ</td>
+				<td style="width: 50px;text-align:center;" class="">จำนวน</td>
+				<td style="width: 50px;text-align:center;" class="">บริการ</td>
+				<td style="width: 50px;text-align:center;" class="">จำนวน</td>
+				<td style="width: 50px;text-align:center;" class="">บริการ</td>
+				<td style="width: 50px;text-align:center;" class="">จำนวน</td>
 			</tr>
 		</thead>
 		<tbody>
 			{{#each content}}
 			<tr data-id="{{id}}">
-				<td> <button type="button" class="btn btn-danger btn-xs removeOrganizationNetworkBtn"><i class="fa fa-trash"> </i></button> 
-					 <button type="button" class="btn btn-info btn-xs editOrganizationNetworkBtn"><i class="fa fa-edit"> </i></button>
+				<td> <button type="button" class="btn btn-danger btn-xs removePsychoSocialReportBtn"><i class="fa fa-trash"> </i></button> 
+					 <button type="button" class="btn btn-info btn-xs editPsychoSocialReportBtn"><i class="fa fa-edit"> </i></button>
 				</td>
-				<td style="text-align:center;">{{networkType.description}}</td>
-				<td style="text-align:center;">{{orgType.description}}</a></td>
-				<td>{{orgName}}</td>
-				<td style="text-align:center;">{{zone.code}}</td>
-				<td style="text-align:center;">{{province.name}}</td>
-				<td style="text-align:center;font-size:14px;color:green">{{#if teenFriendly}}<i class="fa fa-check-square"> </i>{{/if}}</td>
-			</tr>
+				<td>{{organization.orgName}}</td>
+				<td style="width: 120px;text-align:center;">{{targetAge}}</td>
+				<td style="width: 50px;text-align:center;" class="">{{pragnantService}}</td>
+				<td style="width: 50px;text-align:center;" class="">{{pragnantCount}}</td>
+				<td style="width: 50px;text-align:center;" class="">{{alcoholService}}</td>
+				<td style="width: 50px;text-align:center;" class="">{{alcoholCount}}</td>
+				<td style="width: 50px;text-align:center;" class="">{{violenceService}}</td>
+				<td style="width: 50px;text-align:center;" class="">{{violenceCount}}</td>
+				<td style="width: 50px;text-align:center;" class="">{{gamblingService}}</td>
+				<td style="width: 50px;text-align:center;" class="">{{gamblingCount}}</td>
+				<td style="width: 50px;text-align:center;" class="">{{drugService}}</td>
+				<td style="width: 50px;text-align:center;" class="">{{drugCount}}</td>
+				<td style="width: 120px;text-align:center;">{{reportDate}}</td>
+				<td style="width: 120px;text-align:center;">{{reportUser.username}}</td>
+			</tr>			
 			{{/each}}
 		</tbody>
 	</table>

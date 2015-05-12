@@ -1122,9 +1122,11 @@ public class EntityServiceJPA implements EntityService {
 	@Override
 	public ResponseJSend<Page<PsychoSocialReport>> findPsychoSocialReportByExample(
 			JsonNode node, Integer pageNum) throws JsonMappingException {
-		ObjectMapper mapper = getObjectMapper();
 		
 		PsychoSocialReport webModel;
+		
+		ObjectMapper mapper = getObjectMapper();
+		ObjectNode object = (ObjectNode) node;
 		
 		try {
 			webModel = mapper.treeToValue(node, PsychoSocialReport.class);
@@ -1139,8 +1141,15 @@ public class EntityServiceJPA implements EntityService {
 		QPsychoSocialReport q = QPsychoSocialReport.psychoSocialReport;
 		BooleanBuilder p = new BooleanBuilder();
 		
-		if(webModel.getOrganization() != null) {
-			p = p.and(q.organization.id.eq(webModel.getOrganization().getId()));
+		if(webModel.getOrganization()!=null) {
+		
+			if(webModel.getOrganization().getId() != 0) {
+				p = p.and(q.organization.id.eq(webModel.getOrganization().getId()));
+			} else if (webModel.getOrganization().getProvince() != null && webModel.getOrganization().getProvince().getId() != 0) {
+				p = p.and(q.organization.province.id.eq(webModel.getOrganization().getProvince().getId()));
+			} else if (webModel.getOrganization().getZone()!= null && webModel.getOrganization().getZone().getId() != 0) {
+				p = p.and(q.organization.zone.id.eq(webModel.getOrganization().getZone().getId()));
+			}
 		}
 		
 		PageRequest pageRequest =
@@ -1148,6 +1157,10 @@ public class EntityServiceJPA implements EntityService {
 		
 		Page<PsychoSocialReport> reports = psychoSocailReportRepo.findAll(p, pageRequest); 
 		
+		for(PsychoSocialReport report: reports) {
+			report.getReportUser().getUsername();
+			logger.debug(report.getReportUser().getUsername());
+		}
 		
 		ResponseJSend<Page<PsychoSocialReport>> response = new ResponseJSend<Page<PsychoSocialReport>>();
 		response.data=reports;
@@ -1159,7 +1172,13 @@ public class EntityServiceJPA implements EntityService {
 
 	@Override
 	public PsychoSocialReport findPsychoSocialReportById(Long id) {
-		return psychoSocailReportRepo.findOne(id);
+		PsychoSocialReport report = psychoSocailReportRepo.findOne(id);
+		report.getOrganization().getId();
+		report.getOrganization().getProvince().getId();
+		report.getOrganization().getZone().getId();
+		report.getReportUser().getId();
+		
+		return report;
 	}
 
 	@Override
@@ -1210,8 +1229,17 @@ public class EntityServiceJPA implements EntityService {
 
 	@Override
 	public ResponseJSend<Long> deletePsychoSocialReport(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		PsychoSocialReport report = psychoSocailReportRepo.findOne(id);
+		
+		if(report != null) {
+			psychoSocailReportRepo.delete(report);
+		}
+		
+		ResponseJSend<Long> response = new ResponseJSend<Long>();
+		response.data = id;
+		response.status = ResponseStatus.SUCCESS;
+		
+		return response;
 	}
 	
 	
