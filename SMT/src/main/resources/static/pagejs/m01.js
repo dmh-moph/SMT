@@ -235,6 +235,9 @@ var TableResultView = Backbone.View.extend({
 });
 
 var FormView = Backbone.View.extend({
+	/**
+	 * @memberOf FormView
+	 */
 	 initialize: function(options){
 		 this.formViewTemplate = Handlebars.compile($("#formViewTemplate").html());
 		 this.journalSearchResultTemplate =	Handlebars.compile($("#journalSearchResultTemplate").html());
@@ -342,7 +345,12 @@ var FormView = Backbone.View.extend({
 	
 	editForm: function(id) {
 		this.model = smt.Model.JournalSituation.findOrCreate({id: id});
-		this.render();	
+		this.model.fetch({
+			success: _.bind(function() {
+				this.render();		
+			},this)
+		});
+			
 		
 	},
 	render: function() {
@@ -352,14 +360,14 @@ var FormView = Backbone.View.extend({
 		if(this.model.get('id') == null) {
 			json.situations=new Array();
 			json.situations.push({id:0,name: 'กรุณาเลือกประเภทสถานการณ์'});
-			$.merge(json.situations, situations.toJSON());
+			$.merge(json.situations, this.situations.toJSON());
 			
 			
 			
 		} else {
 			json.situations=new Array();
-			$.merge(json.situations, situations.toJSON());
-			 __setSelect(json.situations, this.model.get('situations'));
+			$.merge(json.situations, this.situations.toJSON());
+			 __setSelect(json.situations, this.model.get('situation'));
 			
 		}
 		
