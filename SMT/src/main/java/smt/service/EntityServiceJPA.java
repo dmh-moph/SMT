@@ -1119,6 +1119,60 @@ public class EntityServiceJPA implements EntityService {
 		return response;
 	}
 
+	
+	
+	
+	@Override
+	public Iterable<PsychoSocialReport> findPsychoSocialReportByExample(
+			PsychoSocialReport reportExample) {
+		
+		PsychoSocialReport webModel = reportExample;
+		
+		logger.debug("findPsychoSocialReportByExample");
+
+		QPsychoSocialReport q = QPsychoSocialReport.psychoSocialReport;
+		BooleanBuilder p = new BooleanBuilder();
+		
+		if(webModel.getOrganization()!=null) {
+		
+			if(webModel.getOrganization().getId() != 0) {
+				p = p.and(q.organization.id.eq(webModel.getOrganization().getId()));
+			} else if (webModel.getOrganization().getProvince() != null && webModel.getOrganization().getProvince().getId() != 0) {
+				p = p.and(q.organization.province.id.eq(webModel.getOrganization().getProvince().getId()));
+			} else if (webModel.getOrganization().getZone()!= null && webModel.getOrganization().getZone().getId() != 0) {
+				p = p.and(q.organization.zone.id.eq(webModel.getOrganization().getZone().getId()));
+			}
+			
+			if(webModel.getBeginReportDate() != null && webModel.getEndReportDate() != null) {
+				p = p
+						.and(q.beginReportDate.between(webModel.getBeginReportDate(), webModel.getEndReportDate()))
+						.and(q.endReportDate.between(webModel.getBeginReportDate(), webModel.getEndReportDate()));
+			} else if(webModel.getBeginReportDate() != null) {
+				p = p.and(q.beginReportDate.after(webModel.getBeginReportDate()));
+			} else if(webModel.getEndReportDate() != null) {
+				p = p.and(q.endReportDate.before(webModel.getEndReportDate()));
+			}
+			
+		}
+		
+		
+		Iterable<PsychoSocialReport> reports = psychoSocailReportRepo.findAll(p,
+				QPsychoSocialReport.psychoSocialReport.organization.zone.id.asc(),
+				QPsychoSocialReport.psychoSocialReport.organization.province.id.asc(),
+				QPsychoSocialReport.psychoSocialReport.organization.id.asc()); 
+		
+		for(PsychoSocialReport report: reports) {
+			if(report.getReportUser() != null) {
+				report.getReportUser().getUsername();
+				logger.debug(report.getReportUser().getUsername());
+			}
+		}
+		
+		
+		
+		return reports;
+	}
+
 	@Override
 	public ResponseJSend<Page<PsychoSocialReport>> findPsychoSocialReportByExample(
 			JsonNode node, Integer pageNum) throws JsonMappingException {
@@ -1126,7 +1180,6 @@ public class EntityServiceJPA implements EntityService {
 		PsychoSocialReport webModel;
 		
 		ObjectMapper mapper = getObjectMapper();
-		ObjectNode object = (ObjectNode) node;
 		
 		try {
 			webModel = mapper.treeToValue(node, PsychoSocialReport.class);
@@ -1150,6 +1203,17 @@ public class EntityServiceJPA implements EntityService {
 			} else if (webModel.getOrganization().getZone()!= null && webModel.getOrganization().getZone().getId() != 0) {
 				p = p.and(q.organization.zone.id.eq(webModel.getOrganization().getZone().getId()));
 			}
+			
+			if(webModel.getBeginReportDate() != null && webModel.getEndReportDate() != null) {
+				p = p
+						.and(q.beginReportDate.between(webModel.getBeginReportDate(), webModel.getEndReportDate()))
+						.and(q.endReportDate.between(webModel.getBeginReportDate(), webModel.getEndReportDate()));
+			} else if(webModel.getBeginReportDate() != null) {
+				p = p.and(q.beginReportDate.after(webModel.getBeginReportDate()));
+			} else if(webModel.getEndReportDate() != null) {
+				p = p.and(q.endReportDate.before(webModel.getEndReportDate()));
+			}
+			
 		}
 		
 		PageRequest pageRequest =
@@ -1158,8 +1222,10 @@ public class EntityServiceJPA implements EntityService {
 		Page<PsychoSocialReport> reports = psychoSocailReportRepo.findAll(p, pageRequest); 
 		
 		for(PsychoSocialReport report: reports) {
-			report.getReportUser().getUsername();
-			logger.debug(report.getReportUser().getUsername());
+			if(report.getReportUser() != null) {
+				report.getReportUser().getUsername();
+				logger.debug(report.getReportUser().getUsername());
+			}
 		}
 		
 		ResponseJSend<Page<PsychoSocialReport>> response = new ResponseJSend<Page<PsychoSocialReport>>();
@@ -1176,7 +1242,9 @@ public class EntityServiceJPA implements EntityService {
 		report.getOrganization().getId();
 		report.getOrganization().getProvince().getId();
 		report.getOrganization().getZone().getId();
-		report.getReportUser().getId();
+		if(report.getReportUser() != null) {
+			report.getReportUser().getId();
+		}
 		
 		return report;
 	}

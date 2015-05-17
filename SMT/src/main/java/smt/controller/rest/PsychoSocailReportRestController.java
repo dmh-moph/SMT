@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import smt.auth.model.Activeuser;
 import smt.auth.model.SecurityUser;
-import smt.model.OrganizationNetwork;
 import smt.model.PsychoSocialReport;
 import smt.service.EntityService;
 import smt.webUI.ResponseJSend;

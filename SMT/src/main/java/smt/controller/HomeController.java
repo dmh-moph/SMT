@@ -1,19 +1,34 @@
 package smt.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.sun.research.ws.wadl.Request;
 
 import smt.auth.model.Activeuser;
 import smt.auth.model.SecurityUser;
 import smt.auth.service.ActiveUserHandlerMethodArgumentResolver;
+import smt.model.PsychoSocialReport;
+import smt.service.EntityService;
+import smt.view.M08ExcelReport;
 
 @Controller
 public class HomeController {
 	public static Logger logger = LoggerFactory.getLogger(HomeController.class);
 
+	@Autowired
+	private EntityService entityService;
 	
 	@RequestMapping("/")
 	public String home(Model model, @Activeuser SecurityUser user) {

@@ -119,4 +119,7 @@ public interface EntityService {
 	public Iterable<OrganizationNetwork> findAllOrganizationByProvinceId(
 			Long provinceId);
 
+	public Iterable<PsychoSocialReport> findPsychoSocialReportByExample(
+			PsychoSocialReport exampleReport);
+
 }

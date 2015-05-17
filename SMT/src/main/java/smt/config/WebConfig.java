@@ -16,6 +16,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import smt.auth.service.ActiveUserHandlerMethodArgumentResolver;
+import smt.view.M08ExcelReport;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
@@ -66,5 +67,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	    @Bean
 	    public StringHttpMessageConverter stringConverter() {
 	    	return new StringHttpMessageConverter(Charset.forName("UTF-8"));
+	    }
+	    
+	    @Bean
+	    public M08ExcelReport m08ExcelReportView() {
+	    	return new M08ExcelReport();
 	    }
 }

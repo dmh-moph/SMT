@@ -79,6 +79,9 @@ var AppRouter = Backbone.Router.extend({
 
 
 var SearchView = Backbone.View.extend({
+	/**
+	 * @memberOf Searchview
+	 */
     initialize: function(options){
     	this.searchViewTemplate = Handlebars.compile($("#searchViewTemplate").html());
     	this.provinceSltTemplate = Handlebars.compile($("#provinceSltTemplate").html());
@@ -107,9 +110,31 @@ var SearchView = Backbone.View.extend({
     		
     },
     onClickClearFormBtn: function(e) {
-    	this.searchModel = new smt.Model.PsychoSocailReport();
+    	console.log(JSON.stringify(this.searchModel.toJSON()));
+    	this.setupSearchModel();
     	
-    	appRouter.search();
+    	$.fileDownload('/smt/Report/m08Report',
+    	{
+    		data: {
+    			beginDate: this.searchModel.get('beginReportDate'),
+    			endDate: this.searchModel.get('endReportDate'),
+    			orgId: this.searchModel.get('organization').get('id'),
+    			provinceId :  this.searchModel.get('organization').get('province').get('id'),
+    			zoneId:  this.searchModel.get('organization').get('zone').get('id')
+    		},
+    	
+    		successCallback: function (url) {
+    			 
+    	        alert('You just got a file download dialog or ribbon for this URL :' + url);
+    	    },
+    	    failCallback: function (html, url) {
+    	 
+    	        alert('Your file download just failed for this URL:' + url + '\r\n' +
+    	                'Here was the resulting error HTML: \r\n' + html
+    	                );
+    	    },
+    		httpMethod: 'POST'
+    	});
     },
     onSubmitSearchForm: function(e) {
     	this.onClickSearchBtn(e);
@@ -120,7 +145,7 @@ var SearchView = Backbone.View.extend({
 		var field=$(e.currentTarget).attr('data-field'); 
 		this.searchModel.set(field, value);
     },
-    onClickSearchBtn:function(e) {
+    setupSearchModel : function() {
     	if(this.organizationModel.get('id') != null && this.organizationModel.get('id') != 0) {
     		this.organizationModel.set('lastUpdateBy', null);
     		this.organizationModel.set('createBy', null);
@@ -131,7 +156,11 @@ var SearchView = Backbone.View.extend({
     	} else if(this.healthZoneModel.get('id') != null && this.healthZoneModel.get('id') != 0) {
      		this.searchModel.set('organization', this.dummyOrg);
      		this.searchModel.get('organization').set('zone', this.healthZoneModel);
-     	}    	
+     	}    
+    },
+    
+    onClickSearchBtn:function(e) {
+    	this.setupSearchModel();
     	appRouter.searchWithModelAndPage(this.searchModel, 1);
     },
     onClicknewFormBtn : function(e) {
@@ -219,6 +248,20 @@ var SearchView = Backbone.View.extend({
     	console.log(json);
     	
     	this.$el.html(this.searchViewTemplate(json));
+    	$('#beginReportDateTxt').datepicker({
+			format: 'dd/mm/yyyy',
+			todayBtn: 'linked',
+			autoclose : true,
+			language: "th",
+			orientation: "top left"
+		});
+		$('#endReportDateTxt').datepicker({
+			format: 'dd/mm/yyyy',
+			todayBtn: 'linked',
+			autoclose : true,
+			language: "th",
+			orientation: "top left"
+		});
     	
     	return this;
 	}	
@@ -243,7 +286,8 @@ var TableResultView = Backbone.View.extend({
 		
 		var psychoSocialReport = smt.Model.PsychoSocialReport.findOrCreate({id: reportId});
 		
-		var r = confirm('คุณต้องการลบรายการ: ' + psychoSocialReport.get('organization').get('orgName'));
+		//var r = confirm('คุณต้องการลบรายการ: ' + psychoSocialReport.get('organization').get('orgName'));
+		var r= confirm('Do you want to delete');
 		if (r == true) {
 			psychoSocialReport.destroy({
 				success: function(model, response) {
@@ -478,14 +522,14 @@ var FormView = Backbone.View.extend({
 			todayBtn: 'linked',
 			autoclose : true,
 			language: "th",
-			orientation: "top auto"
+			orientation: "top left"
 		});
 		$('#endReportDateTxt').datepicker({
 			format: 'dd/mm/yyyy',
 			todayBtn: 'linked',
 			autoclose : true,
 			language: "th",
-			orientation: "top auto"
+			orientation: "top left"
 		});
 		
 		return this;

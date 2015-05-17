@@ -43,7 +43,9 @@
 				</div>
 			</div>
 		</div>		
+		<div id="downloadDiv"></div>
 	</div>
+
 	
 <div layout:fragment="pageScript">
 	
@@ -283,6 +285,14 @@
 	<form class="form-horizontal" role="form" id="searchForm">
 		<div class="row">
 			<div class="col-md-6">
+				{{txtInput "half" "ตั้งแต่วันที่" "beginReportDate" this.model.beginReportDate}}
+			</div>
+			<div class="col-md-6">
+				{{txtInput "half" "ถึงวันที่" "endReportDate" this.model.endReportDate}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
 				<div class="form-group">
 				    <label for="inputEmail3" class="col-md-4 control-label">เขตบริการสุขภาพ</label>
 				    <div class="col-md-8">
@@ -323,6 +333,7 @@
 				</div>
 			</div>
 		</div>
+		
 		<div class="row">
 			<div class="col-md-12" style="text-align: center;">
 					<button type="button" class="btn btn-default" id="newFormBtn">
@@ -330,7 +341,7 @@
 					<button type="button" class="btn btn-default" id="searchBtn">
 						<span class="glyphicon glyphicon-search"></span> ค้นหา</button>
 					<button type="button" class="btn btn-default" id="clearFormBtn">
-						<i class="fa fa-times-circle"></i> ล้างข้อมูลค้นหา</button>
+						<i class="fa fa-print"></i> พิมพ์รายงาน</button>
 				</div>
 			</div>
 		</form>
