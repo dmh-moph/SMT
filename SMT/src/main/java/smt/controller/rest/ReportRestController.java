@@ -51,32 +51,23 @@ public class ReportRestController {
 	public ModelAndView m08ReportHandle(Model model, 
 			@RequestParam(required=false) String beginDate, 
 			@RequestParam(required=false) String endDate,
-			@RequestParam(required=false) Long orgId,
-			@RequestParam(required=false) Long provinceId,
 			@RequestParam(required=false) Long zoneId,
 			HttpServletRequest request) throws JsonProcessingException, IOException, ParseException {
 		
 //		ObjectMapper mapper = new ObjectMapper();
 //		JsonNode node =  mapper.readTree(beginDate);
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
 		
 		PsychoSocialReport exampleReport = new PsychoSocialReport();
 		exampleReport.setBeginReportDate(sdf.parse(beginDate));
 		exampleReport.setEndReportDate(sdf.parse(endDate));
 		OrganizationNetwork org = new OrganizationNetwork();
-		if(orgId != null) {
-			org.setId(orgId);
-		} else if(provinceId != null) {
-			Province province = new Province();
-			province.setId(provinceId);
-			org.setProvince(province);
-		} else if(zoneId != null) {
-			HealthZone zone = new HealthZone();
-			zone.setId(zoneId);
-			org.setZone(zone);
-		}
+		HealthZone zone = new HealthZone();
+		zone.setId(zoneId);
+		org.setZone(zone);
+		exampleReport.setOrganization(org);
 		 
 		
 		Iterable<PsychoSocialReport> reports = entityService.findPsychoSocialReportByExample(exampleReport);

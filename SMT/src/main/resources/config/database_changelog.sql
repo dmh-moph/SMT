@@ -182,4 +182,14 @@ create sequence SMT_PSYCHO_REPORT_SEQ START WITH 1 INCREMENT by 1 MAXVALUE 99999
 alter table SMT_PSYCHO_REPORT 
   add CONSTRAINT SMT_PSYCHO_REPORT_ORG_FK
   FOREIGN KEY (ORG_ID) REFERENCES SMT_ORGANIZATION_NETWORK;
+  
+  
+/** 18 May 2015
+ * 
+ */
+  
+alter table smt_journal add (temp varchar2(100));
+update smt_journal set temp=to_char(published_date, 'dd month yyyy');
+alter table smt_journal drop column published_date;
+alter table smt_journal rename column temp to published_date;
 commit;

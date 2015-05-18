@@ -1,7 +1,8 @@
-/**
- * 
- */
+
 var AppRouter = Backbone.Router.extend({
+	/**
+	 * @memberOf AppRouter
+	 */
 	initialize : function(options) {
 		this.defaultBreadCrumb = Handlebars.compile($("#defaultBreadCrumbTemplate").html());
 		this.newFormBreadCrumb = Handlebars.compile($("#newFormBreadCrumbTemplate").html());
@@ -17,15 +18,35 @@ var AppRouter = Backbone.Router.extend({
 		if(options.tableResultView != null) {
 			this.tableResultView = options.tableResultView;
 		}
+		if(options.printReportView != null) {
+			this.printReportView =options.printReportView;
+		}
 		
 	},
 	routes: {
         "newReport" : "newForm",
+        "printReport" : "printReport",
         "search" : "search",
         "PsychoSocialReport/:id" : "editForm",
         "*actions": "defaultRoute" // Backbone will try match the route above first
     },
-    
+    printReport: function(action) {
+    	// set breadcrumb
+    	this.$breadcrubmEl.html(this.defaultBreadCrumb());
+    	
+    	// no table result
+    	this.tableResultView.$el.empty();
+    	
+    	// no form
+    	this.formView.$el.empty();
+    	
+    	// no search
+    	this.searchView.$el.empty();
+    	
+    	// printReport UI
+    	this.printReportView.render();
+    	
+    },
     defaultRoute: function(action) {
     	// set breadcrumb
     	this.$breadcrubmEl.html(this.defaultBreadCrumb());
@@ -35,6 +56,9 @@ var AppRouter = Backbone.Router.extend({
     	
     	// no form
     	this.formView.$el.empty();
+    	
+    	// no report
+    	this.printReportView.$el.empty();
 
     	// show search
     	this.searchView.render();  	
@@ -51,7 +75,9 @@ var AppRouter = Backbone.Router.extend({
     	this.searchView.render();
     	// no form
     	this.formView.$el.empty();
-    	// no table result
+    	// no report
+    	this.printReportView.$el.empty();
+    	
     	this.tableResultView.render();
     	
     },
@@ -59,6 +85,9 @@ var AppRouter = Backbone.Router.extend({
     newForm: function() {
     	this.tableResultView.$el.empty();
     	this.searchView.$el.empty();
+    	// no report
+    	this.printReportView.$el.empty();
+    	
     	this.$breadcrubmEl.html(this.newFormBreadCrumb());
     	
     	this.formView.newForm();
@@ -67,6 +96,9 @@ var AppRouter = Backbone.Router.extend({
     editForm: function(id){
     	this.searchView.$el.empty();
     	this.tableResultView.$el.empty();
+    	// no report
+    	this.printReportView.$el.empty();
+    	
     	var json={};
     	json.companyId=id;
     	this.$breadcrubmEl.html(this.editFormBreadCrumb(json));
@@ -77,6 +109,77 @@ var AppRouter = Backbone.Router.extend({
     
 });
 
+
+var PrintReportView = Backbone.View.extend({
+	/** 
+	 * @memberOf PrintReportView
+	 */
+	   initialize: function(options){
+	    	this.printReportViewTemplate = Handlebars.compile($("#printReportViewTemplate").html());
+	    	
+	    	this.heathZones = options.healthZones;
+	   },
+	   
+	   events: {
+	    	"click #printReportBtn": "onClickPrintReportBtn",
+	    	"click #backBtn" : "onClickBackBtn",
+	    	
+	   },
+	   onClickBackBtn: function(e) {
+		   appRouter.navigate("", {trigger: true});
+	   },
+	   
+	   onClickPrintReportBtn: function(e) {
+	    	$.fileDownload('/smt/Report/m08Report',
+	    	{
+	    		data: {
+	    			beginDate: this.$el.find('#beginReportDateTxt').val(),
+	    			endDate: this.$el.find('#endReportDateTxt').val(),
+	    			provinceId :  this.$el.find('#provinceSlt').val(),
+	    			zoneId: this.$el.find('#healthZoneSlt').val()
+	    		},
+	    	
+	    		successCallback: function (url) {
+	    			 
+	    	        alert('You just got a file download dialog or ribbon for this URL :' + url);
+	    	    },
+	    	    failCallback: function (html, url) {
+	    	 
+	    	        alert('Your file download just failed for this URL:' + url + '\r\n' +
+	    	                'Here was the resulting error HTML: \r\n' + html
+	    	                );
+	    	    },
+	    		httpMethod: 'POST'
+	    	});
+	   },
+	   
+	   render: function(e) {
+		   var json = {};
+		   
+		   json.healthZones = this.heathZones.toJSON();
+		   __setSelect(json.healthZones, null);
+
+		   this.$el.html(this.printReportViewTemplate(json));
+	    	$('#beginReportDateTxt').datepicker({
+				format: 'dd/mm/yyyy',
+				todayBtn: 'linked',
+				autoclose : true,
+				language: "th",
+				orientation: "top left"
+			});
+			$('#endReportDateTxt').datepicker({
+				format: 'dd/mm/yyyy',
+				todayBtn: 'linked',
+				autoclose : true,
+				language: "th",
+				orientation: "top left"
+			});
+	    	
+	    	return this;
+	    	
+	   }	
+	    
+});
 
 var SearchView = Backbone.View.extend({
 	/**
@@ -105,36 +208,12 @@ var SearchView = Backbone.View.extend({
     	
     	"click #newFormBtn" : "onClicknewFormBtn",
     	"click #searchBtn" : "onClickSearchBtn",
-    	"click #clearFormBtn" : "onClickClearFormBtn",
+    	"click #reportBtn" : "onClickReportBtn",
     	"submit #searchForm" : "onSubmitSearchForm"
     		
     },
-    onClickClearFormBtn: function(e) {
-    	console.log(JSON.stringify(this.searchModel.toJSON()));
-    	this.setupSearchModel();
-    	
-    	$.fileDownload('/smt/Report/m08Report',
-    	{
-    		data: {
-    			beginDate: this.searchModel.get('beginReportDate'),
-    			endDate: this.searchModel.get('endReportDate'),
-    			orgId: this.searchModel.get('organization').get('id'),
-    			provinceId :  this.searchModel.get('organization').get('province').get('id'),
-    			zoneId:  this.searchModel.get('organization').get('zone').get('id')
-    		},
-    	
-    		successCallback: function (url) {
-    			 
-    	        alert('You just got a file download dialog or ribbon for this URL :' + url);
-    	    },
-    	    failCallback: function (html, url) {
-    	 
-    	        alert('Your file download just failed for this URL:' + url + '\r\n' +
-    	                'Here was the resulting error HTML: \r\n' + html
-    	                );
-    	    },
-    		httpMethod: 'POST'
-    	});
+    onClickReportBtn: function(e) {
+    	appRouter.navigate("printReport", {trigger: true});
     },
     onSubmitSearchForm: function(e) {
     	this.onClickSearchBtn(e);

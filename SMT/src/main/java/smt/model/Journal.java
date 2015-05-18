@@ -89,9 +89,9 @@ public class Journal implements Serializable{
 	@Lob
 	private String keyword;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Basic
 	@Column(name="PUBLISHED_DATE")
-	private Date publishDate;
+	private String publishDate;
 	
 	@Basic
 	@Column(name="ADDRESS")
@@ -210,11 +210,11 @@ public class Journal implements Serializable{
 		this.keyword = keyword;
 	}
 
-	public Date getPublishDate() {
+	public String getPublishDate() {
 		return publishDate;
 	}
 
-	public void setPublishDate(Date publishDate) {
+	public void setPublishDate(String publishDate) {
 		this.publishDate = publishDate;
 	}
 

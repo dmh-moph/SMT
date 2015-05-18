@@ -1134,14 +1134,10 @@ public class EntityServiceJPA implements EntityService {
 		BooleanBuilder p = new BooleanBuilder();
 		
 		if(webModel.getOrganization()!=null) {
-		
-			if(webModel.getOrganization().getId() != 0) {
-				p = p.and(q.organization.id.eq(webModel.getOrganization().getId()));
-			} else if (webModel.getOrganization().getProvince() != null && webModel.getOrganization().getProvince().getId() != 0) {
-				p = p.and(q.organization.province.id.eq(webModel.getOrganization().getProvince().getId()));
-			} else if (webModel.getOrganization().getZone()!= null && webModel.getOrganization().getZone().getId() != 0) {
-				p = p.and(q.organization.zone.id.eq(webModel.getOrganization().getZone().getId()));
-			}
+			logger.debug("webModel.getOrganization != null");
+			
+			p = p.and(q.organization.zone.id.eq(webModel.getOrganization().getZone().getId()));
+			
 			
 			if(webModel.getBeginReportDate() != null && webModel.getEndReportDate() != null) {
 				p = p
