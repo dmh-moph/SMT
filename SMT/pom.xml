@@ -5,7 +5,7 @@
 
 	<groupId>th.go.dmh</groupId>
 	<artifactId>smt</artifactId>
-	<version>0.9.2-RELEASE</version>
+	<version>0.9.3-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<scm>
 		<connection>scm:git:https://github.com/dmh-moph/SMT.git</connection>

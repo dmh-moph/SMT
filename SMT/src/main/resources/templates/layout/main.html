@@ -74,12 +74,16 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#" th:href="@{/}">SMARTTEEN</a>
+				
+				<img style="float: left; margin: 5px; vertical-align: middle;" width="50" src="/static/graphics/logo.gif" th:src="@{/static/graphics/logo.gif}"/> 
+				<img style="float: left; margin: 5px; vertical-align: middle;" width="50" src="/static/graphics/logo_smarteen.gif" th:src="@{/static/graphics/logo_smarteen.gif}"/>
+				
+				<a style="vertical-align: middle;font-weight: bolder;margin-top:7px;" class="navbar-brand" href="#" th:href="@{/}">SMARTTEEN</a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#" id="aboutLnk"  tabindex="0" onclick="showAboutModal();">About</a></li>
-					<li><a href="logout" th:href="@{/logout}">logout</a></li>
+					<li><a style="vertical-align: middle;margin-top:7px;" href="#" id="aboutLnk"  tabindex="0" onclick="showAboutModal();">About</a></li>
+					<li><a style="vertical-align: middle;margin-top:7px;" href="logout" th:href="@{/logout}">logout</a></li>
 				</ul>
 			</div>
 		</div>
