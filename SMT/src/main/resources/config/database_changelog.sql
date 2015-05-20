@@ -192,4 +192,16 @@ alter table smt_journal add (temp varchar2(100));
 update smt_journal set temp=to_char(published_date, 'dd month yyyy');
 alter table smt_journal drop column published_date;
 alter table smt_journal rename column temp to published_date;
+
+
+/**
+ * 20 May 2015
+ * 
+ */
+
+alter table smt_journal add (temp clob);
+update smt_journal set temp=KEYWORD;
+alter table smt_journal drop column reference;
+alter table smt_journal rename column temp to reference;
+
 commit;

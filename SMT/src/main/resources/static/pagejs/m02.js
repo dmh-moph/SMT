@@ -460,6 +460,7 @@ var FormView = Backbone.View.extend({
 		CKEDITOR.replace('objectiveTxa')
 		CKEDITOR.replace('summaryContentTxa');
 		CKEDITOR.replace('keywordTxa');
+		CKEDITOR.replace('referenceTxa');
 		
 		return this;
 	}

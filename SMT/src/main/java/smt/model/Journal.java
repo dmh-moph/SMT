@@ -25,7 +25,6 @@ import org.hibernate.annotations.Where;
 import smt.auth.model.SecurityUser;
 import smt.model.glb.JournalType;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -115,6 +114,7 @@ public class Journal implements Serializable{
 	
 	@Basic
 	@Column(name="REFERENCE")
+	@Lob
 	private String reference;
 	
 	@ManyToOne
