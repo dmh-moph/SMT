@@ -294,10 +294,10 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-12">
 				<div class="form-group">
-				    <label for="inputEmail3" class="col-md-4 control-label">เขตบริการสุขภาพ</label>
-				    <div class="col-md-8">
+				    <label for="inputEmail3" class="col-md-2 control-label">เขตบริการสุขภาพ</label>
+				    <div class="col-md-10">
 						<select class="form-control formSlt" id="healthZoneSlt" data-field="zone">
 							<option value="0">กรุณาเลือก</option>
 							{{#each this.healthZones}}
@@ -305,19 +305,6 @@
 							{{/each}}
 						</select>
 				    </div>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="form-group">
-			    	<label for="inputEmail3" class="col-md-4 control-label">จังหวัด</label>
-			    	<div class="col-md-8">
-						<select class="form-control formSlt" id="provinceSlt" data-field="province">
-							<option value="0">กรุณาเลือกเขตบริการสุขภาพ</option>
-							{{#each this.provinces}}
-								<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{name}}</option>
-							{{/each}}
-						</select>				      
-			    	</div>
 				</div>
 			</div>
 		</div>
