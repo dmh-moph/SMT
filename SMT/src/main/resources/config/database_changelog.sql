@@ -204,4 +204,28 @@ update smt_journal set temp=KEYWORD;
 alter table smt_journal drop column reference;
 alter table smt_journal rename column temp to reference;
 
+/**
+ * 22 May 2015
+ * 
+ */
+alter table smt_research add (temp clob);
+update smt_research set temp=ABSTRACT_THAI;
+alter table smt_research drop column ABSTRACT_THAI;
+alter table smt_research rename column temp to ABSTRACT_THAI;
+
+alter table smt_research add (temp clob);
+update smt_research set temp=ABSTRACT_ENG;
+alter table smt_research drop column ABSTRACT_ENG;
+alter table smt_research rename column temp to ABSTRACT_ENG;
+
+alter table smt_research add (temp clob);
+update smt_research set temp=OUTPUT_NAME;
+alter table smt_research drop column OUTPUT_NAME;
+alter table smt_research rename column temp to OUTPUT_NAME;
+
+alter table smt_research add (temp clob);
+update smt_research set temp=reference;
+alter table smt_research drop column reference;
+alter table smt_research rename column temp to reference;
+
 commit;

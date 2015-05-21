@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -81,6 +82,7 @@ public class Research implements Serializable{
 	
 	@Basic
 	@Column(name="OUTPUT_NAME")
+	@Lob
 	private String outputName;
 	
 	@Basic
@@ -105,14 +107,17 @@ public class Research implements Serializable{
 	
 	@Basic
 	@Column(name="OBJECTIVE")
+	@Lob
 	private String objective;
 	
 	@Basic
 	@Column(name="ABSTRACT_THAI")
+	@Lob
 	private String abstractTh;
 	
 	@Basic
 	@Column(name="ABSTRACT_ENG")
+	@Lob
 	private String abstractEn;
 	
 	
@@ -130,6 +135,7 @@ public class Research implements Serializable{
 	
 	@Basic
 	@Column(name="REFERENCE")
+	@Lob
 	private String reference;
 	
 	@ManyToOne

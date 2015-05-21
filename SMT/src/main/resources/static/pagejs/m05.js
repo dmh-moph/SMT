@@ -460,6 +460,13 @@ var FormView = Backbone.View.extend({
 		
 		console.log(json);
 		this.$el.html(this.formViewTemplate(json));
+		
+		CKEDITOR.replace('outputNameTxa')
+		CKEDITOR.replace('abstractThTxa');
+		CKEDITOR.replace('abstractEnTxa');
+		CKEDITOR.replace('referenceTxa');
+		
+		
 		$('#fileupload').fileupload({
 	        dataType: 'json',
 	 
