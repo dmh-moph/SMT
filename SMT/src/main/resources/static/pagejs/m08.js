@@ -358,7 +358,34 @@ var TableResultView = Backbone.View.extend({
 	events: {
 		"click .editPsychoSocialReportBtn" : "onClickEditPsychoSocialReportBtn",
 		"click .removePsychoSocialReportBtn" : "onClickremovePsychoSocialReportBtn",
+
+    	"click .btnPageNav" : "onClickBtnPageNav",
+    	"change #pageNavTxt" : "onChangePageNavTxt"
 	},
+	onChangePageNavTxt : function(e) {
+
+		var newValue = $(e.currentTarget).val();
+		var oldValue = $(e.currentTarget).attr('data-value');
+		
+		if(parseInt(newValue) > 0 && parseInt(newValue) <= this.searchResults.page.totalPages ) {
+			
+			$(e.currentTarget).attr('data-value', newValue);
+			this.renderWithPage(parseInt(newValue));
+			
+		} else {
+			alert('กรุณาระบุหน้าระหว่างเลข 1 ถึง '+ this.searchResults.page.totalPages);
+			$(e.currentTarget).val(oldValue);
+		}
+		
+		return false;
+	},
+    onClickBtnPageNav: function(e) {
+    	var pageNum = $(e.currentTarget).attr('data-targetPage');
+    	
+    	if(pageNum > 0) {
+    		this.renderWithPage(pageNum);
+    	}
+    },
 	
 	onClickremovePsychoSocialReportBtn: function(e) {
 		var reportId = $(e.currentTarget).parents('tr').attr("data-id");
