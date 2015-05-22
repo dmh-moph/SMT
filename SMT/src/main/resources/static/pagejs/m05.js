@@ -461,6 +461,7 @@ var FormView = Backbone.View.extend({
 		console.log(json);
 		this.$el.html(this.formViewTemplate(json));
 		
+		CKEDITOR.replace('objectiveTxa');
 		CKEDITOR.replace('outputNameTxa')
 		CKEDITOR.replace('abstractThTxa');
 		CKEDITOR.replace('abstractEnTxa');

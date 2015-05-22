@@ -404,6 +404,8 @@ public class EntityServiceJPA implements EntityService {
 		
 		BooleanBuilder p = new BooleanBuilder();
 		
+		
+		
 		p = p.and(q.type.eq(webModel.getType()));
 		
 		if(webModel.getDescription() != null && webModel.getDescription().trim().length() > 0) {
