@@ -335,4 +335,13 @@ smt.Collection.SituationTypes = Backbone.Collection.extend({
 	url: appUrl('DomainVariable/SITUATION_TYPE')
 });
 
+smt.Model.SecurityUser = Backbone.RelationalModel.extend({
+	urlRoot: appUrl('SecurityUser')
+});
+
+smt.Page.SecurityUsers = Backbone.PageCollection.extend({
+	model: smt.Model.SecurityUser,
+	url: appUrl('SecurityUser/search')
+});	
+	
 })();

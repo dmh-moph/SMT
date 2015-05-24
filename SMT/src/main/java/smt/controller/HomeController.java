@@ -19,9 +19,16 @@ public class HomeController {
 	
 	@RequestMapping("/")
 	public String home(Model model, @Activeuser SecurityUser user) {
-		logger.debug("username: " + user.getUsername());
+		logger.debug("username: " + user.toString());
 		
 		return "home";
+	}
+	
+	@RequestMapping("/a01")
+	public String a01Handle(Model model) {
+		model.addAttribute("title","a01: ข้อมูลผู้ใช้งาน");
+		model.addAttribute("typeTxt", "ข้อมูลผู้ใช้งาน");
+		return "a01";
 	}
 	
 	@RequestMapping("/m08")

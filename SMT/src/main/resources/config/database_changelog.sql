@@ -228,4 +228,31 @@ update smt_research set temp=reference;
 alter table smt_research drop column reference;
 alter table smt_research rename column temp to reference;
 
+alter table smt_research add (temp clob);
+update smt_research set temp=OBJECTIVE;
+alter table smt_research drop column OBJECTIVE;
+alter table smt_research rename column temp to OBJECTIVE;
+
+
+create table SEC_ROLE (
+    id number(19,0) not null,
+    name varchar2(255 char),
+    primary key (id)
+);
+    
+create sequence SEC_ROLE_SEQ START WITH 1 INCREMENT by 1 MAXVALUE 9999999999 MINVALUE 1 NOCYCLE;
+
+create table sec_user_role (
+  user_id number(19,0) not null,
+  role_id number(19,0) not null,
+  primary key (user_id, role_id)
+);
+
+alter table sec_user_role add constraint sec_user_role_user_id foreign key (user_id) REFERENCES sec_user;
+alter table sec_user_role add constraint sec_user_role_role_id foreign key (role_id) REFERENCES sec_role;
+insert INTO sec_role VALUES (sec_role_seq.nextval, 'ADMIN');
+insert INTO sec_role VALUES (sec_role_seq.nextval, 'USER');
+
+
+
 commit;

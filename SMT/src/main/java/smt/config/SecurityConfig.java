@@ -23,6 +23,8 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import smt.auth.service.CustomAuthenticationProvider;
 import smt.auth.service.CustomUserDetailsService;
+import smt.auth.service.SecUserEntityService;
+import smt.auth.service.SecUserEntityServiceJPA;
 
 
 @Configuration
@@ -32,7 +34,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth        	
-        	.authenticationProvider(authenticationProvider())
         	.userDetailsService(userDetailService());
     }
 
@@ -88,8 +89,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new CustomUserDetailsService();
 	}
 	
-	@Bean 
-	public AuthenticationProvider authenticationProvider() {
-		return new CustomAuthenticationProvider();
-	}
 }
