@@ -373,6 +373,13 @@ var FormView = Backbone.View.extend({
 		// now set behaviorType
 		this.model.set('type', behaviorType);
 		
+		this.model.set('objective', CKEDITOR.instances.objectiveTxa.getData());
+		this.model.set('outputName', CKEDITOR.instances.outputNameTxa.getData());
+		this.model.set('abstractTh', CKEDITOR.instances.abstractThTxa.getData());
+		this.model.set('abstractEn', CKEDITOR.instances.abstractEnTxa.getData());
+		this.model.set('reference', CKEDITOR.instances.referenceTxa.getData());
+
+		
 		this.model.save(null, {
 			success:_.bind(function(model, response, options) {
 				if(response.status != 'SUCCESS') {
