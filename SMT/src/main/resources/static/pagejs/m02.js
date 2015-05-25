@@ -372,6 +372,7 @@ var FormView = Backbone.View.extend({
 		this.model.set('keyword', CKEDITOR.instances.keywordTxa.getData());
 		this.model.set('summaryContent', CKEDITOR.instances.summaryContentTxa.getData());
 		this.model.set('objective', CKEDITOR.instances.objectiveTxa.getData());
+		this.model.set('reference', CKEDITOR.instances.referenceTxa.getData());
 		
 		this.model.save(null, {
 			success:_.bind(function(model, response, options) {
