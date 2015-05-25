@@ -449,6 +449,7 @@ public class EntityServiceJPA implements EntityService {
 		
 		ObjectMapper mapper = getObjectMapper();
 		
+		
 		Behavior webModel;
 		
 		try {
@@ -630,6 +631,9 @@ public class EntityServiceJPA implements EntityService {
 		
 		ObjectNode object = (ObjectNode) node;
 		object.remove("organization");
+		object.remove("createBy");
+		object.remove("lastUpdateBy");
+		
 		Journal webModel;
 		
 		try {
@@ -755,6 +759,8 @@ public class EntityServiceJPA implements EntityService {
 		
 		ObjectNode object = (ObjectNode) node;
 		object.remove("organization");
+		object.remove("createBy");
+		object.remove("lastUpdateBy");
 		Research webModel;
 		
 		try {
