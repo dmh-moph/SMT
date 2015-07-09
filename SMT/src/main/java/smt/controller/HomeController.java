@@ -76,8 +76,8 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/m02")
-	public String m02Handle(Model model) {
-		
+	public String m02Handle(Model model, @Activeuser SecurityUser user) {
+		model.addAttribute("roles", user.getRoles().toString() );
 		model.addAttribute("title","m02: ข้อมูลทางวิชาการ");
 		model.addAttribute("typeTxt", "ข้อมูลวิชาการ");
 		return "m02";

@@ -251,6 +251,7 @@
 							<b>ไฟล์ทีเกี่ยวข้อง</b> 
 							
 						</div>
+						{{#if this.isAdmin}}
 						<div class="panel-body">
 							<span class="btn btn-success fileinput-button">
                     			<i class="glyphicon glyphicon-plus"></i>
@@ -261,6 +262,7 @@
 						        <div style="width: 0%;"></div>
     						</div>
 						</div>
+						{{/if}}
 						<table class="table" id="filesTbl">
 							<thead>
 								<th style="width:40px;"></th>
@@ -278,8 +280,10 @@
 		</div>
 		<div class="panel-footer">
 			<button id="backBtn" type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i> กลับหน้าเดิม</button>
+			{{#if this.isAdmin}}
 			<button id="saveFormBtn" type="button" class="btn btn-default"><i class="fa fa-floppy-o"></i> บันทึกข้อมูล</button>
 			<button id="clearFormBtn" type="button" class="btn btn-default"><i class="fa fa-times-circle"></i> ล้างข้อมูล</button>
+			{{/if}}
 		</div>
 	</div>
 	</form>
@@ -290,7 +294,9 @@
 {{#each model.files}}
 	<tr>
 		<td style="text-align:center;">
+			{{#if this.isAdmin}}
 			<a href="#" class="fileDeleteLnk" data-id="{{id}}"><i class="fa fa-trash"></i></a>
+			{{/if}}
 		</td>
 		<td>
 			<a href="/smt/FILES/get/{{../model.domainName}}/{{../model.id}}/{{fileName}}">{{fileName}}</a>
@@ -311,8 +317,8 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="form-group">
-				    <label for="inputEmail3" class="col-sm-2 control-label">ชื่อ[[${typeTxt}]] (ภาษาไทย)</label>
-				    <div class="col-sm-10">
+				    <label for="inputEmail3" class="col-md-4 col-sm-2 control-label">ชื่อ[[${typeTxt}]] (ภาษาไทย)</label>
+				    <div class="col-md-8 col-sm-10">
 				      <input type="text" class="form-control formTxt" id="nameThTxt" 
 							placeholder="ระบุชื่อ[[${typeTxt}]]ที่ต้องการค้นหา (ภาษาไทย)..." data-field="nameTh" value="{{searchModel.nameTh}}"/>
 				    </div>
@@ -320,18 +326,32 @@
 			</div>
 			<div class="col-md-12">
 				<div class="form-group">
-				    <label for="inputEmail3" class="col-sm-2 control-label">ชื่อ[[${typeTxt}]] (ภาษาอังกฤษ)</label>
-				    <div class="col-sm-10">
+				    <label for="inputEmail3" class="col-md-4 col-sm-2 control-label">ชื่อ[[${typeTxt}]] (ภาษาอังกฤษ)</label>
+				    <div class="col-md-8 col-sm-10">
 				      <input type="text" class="form-control formTxt" id="nameEnTxt" 
 							placeholder="ระบุชื่อ[[${typeTxt}]]ที่ต้องการค้นหา (ภาษาอังกฤษ)..." data-field="nameEn" value="{{searchModel.nameEn}}"/>
 				    </div>
 				</div>
 			</div>
+			<div class="col-md-12">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-4 control-label">ประเภทข้อมูลทางวิชาการ</label>
+					    <div class="col-md-8">
+							<select class="form-control formSlt" id="journalTypesSlt" data-field="journalType">
+								{{#each this.journalTypes}}
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
+								{{/each}}
+							</select>				      
+					    </div>
+					</div>
+			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-12" style="text-align: center;">
+					{{#if this.isAdmin}}
 					<button type="button" class="btn btn-default" id="newFormBtn">
 						<i class="fa fa-plus"></i> เพิ่มข้อมูล[[${typeTxt}]]</button>
+					{{/if}}
 					<button type="button" class="btn btn-default" id="searchBtn">
 						<span class="glyphicon glyphicon-search"></span> ค้นหา</button>
 					<button type="button" class="btn btn-default" id="clearFormBtn">
@@ -360,7 +380,7 @@
 		<tbody>
 			{{#each content}}
 			<tr data-id="{{id}}">
-				<td> <button type="button" class="btn btn-danger btn-xs removeJournalBtn"><i class="fa fa-trash"> </i></button> 
+				<td> {{#if this.isAdmin}}<button type="button" class="btn btn-danger btn-xs removeJournalBtn"><i class="fa fa-trash"> </i></button>{{/if}} 
 					 <button type="button" class="btn btn-info btn-xs editJournalBtn"><i class="fa fa-edit"> </i></button>
 				</td>
 				<td style="text-align:center;">{{nameTh}}</td>
@@ -392,7 +412,8 @@
 //<!--
 
 var appRouter;
-var behaviorType = [[${behaviorType}]]
+var behaviorType = [[${behaviorType}]];
+var roles = [[${roles}]];
 
 $( document ).ready(function() {
 	

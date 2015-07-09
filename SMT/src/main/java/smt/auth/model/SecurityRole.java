@@ -50,5 +50,8 @@ public class SecurityRole implements Role, Serializable {
 		this.name = name;
 	}
 	
+	public String toString() {
+		return this.name;
+	}
 	
 }

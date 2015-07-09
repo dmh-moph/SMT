@@ -82,7 +82,7 @@ var SearchView = Backbone.View.extend({
     	this.searchViewTemplate = Handlebars.compile($("#searchViewTemplate").html());
     	this.provinceSltTemplate = Handlebars.compile($("#provinceSltTemplate").html());
     	this.searchModel = new smt.Model.OrganizationNetwork();
-    	
+    	this.isAdmin = roles.contains('ADMIN');
     	// the three must have option!
 		 this.journalTypes = options.journalTypes;
 
@@ -175,7 +175,7 @@ var SearchView = Backbone.View.extend({
     	json.journalTypes = this.journalTypes.toJSON();
     	__setSelect(json.journalTypes, this.searchModel.get('journalTypes'));
     	
-    	console.log(json);
+    	json.isAdmin = this.isAdmin;
     	
     	this.$el.html(this.searchViewTemplate(json));
     	
@@ -188,6 +188,7 @@ var TableResultView = Backbone.View.extend({
 	initialize: function(options){
 		this.searchResults = new smt.Page.Journals();
 		this.tableResultViewTemplate = Handlebars.compile($("#tableResultViewTemplate").html());
+		this.isAdmin = roles.contains('ADMIN');
 	},
 	events: {
 		"click .editJournalBtn" : "onClickEditJournalBtn",
@@ -272,6 +273,7 @@ var TableResultView = Backbone.View.extend({
 					var json = {};
 					json.page = this.searchResults.page;
 					json.content = this.searchResults.toJSON();
+					json.isAdmin = this.isAdmin;
 					this.$el.html(this.tableResultViewTemplate(json));
 	    		}, this)
 	    	});
@@ -289,7 +291,7 @@ var FormView = Backbone.View.extend({
 	 initialize: function(options){
 		 this.formViewTemplate = Handlebars.compile($("#formViewTemplate").html());
 		 this.trFilesTemplate = Handlebars.compile($("#trFilesTemplate").html());
-		 
+	     this.isAdmin = roles.contains('ADMIN');
 		 Handlebars.registerPartial("trFilesTemplate", $("#trFilesTemplate").html());
 		
 		 // the three must have option!
@@ -324,7 +326,7 @@ var FormView = Backbone.View.extend({
 					
 					var json= {};
 					json.model = this.model.toJSON();
-					
+					josn.isAdmin = this.isAdmin;
 					$('#filesTbl tbody').empty();
 					$('#filesTbl tbody').html(this.trFilesTemplate(json));
 					
@@ -459,6 +461,7 @@ var FormView = Backbone.View.extend({
 			 __setSelect(json.journalTypes, this.model.get('journalTypes'));
 			
 		}
+		json.isAdmin = this.isAdmin;
 		
 		this.$el.html(this.formViewTemplate(json));
 		
@@ -470,6 +473,7 @@ var FormView = Backbone.View.extend({
 	            	var file = new smt.Model.FileMeta(file);
 	            	this.model.get('files').add(file);
 	            	var json = {};
+	            	json.isAdmin = this.isAdmin;
 	            	json.model = this.model.toJSON();
 	            	$('#filesTbl tbody').empty();
 	            	$('#filesTbl tbody').html(this.trFilesTemplate(json));
