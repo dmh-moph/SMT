@@ -34,7 +34,6 @@ public class SecurityRole implements Role, Serializable {
 	
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return name;
 	}
 

@@ -81,7 +81,7 @@ var SearchView = Backbone.View.extend({
     initialize: function(options){
     	this.searchViewTemplate = Handlebars.compile($("#searchViewTemplate").html());
     	this.provinceSltTemplate = Handlebars.compile($("#provinceSltTemplate").html());
-    	this.searchModel = new smt.Model.OrganizationNetwork();
+    	this.searchModel = new smt.Model.Journal();
     	this.isAdmin = roles.contains('ADMIN');
     	// the three must have option!
 		 this.journalTypes = options.journalTypes;
@@ -150,8 +150,8 @@ var SearchView = Backbone.View.extend({
     		model = smt.Model.Province.findOrCreate({id:id});
     	} else if(field == 'networkType') {
     		model = smt.Model.DV_NetworkType.findOrCreate({id:id});
-    	} else if(field == 'orgType') {
-    		model = smt.Model.DV_OrgType.findOrCreate({id:id});
+    	} else if(field == 'journalType') {
+    		model = smt.Model.DV_JournalType.findOrCreate({id:id});
     	} else {
     		model = null;
     		return;
@@ -172,7 +172,10 @@ var SearchView = Backbone.View.extend({
     	var json = {};
     	json.searchModel = this.searchModel.toJSON();
     	
-    	json.journalTypes = this.journalTypes.toJSON();
+    	
+    	json.journalTypes=new Array();
+		json.journalTypes.push({id:0,description: 'กรุณาเลือกประเภท'});
+		$.merge(json.journalTypes, this.journalTypes.toJSON());
     	__setSelect(json.journalTypes, this.searchModel.get('journalTypes'));
     	
     	json.isAdmin = this.isAdmin;

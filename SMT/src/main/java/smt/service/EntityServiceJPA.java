@@ -47,6 +47,7 @@ import smt.model.Situation;
 import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
 import smt.model.glb.HealthZone;
+import smt.model.glb.JournalType;
 import smt.model.glb.NetworkType;
 import smt.model.glb.OrgType;
 import smt.model.glb.PersonType;
@@ -578,10 +579,11 @@ public class EntityServiceJPA implements EntityService {
 		
 		BooleanBuilder p = new BooleanBuilder();
 		
+		
 		if(webModel.getJournalType() != null) {
-			logger.debug("Searching for Journal Type:  " + webModel.getJournalType());
-			p = p.and(q.journalType.eq(webModel.getJournalType()));
+			logger.debug("webModel.getJournalType: " +webModel.getJournalType().getId());
 		}
+		
 		
 		BooleanBuilder nameP = new BooleanBuilder();
 		
@@ -592,6 +594,10 @@ public class EntityServiceJPA implements EntityService {
 		
 		if(webModel.getNameEn() != null) {
 			nameP = nameP.or(q.nameEn.like("%"+webModel.getNameEn().trim()+"%"));
+		}
+		
+		if(webModel.getJournalType() != null) {
+			p = p.and(q.journalType.id.eq(webModel.getJournalType().getId()));
 		}
 		
 		p = p.and(nameP);
@@ -659,6 +665,12 @@ public class EntityServiceJPA implements EntityService {
 		
 		BeanUtils.copyProperties(webModel, dbModel, "createBy", "createDate");
 
+		if(webModel.getJournalType() != null) {
+			JournalType type = (JournalType) domainVariableRepo.findOne(webModel.getJournalType().getId());
+			dbModel.setJournalType(type);
+			
+		}
+		
 		dbModel.setLastUpdateBy(user);
 		dbModel.setLastUpdateDate(new Date());
 		journalRepo.save(dbModel);
