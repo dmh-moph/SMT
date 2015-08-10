@@ -254,5 +254,7 @@ insert INTO sec_role VALUES (sec_role_seq.nextval, 'ADMIN');
 insert INTO sec_role VALUES (sec_role_seq.nextval, 'USER');
 
 
+alter table SMT_ORGANIZATION_NETWORK add (school_name varchar2(255 char));
+
 
 commit;

@@ -115,6 +115,10 @@ smt.Model.OrganizationNetwork = Backbone.RelationalModel.extend({
 		type: Backbone.HasMany,
 		key: 'medicalStaffs',
 		relatedModel: 'smt.Model.OrganizationPerson'
+	},{
+		type: Backbone.HasMany,
+		key: 'files',
+		relatedModel: 'smt.Model.FileMeta'
 	}],
 	urlRoot: appUrl('OrganizationNetwork')
 });

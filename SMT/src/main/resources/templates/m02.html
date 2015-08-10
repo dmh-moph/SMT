@@ -381,7 +381,7 @@
 		<tbody>
 			{{#each content}}
 			<tr data-id="{{id}}">
-				<td> {{#if this.isAdmin}}<button type="button" class="btn btn-danger btn-xs removeJournalBtn"><i class="fa fa-trash"> </i></button>{{/if}} 
+				<td> {{#if ../isAdmin}}<button type="button" class="btn btn-danger btn-xs removeJournalBtn"><i class="fa fa-trash"> </i></button>{{/if}} 
 					 <button type="button" class="btn btn-info btn-xs editJournalBtn"><i class="fa fa-edit"> </i></button>
 				</td>
 				<td style="text-align:center;">{{journalType.description}}</td>

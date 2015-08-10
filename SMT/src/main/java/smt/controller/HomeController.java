@@ -38,7 +38,8 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/m06")
-	public String m06Handle(Model model) {
+	public String m06Handle(Model model, @Activeuser SecurityUser user) {
+		model.addAttribute("roles", user.getRoles().toString() );
 		model.addAttribute("title","m06: : ข้อมูลเครือข่ายที่ทำงานเกี่ยวกับเด็กและวัยรุ่น");
 		return "m06";
 	}

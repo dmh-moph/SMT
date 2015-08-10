@@ -20,6 +20,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Where;
+
 import smt.auth.model.SecurityUser;
 import smt.auth.model.User;
 import smt.model.glb.Amphur;
@@ -42,7 +44,7 @@ public class OrganizationNetwork implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -7791733555935177163L;
-	
+	private static final String domainName = "ORGANIZATION_NETWORK";
 	
 	
 	@Override
@@ -82,6 +84,10 @@ public class OrganizationNetwork implements Serializable {
 	private String orgName;
 	
 	@Basic
+	@Column(name="SCHOOL_NAME")
+	private String schoolName;
+	
+	@Basic
 	@Column(name="ORG_CODE1")
 	private String orgCode1;
 	
@@ -112,6 +118,11 @@ public class OrganizationNetwork implements Serializable {
 	@Basic
 	@Column(name="WEBSITE")
 	private String website;
+	
+	@OneToMany
+	@JoinColumn(name="domainId", referencedColumnName="Id")
+	@Where(clause="domain='"+domainName+"'")
+	private List<FileMeta> files;
 	
 	 @OneToMany(mappedBy="organizationNetwork", cascade=CascadeType.ALL)
 	 @OrderColumn(name="organization_Network_index")
@@ -298,6 +309,26 @@ public class OrganizationNetwork implements Serializable {
 
 	public void setTeenFriendly(Boolean teenFriendly) {
 		this.teenFriendly = teenFriendly;
+	}
+
+	public String getSchoolName() {
+		return schoolName;
+	}
+
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+
+	public List<FileMeta> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<FileMeta> files) {
+		this.files = files;
+	}
+
+	public String getDomainName() {
+		return domainName;
 	}
 	
 	

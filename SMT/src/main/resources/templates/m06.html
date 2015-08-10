@@ -179,6 +179,11 @@
 			</div>
 			<div class="row">
 				<div class="col-md-6">
+					{{txtInput "half" "ชื่อโรงเรียน" "schoolName" this.model.schoolName  "readwrite"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
 					{{txtInput "half" "รหัส9 หลัก" "orgCode1" this.model.orgCode1}}
 				</div>
 				<div class="col-md-6">
@@ -238,11 +243,13 @@
 							
 						</div>
 						<div class="panel-body">
+							{{#if isAdmin}}
 							<div class="row" style="margin-bottom: 8px">
 								<div class="col-md-12">
 									<button id="newPersonBtn" type="button" class="btn btn-primary btn-xs"><i class="fa fa-plus-circle"></i> เพิ่มรายชื่อ</button>
 								</div>
 							</div>
+							{{/if}}
 							<div class="row">
 								<div class="col-md-12">
 									<table class="table table-bordered">
@@ -262,23 +269,76 @@
 						</div>
 					</div>
 				</div>
-			</div>			
+			</div>
+
+			{{#if model.id}}
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<b>ไฟล์ทีเกี่ยวข้อง</b> 
+							
+						</div>
+						{{#if this.isAdmin}}
+						<div class="panel-body">
+							<span class="btn btn-success fileinput-button">
+                    			<i class="glyphicon glyphicon-plus"></i>
+                    			<span>Add files...</span>
+                    			<input id="fileupload" type="file" name="files[]" data-url="/smt/FILES/upload/{{model.domainName}}/{{model.id}}" multiple>
+                			</span>
+							 <div id="progress">
+						        <div style="width: 0%;"></div>
+    						</div>
+						</div>
+						{{/if}}
+						<table class="table" id="filesTbl">
+							<thead>
+								<th style="width:40px;"></th>
+								<th>Filename</th>
+								<th style="width:200px;">Size (KB)</th>
+							</thead>
+							<tbody>
+								{{> trFilesTemplate}}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			{{/if}}
+
+			
 		</div>
 		<div class="panel-footer">
 			<button id="backBtn" type="button" class="btn btn-default"><i class="fa fa-chevron-left"></i> กลับหน้าเดิม</button>
-			<button id="saveFormBtn" type="button" class="btn btn-default"><i class="fa fa-floppy-o"></i> บันทึกข้อมูล</button>
-			<button id="clearFormBtn" type="button" class="btn btn-default"><i class="fa fa-times-circle"></i> ล้างข้อมูล</button>
+			{{#if this.isAdmin}}<button id="saveFormBtn" type="button" class="btn btn-default"><i class="fa fa-floppy-o"></i> บันทึกข้อมูล</button>
+			<button id="clearFormBtn" type="button" class="btn btn-default"><i class="fa fa-times-circle"></i> ล้างข้อมูล</button>{{/if}}
 		</div>
 	</div>
 	</form>
 </div>
 </script>
 
+<script  id="trFilesTemplate" type="text/x-handlebars-template"  th:inline="text">
+{{#each model.files}}
+	<tr>
+		<td style="text-align:center;">
+			{{#if this.isAdmin}}
+			<a href="#" class="fileDeleteLnk" data-id="{{id}}"><i class="fa fa-trash"></i></a>
+			{{/if}}
+		</td>
+		<td>
+			<a href="/smt/FILES/get/{{../model.domainName}}/{{../model.id}}/{{fileName}}">{{fileName}}</a>
+		</td>
+		<td>{{formatNumber fileSize}}</td>
+	</tr>
+{{/each}}
+</script>
+
 <script  id="medicalStaffsTbodyTemplate" type="text/x-handlebars-template">
 {{#each this}}
 <tr data-id="{{id}}" data-index="{{@index}}">
-	<td><button type="button" class="btn btn-danger btn-xs removePersonBtn"><i class="fa fa-trash"> </i></button> 
-		<button type="button" class="btn btn-info btn-xs editPersonBtn"><i class="fa fa-edit"> </i></button>
+	<td>{{#if ../isAdmin}}<button type="button" class="btn btn-danger btn-xs removePersonBtn"><i class="fa fa-trash"> </i></button> 
+		<button type="button" class="btn btn-info btn-xs editPersonBtn"><i class="fa fa-edit"> </i></button>{{/if}}
 	</td>
 	<td>{{name}}</td>
 	<td>{{type.description}}</td>
@@ -363,8 +423,8 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12" style="text-align: center;">
-					<button type="button" class="btn btn-default" id="newFormBtn">
-						<i class="fa fa-plus"></i> เพิ่มข้อมูลเครือข่าย</button>
+					{{#if isAdmin}}<button type="button" class="btn btn-default" id="newFormBtn">
+						<i class="fa fa-plus"></i> เพิ่มข้อมูลเครือข่าย</button>{{/if}}
 					<button type="button" class="btn btn-default" id="searchBtn">
 						<span class="glyphicon glyphicon-search"></span> ค้นหา</button>
 					<button type="button" class="btn btn-default" id="clearFormBtn">
@@ -388,6 +448,7 @@
 				<td style="width: 120px;text-align:center;" class=""><b>ประเภทเครือข่าย</b></td>
 				<td style="width: 120px;text-align:center;" class=""><b>ประเภทหน่วยงาน</b></td>
 				<td style="text-align:center;"><b>ชื่อหน่วยงาน</b></td>
+				<td style="width: 240px;text-align:center;"><b>ชื่อโรงเรียน</b></td>
 				<td style="width: 60px;text-align:center;" class=""><b>เขต</b></td>
 				<td style="width: 100px;text-align:center;" class=""><b>จังหวัด</b></td>
 				<td style="width: 150px;text-align:center;" class=""><b>ผ่านเกณฑ์คลินิกบริการ<br/>ที่เป็นมิตรกับวัยรุ่น </b></td>
@@ -396,12 +457,13 @@
 		<tbody>
 			{{#each content}}
 			<tr data-id="{{id}}">
-				<td> <button type="button" class="btn btn-danger btn-xs removeOrganizationNetworkBtn"><i class="fa fa-trash"> </i></button> 
+				<td> {{#if ../isAdmin}}<button type="button" class="btn btn-danger btn-xs removeOrganizationNetworkBtn"><i class="fa fa-trash"> </i></button>{{/if}} 
 					 <button type="button" class="btn btn-info btn-xs editOrganizationNetworkBtn"><i class="fa fa-edit"> </i></button>
 				</td>
 				<td style="text-align:center;">{{networkType.description}}</td>
 				<td style="text-align:center;">{{orgType.description}}</a></td>
 				<td>{{orgName}}</td>
+				<td>{{schoolName}}</td>
 				<td style="text-align:center;">{{zone.code}}</td>
 				<td style="text-align:center;">{{province.name}}</td>
 				<td style="text-align:center;font-size:14px;color:green">{{#if teenFriendly}}<i class="fa fa-check-square"> </i>{{/if}}</td>
@@ -433,6 +495,7 @@
 var e1;
 
 var appRouter;
+var roles = [[${roles}]];
 
 $( document ).ready(function() {
 	

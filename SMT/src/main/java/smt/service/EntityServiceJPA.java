@@ -177,7 +177,10 @@ public class EntityServiceJPA implements EntityService {
 
 	@Override
 	public OrganizationNetwork findOrganizationNetworkById(Long id) {
-		return organizationNetworkRepo.findOne(id);
+		OrganizationNetwork org = organizationNetworkRepo.findOne(id);
+		org.getFiles().size();
+		org.getMedicalStaffs().size();
+		return org;
 	}
 
 	@Override
@@ -209,6 +212,7 @@ public class EntityServiceJPA implements EntityService {
 		model.setEmail(node.path("email").asText());
 		model.setWebsite(node.path("website").asText());
 		model.setTeenFriendly(node.path("teenFriendly").asBoolean());
+		model.setSchoolName(node.path("schoolName").asText());
 		
 
 		// now the SLT

@@ -89,7 +89,7 @@ var SearchView = Backbone.View.extend({
     	this.orgTypes = options.orgTypes;
     	this.heathZones = options.healthZones;
     	
-
+    	this.isAdmin = roles.contains('ADMIN');
     	this.provinces = new smt.Collection.Provinces();
     	
     	
@@ -190,7 +190,7 @@ var SearchView = Backbone.View.extend({
     	json.provinces = this.provinces.toJSON();
     	__setSelect(json.provinces, this.searchModel.get('province'));
     	
-    	console.log(json);
+    	json.isAdmin = this.isAdmin;
     	
     	this.$el.html(this.searchViewTemplate(json));
     	
@@ -203,6 +203,7 @@ var TableResultView = Backbone.View.extend({
 	initialize: function(options){
 		this.searchResults = new smt.Page.OrganizationNetworks();
 		this.tableResultViewTemplate = Handlebars.compile($("#tableResultViewTemplate").html());
+		 this.isAdmin = roles.contains('ADMIN');
 	},
 	events: {
 		"click .editOrganizationNetworkBtn" : "onClickEditOrganizationNetworkBtn",
@@ -286,6 +287,7 @@ var TableResultView = Backbone.View.extend({
 					var json = {};
 					json.page = this.searchResults.page;
 					json.content = this.searchResults.toJSON();
+					json.isAdmin = this.isAdmin;
 					this.$el.html(this.tableResultViewTemplate(json));
 	    		}, this)
 	    	});
@@ -301,6 +303,9 @@ var FormView = Backbone.View.extend({
 		 this.amphurSltTemplate = Handlebars.compile($("#amphurSltTemplate").html());
 		 this.medicalStaffsTbodyTemplate = Handlebars.compile($("#medicalStaffsTbodyTemplate").html());
 		 
+		 this.trFilesTemplate = Handlebars.compile($("#trFilesTemplate").html());
+		 Handlebars.registerPartial("trFilesTemplate", $("#trFilesTemplate").html());
+		 this.isAdmin = roles.contains('ADMIN');
 		
 		 // the three must have option!
 		 this.networkTypes = options.networkTypes;
@@ -322,9 +327,37 @@ var FormView = Backbone.View.extend({
 		 "click .editPersonBtn" : "onClickEditPersonBtn",
 		 
 		"click #saveFormBtn" : "onClickSaveFormBtn",
-		"click #backBtn" : "onClickBackBtn"
+		"click #backBtn" : "onClickBackBtn",
+		
+		"click .fileDeleteLnk" : "onClickFileDeleteLnk"
 			 
 	},
+	onClickFileDeleteLnk: function(e){
+		var fileId = $(e.currentTarget).attr('data-id');
+		var file = smt.Model.FileMeta.findOrCreate(fileId);
+		
+		var r = confirm("คุณต้องการลบไฟล์ " + file.get('fileName'));
+		if (r == true) {
+		    
+			file.destroy({
+				success: _.bind(function(model, response) {
+					alert("ลบข้อมูลเรียบร้อยแล้ว")
+					
+					this.model.get('files').remove(file);
+					
+					var json= {};
+					json.model = this.model.toJSON();
+					josn.isAdmin = this.isAdmin;
+					$('#filesTbl tbody').empty();
+					$('#filesTbl tbody').html(this.trFilesTemplate(json));
+					
+				},this)
+			});
+			
+		} 
+		
+		return false;
+	},	
 	onClickSaveFormBtn: function(e) {
 		var validated = true;
 		
@@ -480,7 +513,8 @@ var FormView = Backbone.View.extend({
 		var zoneId=this.model.get('zone').get('id');
 		var provinceId = this.model.get('province').get('id');
 		$.when(this.provinces.fetch({url: appUrl('Province/findAllByZone/'+zoneId)}),
-				this.amphurs.fetch({url: appUrl('Province/'+provinceId +'/Amphur')}))
+				this.amphurs.fetch({url: appUrl('Province/'+provinceId +'/Amphur')}),
+				this.model.fetch())
 				.done(_.bind(function(x) {
 			this.render();	
 		},this));
@@ -488,6 +522,7 @@ var FormView = Backbone.View.extend({
 	},
 	renderPersonTbl: function() {
 		var json = this.model.get('medicalStaffs').toJSON();
+		json.isAdmin = this.isAdmin;
 		var html = this.medicalStaffsTbodyTemplate(json);
 		
 		this.$el.find('#medicalStaffsTbody').html(html);
@@ -496,6 +531,7 @@ var FormView = Backbone.View.extend({
 	render: function() {
 		var json={};
 		json.model = this.model.toJSON();
+		
 		
 		if(this.model.get('id') == null) {
 			json.networkTypes=new Array();
@@ -537,10 +573,36 @@ var FormView = Backbone.View.extend({
 			__setSelect(json.amphurs, this.model.get('amphur'));
 		}
 		
-		console.log(json);
+		json.isAdmin  = this.isAdmin;
+		
+		
 		this.$el.html(this.formViewTemplate(json));
 		
 		this.renderPersonTbl();
+		
+		$('#fileupload').fileupload({
+	        dataType: 'json',
+	 
+	        done: _.bind(function (e, data) {
+	            $.each(data.result, _.bind(function (index, file) {
+	            	var file = new smt.Model.FileMeta(file);
+	            	this.model.get('files').add(file);
+	            	var json = {};
+	            	json.isAdmin = this.isAdmin;
+	            	json.model = this.model.toJSON();
+	            	$('#filesTbl tbody').empty();
+	            	$('#filesTbl tbody').html(this.trFilesTemplate(json));
+	            },this)); 
+	        },this),	 
+	        progressall: function (e, data) {
+	            var progress = parseInt(data.loaded / data.total * 100, 10);
+	            $('#progress .bar').css(
+	                'width',
+	                progress + '%'
+	            );
+	        }
+		});
+		
 		return this;
 	}
 });
