@@ -478,11 +478,11 @@ var FormView = Backbone.View.extend({
 		} else {
 			json.journalTypes=new Array();
 			$.merge(json.journalTypes, journalTypes.toJSON());
-			 __setSelect(json.journalTypes, this.model.get('journalTypes'));
+			 __setSelect(json.journalTypes, this.model.get('journalType'));
 			
 		}
 		json.isAdmin = this.isAdmin;
-		
+		console.log(json);
 		this.$el.html(this.formViewTemplate(json));
 		
 		$('#fileupload').fileupload({
