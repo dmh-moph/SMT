@@ -31,7 +31,7 @@ public static Logger logger = LoggerFactory.getLogger(JournalRestController.clas
 	@RequestMapping(value = "/search/page/{pageNum}", method = {RequestMethod.POST}) 
 	public ResponseJSend<Page<Journal>> findJournalByExample(
 			@RequestBody JsonNode node, @Activeuser SecurityUser user, @PathVariable Integer pageNum) throws JsonMappingException {
-		return entityService.findJournalByExample(node, pageNum);
+		return entityService.findJournalByExample(node, pageNum, user);
 	}
 
 	@RequestMapping(value= "/{id}", method = {RequestMethod.GET})

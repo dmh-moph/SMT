@@ -570,7 +570,7 @@ public class EntityServiceJPA implements EntityService {
 
 	@Override
 	public ResponseJSend<Page<Journal>> findJournalByExample(JsonNode node,
-			Integer pageNum) throws JsonMappingException {
+			Integer pageNum, SecurityUser user) throws JsonMappingException {
 		logger.debug("findJournalByExample");
 		
 //		Long orgId = node.get("organization").get("id").asLong();
@@ -612,8 +612,20 @@ public class EntityServiceJPA implements EntityService {
 			nameP = nameP.or(q.nameEn.like("%"+webModel.getNameEn().trim()+"%"));
 		}
 		
-		if(webModel.getJournalType() != null) {
-			p = p.and(q.journalType.id.eq(webModel.getJournalType().getId()));
+		
+		if(user.getRoles().toString().indexOf("ADMIN", 0) < 0 ) {
+
+			if(webModel.getJournalType() != null && webModel.getJournalType().getCode().equals("1") ) {
+				p = p.andAnyOf(q.journalType.id.eq(webModel.getJournalType().getId()), q.journalType.code.eq("2"));
+			} else if (webModel.getJournalType() != null && webModel.getJournalType().getCode().equals("8") ) {
+				p = p.andAnyOf(q.journalType.id.eq(webModel.getJournalType().getId()), q.journalType.code.eq("9"));
+			} else if(webModel.getJournalType() != null) {
+				p = p.and(q.journalType.id.eq(webModel.getJournalType().getId()));
+			}
+		} else {
+			if(webModel.getJournalType() != null) {
+				p = p.and(q.journalType.id.eq(webModel.getJournalType().getId()));
+			}
 		}
 		
 		p = p.and(nameP);
@@ -688,7 +700,7 @@ public class EntityServiceJPA implements EntityService {
 		}
 		
 		dbModel.setLastUpdateBy(user);
-		dbModel.setLastUpdateDate(new Date());
+		//dbModel.setLastUpdateDate(new Date());
 		journalRepo.save(dbModel);
 		
 		ResponseJSend<Long> response = new ResponseJSend<Long>();

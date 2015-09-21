@@ -179,6 +179,23 @@ var SearchView = Backbone.View.extend({
     	__setSelect(json.journalTypes, this.searchModel.get('journalTypes'));
     	
     	json.isAdmin = this.isAdmin;
+    	if(!this.isAdmin) {
+    		var types = new Array();
+    		for(var i=0; i<json.journalTypes.length; i++) {
+    			
+    			var type = json.journalTypes[i];
+    			if(type.code == 1) {
+    				type.description = 'งานวิชาการ (หนังสือ, บทความ, วารสาร)';
+    			} else if (type.code == 8) {
+    				type.description = 'สื่อโสตทัศน์';
+    			} 
+    			
+    			if(type.code != 2 && type.code !=9) {
+    				types.push(type);
+    			}
+    		}
+    		json.journalTypes = types;
+    	}
     	
     	this.$el.html(this.searchViewTemplate(json));
     	

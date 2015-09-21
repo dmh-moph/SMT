@@ -57,7 +57,7 @@ public interface EntityService {
 	public ResponseJSend<Long> deleteBehavior(Long id);
 
 	public ResponseJSend<Page<Journal>> findJournalByExample(JsonNode node,
-			Integer pageNum) throws JsonMappingException;
+			Integer pageNum, SecurityUser user) throws JsonMappingException;
 
 	public Journal findJournalById(Long id);
 
