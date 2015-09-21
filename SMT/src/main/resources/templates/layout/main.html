@@ -67,7 +67,7 @@
 	</div>			
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container-fluid">
-			<div class="navbar-header">
+			<div class="navbar-header" style="width: 700px;">
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 					<span class="sr-only">Toggle navigation</span> 
 					<span class="icon-bar"></span>
@@ -78,9 +78,15 @@
 				<img style="float: left; margin: 5px; vertical-align: middle;" width="50" src="/static/graphics/logo.gif" th:src="@{/static/graphics/logo.gif}"/> 
 				<img style="float: left; margin: 5px; vertical-align: middle;" width="50" src="/static/graphics/logo_smarteen.gif" th:src="@{/static/graphics/logo_smarteen.gif}"/>
 				
-				<a style="vertical-align: middle;font-weight: bolder;margin-top:7px;" class="navbar-brand" href="#" th:href="@{/}">SMARTTEEN</a>
+				<a style="vertical-align: middle;font-weight: bolder;margin-top:7px;color: #fff;" class="navbar-brand" href="#" th:href="@{/}">SMARTTEEN</a>
+				<div style="float:left; margin-top:8px; color: #fff;"> สถาบันสุขภาพจิตเด็กและวัยรุ่นราชนครินทร์ <br/>
+					Child and Adolescent Mental Health Rajanagarindra Institute (CAMRI) <br/>
+					กรมสุขภาพจิต  กระทรวงสาธารณสุข
+				</div>
+				
 			</div>
 			<div class="navbar-collapse collapse">
+			
 				<ul class="nav navbar-nav navbar-right">
 					<li><a style="vertical-align: middle;margin-top:7px;" href="#" id="aboutLnk"  tabindex="0" onclick="showAboutModal();">About</a></li>
 					<li><a style="vertical-align: middle;margin-top:7px;" href="logout" th:href="@{/logout}">logout</a></li>

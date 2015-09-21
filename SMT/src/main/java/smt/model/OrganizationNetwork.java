@@ -27,9 +27,11 @@ import smt.auth.model.User;
 import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
 import smt.model.glb.HealthZone;
+import smt.model.glb.JournalType;
 import smt.model.glb.NetworkType;
 import smt.model.glb.OrgType;
 import smt.model.glb.Province;
+import smt.model.glb.SchoolType;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -86,6 +88,10 @@ public class OrganizationNetwork implements Serializable {
 	@Basic
 	@Column(name="SCHOOL_NAME")
 	private String schoolName;
+	
+	@ManyToOne
+	@JoinColumn(name="DV_SCHOOL_TYPE")
+	private SchoolType schoolType;
 	
 	@Basic
 	@Column(name="ORG_CODE1")
@@ -330,6 +336,15 @@ public class OrganizationNetwork implements Serializable {
 	public String getDomainName() {
 		return domainName;
 	}
+
+	public SchoolType getSchoolType() {
+		return schoolType;
+	}
+
+	public void setSchoolType(SchoolType schoolType) {
+		this.schoolType = schoolType;
+	}
+	
 	
 	
 }

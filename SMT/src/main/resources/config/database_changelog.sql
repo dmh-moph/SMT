@@ -257,4 +257,10 @@ insert INTO sec_role VALUES (sec_role_seq.nextval, 'USER');
 alter table SMT_ORGANIZATION_NETWORK add (school_name varchar2(255 char));
 
 
+alter table SMT_ORGANIZATION_NETWORK add (DV_SCHOOL_TYPE number);
+alter table SMT_ORGANIZATION_NETWORK
+	add constraint DV_SCHOOL_TYPE_FK
+	foreign key (DV_SCHOOL_TYPE)
+	REFERENCES GLB_VARIABLE;
+
 commit;

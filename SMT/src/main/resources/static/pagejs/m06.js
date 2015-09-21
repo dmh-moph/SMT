@@ -312,6 +312,7 @@ var FormView = Backbone.View.extend({
 		 this.orgTypes = options.orgTypes;
 		 this.heathZones = options.healthZones;
 		 this.personTypes = options.personTypes;
+		 this.schoolTypes = options.schoolTypes;
 		 
 		 this.provinces = new smt.Collection.Provinces();
 		 this.amphurs = new smt.Collection.Amphurs();
@@ -321,7 +322,8 @@ var FormView = Backbone.View.extend({
 	 events: {
 		 "change .formSlt": "onChangeFormSlt",
 		 "change .formTxt" : "onChangeTxtSlt",
-		 
+		 "change .formRdo" : "onChangeFormRdo",
+ 		 
 		 "click #newPersonBtn" : "onClickNewPersonBtn",
 		 "click .removePersonBtn" : "onClickRemovePersonBtn",
 		 "click .editPersonBtn" : "onClickEditPersonBtn",
@@ -443,6 +445,19 @@ var FormView = Backbone.View.extend({
 		this.model.set(field, value);
 	},
 	
+	onChangeFormRdo: function(e) {
+		var id=$(e.currentTarget).val();
+    	var field=$(e.currentTarget).attr('data-field');
+    	var model;
+    	
+    	if(field == 'schoolType') {
+    		model = smt.Model.DV_SchoolType.findOrCreate({id:id});
+    	}
+    	
+    	this.model.set(field, model);
+    		
+	},
+	
 	onChangeFormSlt: function(e) {
     	//get healthZone val
     	var id=$(e.currentTarget).val();
@@ -510,13 +525,16 @@ var FormView = Backbone.View.extend({
 	
 	editForm: function(id) {
 		this.model = smt.Model.OrganizationNetwork.findOrCreate({id: id});
-		var zoneId=this.model.get('zone').get('id');
-		var provinceId = this.model.get('province').get('id');
-		$.when(this.provinces.fetch({url: appUrl('Province/findAllByZone/'+zoneId)}),
-				this.amphurs.fetch({url: appUrl('Province/'+provinceId +'/Amphur')}),
-				this.model.fetch())
-				.done(_.bind(function(x) {
-			this.render();	
+		
+		$.when(this.model.fetch()).done(_.bind(function(x) {
+			var zoneId=this.model.get('zone').get('id');
+			var provinceId = this.model.get('province').get('id');
+			
+			$.when(this.provinces.fetch({url: appUrl('Province/findAllByZone/'+zoneId)}),
+					this.amphurs.fetch({url: appUrl('Province/'+provinceId +'/Amphur')})).done(_.bind(function(x) {
+			
+						this.render();	
+			},this))
 		},this));
 		
 	},
@@ -537,6 +555,9 @@ var FormView = Backbone.View.extend({
 			json.networkTypes=new Array();
 			json.networkTypes.push({id:0,description: 'กรุณาเลือกประเภทเครือข่าย'});
 			$.merge(json.networkTypes, networkTypes.toJSON());
+			
+			json.schoolTypes=new Array();
+			$.merge(json.schoolTypes, schoolTypes.toJSON());
 			
 			json.orgTypes=new Array();
 			json.orgTypes.push({id:0,description: 'กรุณาเลือกประเภทหน่วยงาน'});
@@ -559,6 +580,10 @@ var FormView = Backbone.View.extend({
 			json.orgTypes=new Array();
 			$.merge(json.orgTypes, orgTypes.toJSON());
 			__setSelect(json.orgTypes, this.model.get('orgType'));
+			
+			json.schoolTypes=new Array();
+			$.merge(json.schoolTypes, schoolTypes.toJSON());
+			__setSelect(json.schoolTypes, this.model.get('schoolType'));
 			
 			json.healthZones=new Array();
 			$.merge(json.healthZones, healthZones.toJSON());

@@ -52,6 +52,7 @@ import smt.model.glb.NetworkType;
 import smt.model.glb.OrgType;
 import smt.model.glb.PersonType;
 import smt.model.glb.Province;
+import smt.model.glb.SchoolType;
 import smt.model.glb.SituationType;
 import smt.repository.AmphurRepo;
 import smt.repository.BehaviorImpactRepo;
@@ -68,6 +69,7 @@ import smt.repository.PersonTypeRepo;
 import smt.repository.ProvinceRepo;
 import smt.repository.PsychoSocailReportRepo;
 import smt.repository.ResearchSituationRepo;
+import smt.repository.SchoolTypeRepo;
 import smt.repository.SituationRepo;
 import smt.repository.SituationTypeRepo;
 import smt.webUI.DefaultProperty;
@@ -104,6 +106,9 @@ public class EntityServiceJPA implements EntityService {
 	
 	@Autowired
 	NetworkTypeRepo networkTypeRepo;
+	
+	@Autowired
+	SchoolTypeRepo schoolTypeRepo;
 	
 	@Autowired
 	PersonTypeRepo personTypeRepo;
@@ -242,6 +247,13 @@ public class EntityServiceJPA implements EntityService {
 			NetworkType networkType = networkTypeRepo.findOne(networkTypeId);
 			
 			model.setNetworkType(networkType);
+		}
+		
+		if(node.get("schoolType") != null) {
+			Long schoolTypeId = node.get("schoolType").get("id").asLong();
+			SchoolType schoolType = schoolTypeRepo.findOne(schoolTypeId);
+			
+			model.setSchoolType(schoolType);
 		}
 		
 		if(node.get("orgType") != null) {

@@ -52,6 +52,8 @@ smt.Model.DV_SituationType = Backbone.RelationalModel.extend({
 });
 smt.Model.DV_EducationLevel = Backbone.RelationalModel.extend({
 });
+smt.Model.DV_SchoolType = Backbone.RelationalModel.extend({
+});
 
 smt.Model.HealthZone = Backbone.RelationalModel.extend();
  
@@ -99,6 +101,10 @@ smt.Model.OrganizationNetwork = Backbone.RelationalModel.extend({
 		type: Backbone.HasOne,
 		key: 'networkType',
 		relatedModel: 'smt.Model.DV_NetworkType'
+	},{
+		type: Backbone.HasOne,
+		key: 'schoolType',
+		relatedModel: 'smt.Model.DV_SchoolType'
 	}, {
 		type: Backbone.HasOne,
 		key: 'orgType',
@@ -320,6 +326,10 @@ smt.Collection.NetworkTypes = Backbone.Collection.extend({
 smt.Collection.JournalTypes = Backbone.Collection.extend({
 	model: smt.Model.DV_JournalType,
 	url: appUrl('DomainVariable/JOURNAL_TYPE')
+});
+smt.Collection.SchoolTypes = Backbone.Collection.extend({
+	model: smt.Model.DV_SchoolType,
+	url: appUrl('DomainVariable/SCHOOL_TYPE')
 });
 
 smt.Collection.OrgTypes = Backbone.Collection.extend({

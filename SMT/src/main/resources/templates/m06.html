@@ -181,6 +181,17 @@
 				<div class="col-md-6">
 					{{txtInput "half" "ชื่อโรงเรียน" "schoolName" this.model.schoolName  "readwrite"}}
 				</div>
+				<div class="col-md-6">
+					{{#each this.schoolTypes}}
+					
+					<label class="radio-inline">
+      						<input class="formRdo" type="radio" id="schoolType{{id}}" {{#if selected}}checked="checked"{{/if}} 
+									data-field="schoolType" name="schoolType" value="{{id}}">
+      							{{description}}
+    					</label>
+					
+					{{/each}}
+				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-6">
@@ -504,8 +515,9 @@ $( document ).ready(function() {
 	orgTypes = new  smt.Collection.OrgTypes();
 	healthZones = new smt.Collection.HealthZones();
 	personTypes = new smt.Collection.PersonTypes();
+	schoolTypes = new smt.Collection.SchoolTypes();
 	
-	$.when(networkTypes.fetch(), orgTypes.fetch(), healthZones.fetch(), personTypes.fetch()).done(function(x) {
+	$.when(networkTypes.fetch(), orgTypes.fetch(), healthZones.fetch(), personTypes.fetch(), schoolTypes.fetch()).done(function(x) {
 		
 		searchView = new SearchView({
 			networkTypes: networkTypes,
@@ -523,6 +535,7 @@ $( document ).ready(function() {
 			orgTypes: orgTypes,
 			healthZones: healthZones,
 			personTypes: personTypes,
+			schoolTypes: schoolTypes,
 			el: "#formView"
 		})
 		
