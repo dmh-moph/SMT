@@ -262,5 +262,41 @@ alter table SMT_ORGANIZATION_NETWORK
 	add constraint DV_SCHOOL_TYPE_FK
 	foreign key (DV_SCHOOL_TYPE)
 	REFERENCES GLB_VARIABLE;
+	
+	
+create table SMT_USERINFO (
+  id number(19,0) not null,
+  EMAIL varchar2(255 char),
+  SEX VARCHAR2(1), 
+  DEPARTMENT varchar2(255 char),
+  
+  OCCUPATION number,
+  OCCUPATION_OTHER varchar2(255 char),
+  
+  POSITION number,
+  POSITION_OTHER varchar2(255 char),
+  
+  OBJECTIVE number,
+  OBJECTIVE_OTHER varchar2(255 char),
+  primary key (id)
+);
+
+alter table SMT_USERINFO
+	add constraint DV_OCCUPATION_FK
+	foreign key (OCCUPATION)
+	REFERENCES GLB_VARIABLE;
+	
+alter table SMT_USERINFO
+	add constraint DV_POSITION_FK
+	foreign key (POSITION)
+	REFERENCES GLB_VARIABLE;
+	
+alter table SMT_USERINFO
+	add constraint DV_OBJECTIVE_FK
+	foreign key (OBJECTIVE)
+	REFERENCES GLB_VARIABLE;
+
+alter table sec_user add (info number);
+
 
 commit;

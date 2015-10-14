@@ -15,7 +15,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -65,6 +67,9 @@ public class SecurityUser implements User, UserDetails, Serializable {
 	    inverseJoinColumns=@JoinColumn(name="ROLE_ID")
 	)
 	private Set<SecurityRole> securityRoles;
+	
+	@OneToOne @MapsId
+	private UserInfo info;
 	
 	public SecurityUser() {
 		
