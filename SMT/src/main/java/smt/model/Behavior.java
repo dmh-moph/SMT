@@ -23,8 +23,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Where;
-import org.neo4j.cypher.internal.compiler.v2_1.perty.docbuilders.scalaDocBuilder;
-
 import smt.auth.model.SecurityUser;
 import smt.model.glb.EducationLevel;
 import smt.model.glb.HealthZone;

@@ -6,8 +6,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 
-import smt.auth.service.SecUserEntityService;
-import smt.auth.service.SecUserEntityServiceJPA;
 import smt.service.EntityService;
 import smt.service.EntityServiceJPA;
 

@@ -6,7 +6,6 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
 import smt.auth.model.SecurityRole;
 import smt.auth.model.SecurityUser;
-import smt.auth.model.User;
 
 public interface SecUserRepository extends JpaRepository<SecurityUser, Long>, QueryDslPredicateExecutor<SecurityUser> {
 

@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import smt.auth.model.Activeuser;
 import smt.auth.model.SecurityUser;
-import smt.model.Journal;
 import smt.model.JournalSituation;
 import smt.service.EntityService;
 import smt.webUI.ResponseJSend;

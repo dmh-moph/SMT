@@ -23,11 +23,8 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.Where;
 
 import smt.auth.model.SecurityUser;
-import smt.auth.model.User;
 import smt.model.glb.Amphur;
-import smt.model.glb.DomainVariable;
 import smt.model.glb.HealthZone;
-import smt.model.glb.JournalType;
 import smt.model.glb.NetworkType;
 import smt.model.glb.OrgType;
 import smt.model.glb.Province;
