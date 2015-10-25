@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -67,7 +68,7 @@ public class SecurityUser implements User, UserDetails, Serializable {
 	)
 	private Set<SecurityRole> securityRoles;
 	
-	@OneToOne @MapsId
+	 @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
 	private UserInfo info;
 	
 	public SecurityUser() {
@@ -165,6 +166,16 @@ public class SecurityUser implements User, UserDetails, Serializable {
 		return roles;
 	}
 
+	
+	
+
+	public UserInfo getInfo() {
+		return info;
+	}
+
+	public void setInfo(UserInfo info) {
+		this.info = info;
+	}
 
 	@Override
 	public String toString() {

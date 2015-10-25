@@ -15,5 +15,13 @@ public interface DomainVariableRepo extends JpaRepository<DomainVariable, Long> 
 			+ "WHERE dv.domain = ?1 "
 			+ "ORDER BY dv.sequence asc")
 	public List<DomainVariable> findAllByDomainName(String domainName);
+
+	@Query(""
+			+ "SELECT dv "
+			+ "FROM DomainVariable dv "
+			+ "WHERE dv.domain = 'POSITION' "
+			+ "	AND dv.code like ?1 "
+			+ "ORDER BY dv.sequence asc")
+	public List<DomainVariable> findAllPositionBeginWithCode(String code);
 	
 }

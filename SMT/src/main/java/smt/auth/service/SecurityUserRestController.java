@@ -1,5 +1,8 @@
 package smt.auth.service;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,7 +53,7 @@ public class SecurityUserRestController {
 	
 	@RequestMapping(value = "", method = {RequestMethod.POST, RequestMethod.PUT}) 
 	public ResponseJSend<Long> saveSecurityUser(@RequestBody JsonNode node,
-			@Activeuser SecurityUser user) {
+			@Activeuser SecurityUser user, HttpServletRequest request) {
 		
 		return this.secUserEntityService.saveSecurityUser(node, user);
 	}

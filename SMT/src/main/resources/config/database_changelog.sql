@@ -298,5 +298,39 @@ alter table SMT_USERINFO
 
 alter table sec_user add (info number);
 
+-- init for Global variable
+insert into glb_variable values('OCCUPATION', 1, '1', 'บุคลากรสาธารณสุข', 'บุคลากรสาธารณสุข', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('OCCUPATION', 2, '2', 'บุคลากรศึกษาธิการ', 'บุคลากรศึกษาธิการ', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('OCCUPATION', 3, '3', 'ประชาชนทั่วไป', 'ประชาชนทั่วไป', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('OCCUPATION', 4, '4', 'วัยรุ่น/นักเรียน/นักศึกษา', 'วัยรุ่น/นักเรียน/นักศึกษา', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('OCCUPATION', 5, '5', 'อิ่นๆ', 'อิ่นๆ', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+
+insert into glb_variable values('POSITION', 1, '11', 'จิตแพทย์', 'จิตแพทย์', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('POSITION', 2, '12', 'แพทย์', 'แพทย์', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('POSITION', 3, '13', 'นักจิตวิทยา', 'นักจิตวิทยา', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('POSITION', 4, '14', 'พยาบาล', 'พยาบาล', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('POSITION', 5, '15', 'นักสังคมสงเคราะห์', 'นักสังคมสงเคราะห์', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('POSITION', 6, '16', 'นักวิชาการสาธารณสุข', 'นักวิชาการสาธารณสุข', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('POSITION', 7, '17', 'นักวิจัย', 'นักวิจัย', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('POSITION', 8, '18', 'บุคลากรสาธารณสุข', 'บุคลากรสาธารณสุข', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('POSITION', 9, '19', 'อิ่นๆ', 'อิ่นๆ', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+
+insert into glb_variable values('POSITION', 1, '21', 'อาจารย์/ผู้บรรยาย', 'อาจารย์/ผู้บรรยาย', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('POSITION', 2, '22', 'นักวิจัย', 'นักวิจัย', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('POSITION', 3, '23', 'บุคลากรทางการศึกษา', 'บุคลากรทางการศึกษา', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('POSITION', 4, '24', 'อิ่นๆ', 'อิ่นๆ', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+
+insert into glb_variable values('POSITION', 1, '31', 'อิ่นๆ', 'อิ่นๆ', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+
+insert into glb_variable values('POSITION', 1, '41', 'อิ่นๆ', 'อิ่นๆ', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+
+insert into glb_variable values('POSITION', 1, '51', 'อิ่นๆ', 'อิ่นๆ', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+
+
+insert into glb_variable values('USER_INFO_OBJECTIVE', 1, '1', 'สอน/บรรยาย', 'สอน/บรรยาย', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('USER_INFO_OBJECTIVE', 2, '2', 'วิจัย', 'วิจัย', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('USER_INFO_OBJECTIVE', 3, '3', 'ศึกษาค้นคว้าเพื่อการศึกษา', 'ศึกษาค้นคว้าเพื่อการศึกษา', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('USER_INFO_OBJECTIVE', 4, '4', 'เพิ่มพูนความรู้', 'เพิ่มพูนความรู้', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
+insert into glb_variable values('USER_INFO_OBJECTIVE', 5, '5', 'อิ่นๆ', 'อิ่นๆ', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
 
 commit;

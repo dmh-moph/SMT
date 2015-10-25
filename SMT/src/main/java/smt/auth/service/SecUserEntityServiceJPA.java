@@ -17,6 +17,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import smt.auth.model.QSecurityUser;
 import smt.auth.model.SecurityRole;
 import smt.auth.model.SecurityUser;
+import smt.auth.model.UserInfo;
+import smt.model.glb.Occupation;
+import smt.model.glb.Position;
+import smt.model.glb.Sex;
+import smt.model.glb.UserInfoObjective;
+import smt.repository.DomainVariableRepo;
 import smt.webUI.DefaultProperty;
 import smt.webUI.ResponseJSend;
 import smt.webUI.ResponseStatus;
@@ -29,6 +35,10 @@ public class SecUserEntityServiceJPA implements SecUserEntityService {
 	
 	@Autowired
 	private SecUserRepository secUserRepo;
+	
+	
+	@Autowired
+	DomainVariableRepo domainVariableRepo;
 	
 	@Override
 	public SecurityUser getSecUserByLogin(String username) {
@@ -84,6 +94,47 @@ public class SecUserEntityServiceJPA implements SecUserEntityService {
 		dbModel.setUsername(webModel.getUsername());
 		dbModel.setPassword(webModel.getPassword());
 		
+		UserInfo info;
+		if(dbModel.getInfo() == null) {
+			info = new UserInfo();
+			info.setUser(dbModel);
+			dbModel.setInfo(info);
+		} else {
+			info = dbModel.getInfo();
+		}
+		
+		if(node.get("info") != null) {
+			JsonNode infoNode = node.get("info");
+			
+			info.setDepartment(infoNode.path("department").asText());
+			info.setEmail(infoNode.path("email").asText());
+			
+			if(infoNode.path("sex").asText().equals("M") ) {
+				info.setSex(Sex.M);	
+			} else if (infoNode.path("sex").asText().equals("F") ) {
+				info.setSex(Sex.F);
+			}
+			
+			if(infoNode.get("occupation") != null) {
+				Occupation o = (Occupation) domainVariableRepo.findOne(infoNode.get("occupation").get("id").asLong());
+				info.setOccupation(o);
+			}
+			info.setOccupationOther(infoNode.path("occupationOther").asText());
+			
+			if(infoNode.get("position") != null) {
+				Position p = (Position) domainVariableRepo.findOne(infoNode.get("position").get("id").asLong());
+				info.setPosition(p);
+			}
+			info.setPositionOther(infoNode.path("positionOther").asText());
+			
+			if(infoNode.get("objective") != null) {
+				UserInfoObjective o = (UserInfoObjective) domainVariableRepo.findOne(infoNode.get("objective").get("id").asLong());
+				info.setObjective(o);
+			}
+			info.setObjectiveOther(infoNode.path("objectiveOther").asText());
+			
+		}
+ 		
 		secUserRepo.save(dbModel);
 		
 		ResponseJSend<Long> response = new ResponseJSend<Long>();
@@ -108,5 +159,10 @@ public class SecUserEntityServiceJPA implements SecUserEntityService {
 	@Override
 	public SecurityUser findSecurityUserById(Long id) {
 		return secUserRepo.findOne(id);
+	}
+
+	@Override
+	public SecurityUser findSecurityUserByUsername(String username) {
+			return secUserRepo.findUserByUserName(username);
 	}
 }

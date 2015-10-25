@@ -179,6 +179,17 @@
  			<groupId>org.springframework.boot</groupId>
  			<artifactId>spring-boot-starter-data-solr</artifactId>
  		</dependency>
+ 		<dependency>
+		    <groupId>com.liferay</groupId>
+		    <artifactId>nl.captcha.simplecaptcha</artifactId>
+		    <version>1.1.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.jhlabs</groupId>
+		    <artifactId>filters</artifactId>
+		    <version>2.0.235-1</version>
+		</dependency>
+ 		
 	</dependencies>
 
 

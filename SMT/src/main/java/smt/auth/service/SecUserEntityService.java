@@ -19,5 +19,7 @@ public interface SecUserEntityService {
 	public ResponseJSend<Long> deleteSecurityUser(Long id);
 
 	public SecurityUser findSecurityUserById(Long id);
+	
+	public SecurityUser findSecurityUserByUsername(String username);
 
 }

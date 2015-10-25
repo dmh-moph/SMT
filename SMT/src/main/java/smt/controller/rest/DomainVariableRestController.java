@@ -21,6 +21,13 @@ public class DomainVariableRestController {
 	@Autowired
 	private EntityService entityService;
 	
+	
+	@RequestMapping("/OCCUPATION/{id}/POSITION")
+	public List<DomainVariable> findAllPostionByOCCUPATION(@PathVariable Long id) {
+		logger.debug("OCCUPATION ID: " + id);
+		return entityService.findAllDomainVariablePostionByOccupationId(id);
+	}
+	
 	@RequestMapping("/{domainName}")
 	public List<DomainVariable> findAllByDomanName(@PathVariable String domainName) {
 		logger.debug("domainName: " + domainName);

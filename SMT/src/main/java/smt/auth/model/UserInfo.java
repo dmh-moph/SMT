@@ -9,6 +9,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.slf4j.Logger;
@@ -40,6 +42,11 @@ public class UserInfo implements Serializable{
 	@Id
 	@Column(name="ID")
 	private Long id;
+	
+	@JoinColumn(name = "ID")
+    @OneToOne
+    @MapsId
+    private SecurityUser user;
 
 	@Column(name="EMAIL")
 	private String email;
@@ -56,7 +63,7 @@ public class UserInfo implements Serializable{
 	private Occupation occupation;
 	
 	@Column(name="OCCUPATION_OTHER")
-	private String OccupationOther;
+	private String occupationOther;
 	
 	@ManyToOne
 	@JoinColumn(name="POSITION")
@@ -70,7 +77,7 @@ public class UserInfo implements Serializable{
 	private UserInfoObjective objective;
 	
 	@Column(name="OBJECTIVE_OTHER")
-	private String ObjectiveOther;
+	private String objectiveOther;
 	
 
 	public Long getId() {
@@ -114,11 +121,11 @@ public class UserInfo implements Serializable{
 	}
 
 	public String getOccupationOther() {
-		return OccupationOther;
+		return occupationOther;
 	}
 
 	public void setOccupationOther(String occupationOther) {
-		OccupationOther = occupationOther;
+		this.occupationOther = occupationOther;
 	}
 
 	public Position getPosition() {
@@ -146,12 +153,21 @@ public class UserInfo implements Serializable{
 	}
 
 	public String getObjectiveOther() {
-		return ObjectiveOther;
+		return objectiveOther;
 	}
 
 	public void setObjectiveOther(String objectiveOther) {
-		ObjectiveOther = objectiveOther;
+		this.objectiveOther = objectiveOther;
 	}
+
+	public SecurityUser getUser() {
+		return user;
+	}
+
+	public void setUser(SecurityUser user) {
+		this.user = user;
+	}
+	
 	
 	
 	

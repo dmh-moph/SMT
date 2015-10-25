@@ -1,3 +1,7 @@
+function rootUrl(url) {
+	return '/smt/'+url;
+}
+
 function appUrl(url) {
 	return '/smt/REST/'+url;
 }
@@ -55,6 +59,15 @@ smt.Model.DV_EducationLevel = Backbone.RelationalModel.extend({
 smt.Model.DV_SchoolType = Backbone.RelationalModel.extend({
 });
 
+smt.Model.DV_Occupation = Backbone.RelationalModel.extend({
+});
+
+smt.Model.DV_Objective = Backbone.RelationalModel.extend({
+});
+
+smt.Model.DV_Position = Backbone.RelationalModel.extend({
+});
+
 smt.Model.HealthZone = Backbone.RelationalModel.extend();
  
 smt.Model.FileMeta = Backbone.RelationalModel.extend({
@@ -81,9 +94,32 @@ smt.Model.Province = Backbone.RelationalModel.extend({
 	urlRoot: appUrl('Province')
 });
 
-smt.Model.Auth.User = Backbone.RelationalModel.extend({
-	
+smt.Model.Auth.UserInfo = Backbone.RelationalModel.extend({
+	relations: [{
+		type: Backbone.HasOne,
+		key: 'occupation',
+		relatedModel: 'smt.Model.DV_Occupation'
+	},{
+		type: Backbone.HasOne,
+		key: 'objective',
+		relatedModel: 'smt.Model.DV_Objective'
+	},{
+		type: Backbone.HasOne,
+		key: 'position',
+		relatedModel: 'smt.Model.DV_Position'
+	}]
 });
+
+smt.Model.Auth.User = Backbone.RelationalModel.extend({
+	relations: [{
+		type: Backbone.HasOne,
+		key: 'info',
+		relatedModel: 'smt.Model.Auth.UserInfo'
+	}]
+});
+
+
+
 smt.Model.OrganizationNetwork = Backbone.RelationalModel.extend({
 	relations: [{
 		type: Backbone.HasOne,
@@ -348,6 +384,19 @@ smt.Collection.SituationTypes = Backbone.Collection.extend({
 	model: smt.Model.DV_SituationType,
 	url: appUrl('DomainVariable/SITUATION_TYPE')
 });
+smt.Collection.Occupations = Backbone.Collection.extend({
+	model: smt.Model.DV_Occupation,
+	url: appUrl('DomainVariable/OCCUPATION')
+});
+smt.Collection.Objectives = Backbone.Collection.extend({
+	model: smt.Model.DV_Objective,
+	url: appUrl('DomainVariable/USER_INFO_OBJECTIVE')
+});
+smt.Collection.Positions = Backbone.Collection.extend({
+	model: smt.Model.DV_Position,
+	url: appUrl('DomainVariable/POSITION')
+});
+
 
 smt.Model.SecurityUser = Backbone.RelationalModel.extend({
 	urlRoot: appUrl('SecurityUser')

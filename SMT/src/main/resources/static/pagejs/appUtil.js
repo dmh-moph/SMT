@@ -7,7 +7,7 @@ if (typeof console === 'undefined') {
 }
 
 //Globally register moment 
-moment.locale("th");
+//moment.locale("th");
 
 Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
     lvalue = parseFloat(lvalue);

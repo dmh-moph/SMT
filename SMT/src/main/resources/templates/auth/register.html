@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/main">
 <head>
     <title>SMARTTEEN - Login</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -11,41 +14,210 @@
     <script type="text/javascript" src="../../static/js/bootstrap.js" th:src="@{/static/js/bootstrap.js}"></script>
 </head>
 <body>
-	  <div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<form class="form-horizontal">
-  <div class="form-group">
-    <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
-    <div class="col-sm-10">
-      <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
-    <div class="col-sm-10">
-      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <div class="checkbox">
-        <label>
-          <input type="checkbox"> Remember me!!!
-        </label>
-      </div>
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <button type="submit" class="btn btn-default">Sign in</button>
-    </div>
-  </div>
-</form>	
-			
-	</div>
-	</div>
+	<div layout:fragment="content">
+		<div class="row" id="formView">
+		</div>
 	
     </div> <!-- /container -->
+    
+    
+    <div layout:fragment="pageScript">
+
+<script  id="positionRowTemplate" type="text/x-handlebars-template">
+				<div class="col-md-6">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-4 control-label">Position</label>
+					    <div class="col-md-8">
+					      <select class="form-control formSlt" id="positionSlt" data-field="info.position">
+								{{#each this.positions}}
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
+								{{/each}}
+							</select>	
+					    </div>
+					</div>
+				</div>
+				<div class="col-md-6" id="positionOtherDiv" {{#if otherHidden}}style="display:none;"{{/if}}>
+					{{txtInput "full" "กรุณาระบุ" "info.positionOther"  model.department "readwrite" "required"}}
+				</div>
+</script>
+
+<script  id="successAlertTemplate" type="text/x-handlebars-template">
+<div class="alert alert-success" role="alert">ลงทะเบียนผู้ใช้งานสำเร็จ ท่านสามารถ กลับไปหน้า <a href="login">Login</a></div>
+</script>
+
+
+<script  id="formViewTemplate" type="text/x-handlebars-template">
+<div class="col-md-12" id="alert">
+</div>
+<div class="col-md-12">
+	<form class="form-horizontal" role="form">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<b><i class="fa fa-pencil-square-o"></i> ลงทะเบียนผู้ใช้งานใหม่</b>
+		</div>
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "ระบุ Username" "username"  model.username "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="check.password1Txt">pick a password</label>
+						<div class="col-md-10">
+							<input id="check.password1Txt" class="form-control formTxt" type="password" required="required" value="" data-field="check.password1">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="check.password2Txt">Enter password again</label>
+						<div class="col-md-10">
+							<input id="check.password2Txt" class="form-control formTxt" type="password" required="required" value="" data-field="check.password2">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+				 		<label for="sex" class="col-sm-4 control-label">Securitry</label>
+						<div class="col-sm-8">
+							<img src="./captcha"/ id='captchaImg'>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					{{txtInput "full" "Enter Text" "captcha"  model.captcha "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "Email Address" "info.email"  model.email "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+				 		<label for="sex" class="col-sm-2 control-label">Gender</label>
+						<div class="col-sm-10">
+							<label class="radio-inline"><input type="radio" class="formRdo" name="sex" data-field="info.sex" value="M">Male</label>
+							<label class="radio-inline"><input type="radio" class="formRdo" name="sex" data-field="info.sex" value="F">Female</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					{{txtInput "full" "Department" "info.department"  model.department "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-4 control-label">Occupation</label>
+					    <div class="col-md-8">
+					      <select class="form-control formSlt" id="occupationSlt" data-field="info.occupation">
+								{{#each this.occupations}}
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
+								{{/each}}
+							</select>	
+					    </div>
+					</div>
+				</div>
+				<div class="col-md-6" id="occupationOtherDiv" style="display:none;">
+					{{txtInput "full" "กรุณาระบุ" "info.occupationOther"  model.department "readwrite" "required"}}
+				</div>
+			</div>
+			<div class="row" id="positionRow">
+
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+					    <label for="inputEmail3" class="col-md-4 control-label">Objective</label>
+					    <div class="col-md-8">
+					      <select class="form-control formSlt" id="objectiveSlt" data-field="info.objective">
+								{{#each this.objectives}}
+									<option value="{{id}}" {{#if selected}}selected="selected"{{/if}}>{{description}}</option>
+								{{/each}}
+							</select>	
+					    </div>
+					</div>
+				</div>
+				<div class="col-md-6" id="objectiveOtherDiv" style="display:none;">
+					{{txtInput "full" "กรุณาระบุ" "info.objectiveOther"  model.department "readwrite" "required"}}
+				</div>
+			</div>
+
+		</div>
+		<div class="panel-footer">
+			<button id="saveFormBtn" type="button" class="btn btn-default"><i class="fa fa-floppy-o"></i> ลงทะเบียนผู้ใช้งาน</button>
+		</div>
+	</div>
+	</form>
+</div>
+</script>
+
+
+<script type="text/javascript" src="../../static/pagejs/auth/register.js"
+				th:src="@{/static/pagejs/auth/register.js}"></script>
+				
+<script type="text/javascript" th:inline="javascript">
+//<!--
+
+var appRouter;
+
+$( document ).ready(function() {
+	
+	//initialize things
+	
+
+	
+	
+	occupations = new smt.Collection.Occupations();
+	objectives = new smt.Collection.Objectives();
+	
+	$.when(occupations.fetch(), objectives.fetch()).done(function(x) {
+	
+		var o = occupations.at(0);
+		
+		positions = new smt.Collection.Positions();
+		positions.url = appUrl('DomainVariable/OCCUPATION/'+o.get('id')+'/POSITION');
+		
+		
+		$.when(positions.fetch()).done(function(y) {
+			formView = new FormView({
+				el: "#formView",
+				occupations: occupations,
+				objectives : objectives,
+				positions : positions
+			});
+			
+			appRouter = new AppRouter({
+				formView: formView
+			});
+			Backbone.history.start();
+			
+			
+		});
+		
+		
+		
+	});
+
+	
+	
+});
+
+
+//-->
+</script>
+		
+    </div>
+    
 </body>
 </html>

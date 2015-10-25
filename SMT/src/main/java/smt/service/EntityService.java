@@ -122,4 +122,6 @@ public interface EntityService {
 	public Iterable<PsychoSocialReport> findPsychoSocialReportByExample(
 			PsychoSocialReport exampleReport);
 
+	public List<DomainVariable> findAllDomainVariablePostionByOccupationId(Long id);
+
 }
