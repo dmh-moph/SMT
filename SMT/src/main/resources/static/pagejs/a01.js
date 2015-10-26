@@ -174,7 +174,7 @@ var TableResultView = Backbone.View.extend({
 		var userId = $(e.currentTarget).parents('tr').attr("data-id");
 		var user = smt.Model.SecurityUser.findOrCreate({id: userId});
 		
-		var r = confirm('คุณต้องการลบรายการ' + user.get('login'));
+		var r = confirm('คุณต้องการลบรายการผู้ใช้งาน: ' + user.get('username'));
 		if (r == true) {
 			user.destroy({
 				success: function(model, response) {

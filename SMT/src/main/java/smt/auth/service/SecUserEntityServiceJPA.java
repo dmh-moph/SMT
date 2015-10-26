@@ -83,6 +83,17 @@ public class SecUserEntityServiceJPA implements SecUserEntityService {
 			
 			
 		} else {
+			SecurityUser checkUserNameUser = secUserRepo.findUserByUserName(webModel.getUsername());
+			if(checkUserNameUser != null) {
+				// we should return fail here
+				ResponseJSend<Long> response = new ResponseJSend<Long>();
+				response.status = ResponseStatus.FAIL;
+				response.data = -2L;
+				response.message = "username นี้มีคนนำไปใช้แล้ว";
+				return response;
+			}
+			
+			
 			dbModel = new SecurityUser();
 			SecurityRole userRole = secUserRepo.findUserRole();
 			

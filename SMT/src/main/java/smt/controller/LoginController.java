@@ -74,7 +74,7 @@ public class LoginController {
 			// 
 			response = new ResponseJSend<Long>();
 			response.status = ResponseStatus.FAIL;
-			response.data = null;
+			response.data = -1L;
 			response.message = "CAPTCHA was not match";
 		} else {
 			SecurityUser systemUser = secUserEntityService.findSecurityUserByUsername("SYSTEM");

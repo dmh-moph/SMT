@@ -75,6 +75,63 @@ var FormView = Backbone.View.extend({
 			}
 		});
 		
+		if(this.$el.find('#usernameTxt').val().trim().length == 0) {
+			this.$el.find('#usernameTxt').parents('.form-group').addClass('has-error');
+			validated = false;
+		}
+		
+		if(this.$el.find('#info\\.departmentTxt').val().trim().length == 0) {
+			this.$el.find('#info\\.departmentTxt').parents('.form-group').addClass('has-error');
+			validated = false;
+		}
+		
+		if(this.$el.find('#info\\.emailTxt').val().trim().length == 0) {
+			this.$el.find('#info\\.emailTxt').parents('.form-group').addClass('has-error');
+			validated = false;
+		}
+		
+		if(this.$el.find('#check\\.password1Txt').val().trim().length == 0) {
+			this.$el.find('#check\\.password1Txt').parents('.form-group').addClass('has-error');
+			validated = false;
+		}
+		
+		if(this.$el.find('#check\\.password2Txt').val().trim().length == 0) {
+			this.$el.find('#check\\.password2Txt').parents('.form-group').addClass('has-error');
+			validated = false;
+		}
+		
+		if(this.$el.find('input[name=sex]:checked').val() == null) {
+			this.$el.find('#sexFormGroup').addClass('has-error');
+		}
+		
+		if (this.$el.find('#occupationOtherDiv').css('display') != 'none') {
+			if(this.$el.find('#info\\.occupationOtherTxt').val().trim().length == 0) {
+				this.$el.find('#info\\.occupationOtherTxt').parents('.form-group').addClass('has-error');
+				validated = false;
+			}
+		} else {
+			this.model.get('info').set('occupationOther', null);
+		}
+		
+		if (this.$el.find('#positionOtherDiv').css('display') != 'none') {
+			if(this.$el.find('#info\\.positionOtherTxt').val().trim().length == 0) {
+				this.$el.find('#info\\.positionOtherTxt').parents('.form-group').addClass('has-error');
+				validated = false;
+			}
+		} else {
+			this.model.get('info').set('positionOther', null);
+		}
+		
+		if (this.$el.find('#objectiveOtherDiv').css('display') != 'none') {
+			if(this.$el.find('#info\\.objectiveOtherTxt').val().trim().length == 0) {
+				this.$el.find('#info\\.objectiveOtherTxt').parents('.form-group').addClass('has-error');
+				validated = false;
+			}
+		} else {
+			this.model.get('info').set('objectiveOther', null);
+		}
+		
+		
 		var passwd1 =this.$el.find('#check\\.password1Txt').val();
 		var passwd2 =this.$el.find('#check\\.password2Txt').val();
 		
@@ -84,6 +141,8 @@ var FormView = Backbone.View.extend({
 			this.$el.find('#check\\.password2Txt').parents('.form-group').addClass('has-error');	
 			validated = false;
 			return;
+		} else {
+			this.model.set('password', passwd1);
 		}
 		
 		
@@ -99,6 +158,11 @@ var FormView = Backbone.View.extend({
 					alert(response.status + " :" + response.message);
 					var d = new Date();
 					$('#captchaImg').attr("src", "/smt/captcha?d="+d.getTime());
+					$('#captchaTxt').val(null);
+					
+					if(response.data == -2) {
+						$('#usernameTxt').parents('.form-group').addClass('has-error');
+					}
 					
 				} else {
 					this.model.set('id', response.data);
@@ -117,6 +181,7 @@ var FormView = Backbone.View.extend({
 		
 		if(field == "info.sex") {
 			this.model.get('info').set('sex', value);
+			this.$el.find('#sexFormGroup').removeClass('has-error');
 		}
 	},
 	
@@ -160,6 +225,7 @@ var FormView = Backbone.View.extend({
     		if(model.get('description') == 'อิ่นๆ') {
     			$('#occupationOtherDiv').show();
     		} else {
+    			this.$el.find('#info\\.occupationOtherTxt').val(null);
     			$('#occupationOtherDiv').hide();
     		}
     		
@@ -179,6 +245,7 @@ var FormView = Backbone.View.extend({
     		if(model.get('description') == 'อิ่นๆ') {
     			$('#objectiveOtherDiv').show();
     		} else {
+    			this.$el.find('#info\\.objectiveOtherTxt').val(null);
     			$('#objectiveOtherDiv').hide();
     		}
     		
@@ -189,6 +256,7 @@ var FormView = Backbone.View.extend({
     		if(model.get('description') == 'อิ่นๆ') {
     			$('#positionOtherDiv').show();
     		} else {
+    			this.$el.find('#info\\.positionOtherTxt').val(null);
     			$('#positionOtherDiv').hide();
     		}
     		
