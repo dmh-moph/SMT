@@ -433,6 +433,17 @@
 			</div>
 		</div>
 		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+				    <label for="inputEmail3" class="col-sm-2 control-label">ชื่อโรงเรียน</label>
+				    <div class="col-sm-10">
+				      <input type="text" class="form-control formTxt" id="schoolNameTxt" 
+							placeholder="ระบุชื่อโรงเรียนที่ต้องการค้นหา..." data-field="schoolName" value="{{searchModel.schoolName}}"/>
+				    </div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
 			<div class="col-md-12" style="text-align: center;">
 					{{#if isAdmin}}<button type="button" class="btn btn-default" id="newFormBtn">
 						<i class="fa fa-plus"></i> เพิ่มข้อมูลเครือข่าย</button>{{/if}}

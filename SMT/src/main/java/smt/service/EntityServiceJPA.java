@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -338,7 +341,9 @@ public class EntityServiceJPA implements EntityService {
 			JsonNode node, Integer pageNum) {
 		
 		PageRequest pageRequest =
-	            new PageRequest(pageNum -1, DefaultProperty.NUMBER_OF_ELEMENT_PER_PAGE, Sort.Direction.ASC, "orgName");
+	            new PageRequest(pageNum -1, DefaultProperty.NUMBER_OF_ELEMENT_PER_PAGE, new Sort(
+	            		new Order(Direction.ASC, "orgName"),new Order(Direction.ASC, "id") 
+	            		) );
 
 		
 		QOrganizationNetwork q = QOrganizationNetwork.organizationNetwork;
@@ -350,6 +355,8 @@ public class EntityServiceJPA implements EntityService {
 			orgNameStr += node.get("orgName").asText() + "%";
 		}
 		BooleanExpression p = q.orgName.like(orgNameStr);
+		logger.debug("orgName: " + orgNameStr);
+		
 		
 		if(node.get("orgType") != null && node.get("orgType").get("id") !=null) {
 			Long orgTypeId = node.get("orgType").get("id").asLong();
@@ -369,6 +376,11 @@ public class EntityServiceJPA implements EntityService {
 		if(node.get("province") != null && node.get("province").get("id") != null) {
 			Long provinceId = node.get("province").get("id").asLong();
 			p = p.and(q.province.id.eq(provinceId));
+		}
+		
+		if(node.get("schoolName") != null && node.get("schoolName").asText().length() > 0) {
+			p = p.and(q.schoolName.contains(node.get("schoolName").asText()));
+			logger.debug("schoolName: " + node.get("schoolName").asText());
 		}
 		
 		Page<OrganizationNetwork> orgs  = organizationNetworkRepo.findAll(p, pageRequest);
