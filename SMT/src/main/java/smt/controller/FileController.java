@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -27,8 +28,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.mysema.query.types.expr.BooleanExpression;
 
+import smt.model.FileHistoryRecord;
 import smt.model.FileMeta;
 import smt.model.QFileMeta;
+import smt.repository.FileHistoryRecordRepo;
 import smt.repository.FileMetaRepo;
 
 @Controller
@@ -41,6 +44,9 @@ public class FileController {
 	 
 	 @Autowired
 	 private FileMetaRepo fileMetaRepo;
+	 
+	 @Autowired
+	 private FileHistoryRecordRepo fileHistoryRecordRepo;
 	 
 	 
 	 @RequestMapping(value="/upload/{domain}/{domainId}", method = RequestMethod.POST)
@@ -145,7 +151,8 @@ public class FileController {
      public void getFile(HttpServletResponse response,
     		 @PathVariable String filename,
     		 @PathVariable String domain,
-    		 @PathVariable Long domainId){
+    		 @PathVariable Long domainId,
+    		 HttpServletRequest request){
 		 File file = new File(fileUploadDirectory+"/"+domain + "/" + domainId+"/"+filename);
 		 logger.debug("finding file @ : " + domain + " domainId:" + " filename: " + filename);
 		 logger.debug("finding file : " + file.getAbsolutePath());
@@ -156,16 +163,24 @@ public class FileController {
 		 try {  
 			 FileMeta fileMeta = fileMetaRepo.findOne(p);
 			 if(fileMeta == null) throw new FileNotFoundException();
+			 
+        	 // now save usage record
+        	 FileHistoryRecord record = new FileHistoryRecord(fileMeta, request);
+        	 fileHistoryRecordRepo.save(record);
+			 
+        	 // and stream to response
 			 String fileName = URLEncoder.encode(fileMeta.getFileName(),"UTF-8");
 			 response.setCharacterEncoding("UTF-8");
              response.setContentType(fileMeta.getFileType() + ";charset=UTF-8");
-        	 
         	 response.setHeader("Content-Disposition","attachment; filename*=UTF-8''"+fileName);
         	 
         	 FileCopyUtils.copy(new FileInputStream(file), response.getOutputStream());
+
          }catch (IOException e) {
         	 e.printStackTrace();
          }
+		 
+		 
      }
 }
 

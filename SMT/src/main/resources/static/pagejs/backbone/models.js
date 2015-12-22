@@ -402,6 +402,14 @@ smt.Model.SecurityUser = Backbone.RelationalModel.extend({
 	urlRoot: appUrl('SecurityUser')
 });
 
+smt.Model.fileHistoryRecordSearch = Backbone.RelationalModel.extend({
+	
+});
+smt.Collection.fileHistoryRecordSearches = Backbone.Collection.extend({
+	model: smt.Model.fileHistoryRecordSearch
+});
+
+
 smt.Page.SecurityUsers = Backbone.PageCollection.extend({
 	model: smt.Model.SecurityUser,
 	url: appUrl('SecurityUser/search')

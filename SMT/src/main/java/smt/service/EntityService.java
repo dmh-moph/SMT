@@ -20,6 +20,7 @@ import smt.model.glb.Amphur;
 import smt.model.glb.DomainVariable;
 import smt.model.glb.HealthZone;
 import smt.model.glb.Province;
+import smt.webUI.DomainCountTuple;
 import smt.webUI.ResponseJSend;
 
 public interface EntityService {
@@ -123,5 +124,7 @@ public interface EntityService {
 			PsychoSocialReport exampleReport);
 
 	public List<DomainVariable> findAllDomainVariablePostionByOccupationId(Long id);
+
+	public Iterable<DomainCountTuple> findHistoryCountBetween(String domain, String start, String end);
 
 }

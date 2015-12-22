@@ -31,6 +31,13 @@ public class HomeController {
 		return "a01";
 	}
 	
+	@RequestMapping("/a02")
+	public String a02Handle(Model model) {
+		model.addAttribute("title","a02: สถิติการ download ข้อมูล");
+		model.addAttribute("typeTxt", "สถิติการ download ข้อมูล");
+		return "a02";
+	}
+	
 	@RequestMapping("/m08")
 	public String m08Handle(Model model) {
 		model.addAttribute("title","m08: ข้อมูลรายงานผลการดำเนินงานศูนย์ให้คำปรึกษาคุณภาพ (Psychosocial Clinic)");

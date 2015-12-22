@@ -346,7 +346,7 @@ var FormView = Backbone.View.extend({
 					
 					var json= {};
 					json.model = this.model.toJSON();
-					josn.isAdmin = this.isAdmin;
+					json.isAdmin = this.isAdmin;
 					$('#filesTbl tbody').empty();
 					$('#filesTbl tbody').html(this.trFilesTemplate(json));
 					

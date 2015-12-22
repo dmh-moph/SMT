@@ -333,4 +333,22 @@ insert into glb_variable values('USER_INFO_OBJECTIVE', 3, '3', 'ศึกษา�
 insert into glb_variable values('USER_INFO_OBJECTIVE', 4, '4', 'เพิ่มพูนความรู้', 'เพิ่มพูนความรู้', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
 insert into glb_variable values('USER_INFO_OBJECTIVE', 5, '5', 'อิ่นๆ', 'อิ่นๆ', 0, sysdate, 0, sysdate, glb_variable_seq.nextval);
 
+
+
+create table SMT_FILEHISTORYRECORD (
+  id number(19,0) not null,
+  fileMeta_id number(19,0),
+  ip_address varchar2(40),
+  user_agent varchar2(100),
+  search_time date,
+  referrer varchar2(255),
+    primary key (id)
+);
+
+alter table SMT_FILEHISTORYRECORD
+	add constraint FILEHISTORY_FILE_FK
+	foreign key (fileMeta_id)
+	REFERENCES SMT_FILEMETA;
+
+
 commit;

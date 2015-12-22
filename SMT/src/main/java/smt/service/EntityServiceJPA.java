@@ -1,10 +1,15 @@
 package smt.service;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
+import org.crsh.console.jline.internal.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -28,12 +33,14 @@ import smt.auth.model.SecurityUser;
 import smt.auth.service.SecUserRepository;
 import smt.model.Behavior;
 import smt.model.BehaviorImpact;
+import smt.model.FileHistoryRecord;
 import smt.model.Journal;
 import smt.model.JournalSituation;
 import smt.model.OrganizationNetwork;
 import smt.model.OrganizationPerson;
 import smt.model.PsychoSocialReport;
 import smt.model.QBehavior;
+import smt.model.QFileHistoryRecord;
 import smt.model.QJournal;
 import smt.model.QJournalSituation;
 import smt.model.QOrganizationNetwork;
@@ -58,9 +65,11 @@ import smt.repository.AmphurRepo;
 import smt.repository.BehaviorImpactRepo;
 import smt.repository.BehaviorRepo;
 import smt.repository.DomainVariableRepo;
+import smt.repository.FileHistoryRecordRepo;
 import smt.repository.HealthZoneRepo;
 import smt.repository.JournalRepo;
 import smt.repository.JournalSituationRepo;
+import smt.repository.JournalTypeRepo;
 import smt.repository.NetworkTypeRepo;
 import smt.repository.OrgTypeRepo;
 import smt.repository.OrganizationNetworkRepo;
@@ -73,6 +82,7 @@ import smt.repository.SchoolTypeRepo;
 import smt.repository.SituationRepo;
 import smt.repository.SituationTypeRepo;
 import smt.webUI.DefaultProperty;
+import smt.webUI.DomainCountTuple;
 import smt.webUI.ResponseJSend;
 import smt.webUI.ResponseStatus;
 
@@ -132,6 +142,9 @@ public class EntityServiceJPA implements EntityService {
 	SituationTypeRepo situationTypeRepo;
 	
 	@Autowired
+	JournalTypeRepo journalTypeRepo;
+	
+	@Autowired
 	JournalSituationRepo journalSituationRepo;
 	
 	@Autowired
@@ -140,11 +153,16 @@ public class EntityServiceJPA implements EntityService {
 	@Autowired
 	PsychoSocailReportRepo psychoSocailReportRepo;
 	
+	@Autowired
+	FileHistoryRecordRepo fileHistoryRecordRepo;
+	
+	SimpleDateFormat ddmmyyyyFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+	
 	@Override
 	public List<Province> findAllProvince() {
 		return provinceRepo.findAll();
 	}
-
+	
 	@Override
 	public List<Amphur> findAllAmphurByProvinceId(Long provinceId) {
 		return provinceRepo.findAllAmphurByProvinceId(provinceId);
@@ -724,7 +742,7 @@ public class EntityServiceJPA implements EntityService {
 		}
 		
 		dbModel.setLastUpdateBy(user);
-		//dbModel.setLastUpdateDate(new Date());
+		dbModel.setLastUpdateDate(new Date());
 		journalRepo.save(dbModel);
 		
 		ResponseJSend<Long> response = new ResponseJSend<Long>();
@@ -1377,6 +1395,52 @@ public class EntityServiceJPA implements EntityService {
 		
 		return response;
 	}
+
+	@Override
+	public List<DomainCountTuple> findHistoryCountBetween(String domain, String start, String end) {
+		try {
+			Date startDate = ddmmyyyyFormat.parse(start);
+			Date endDate = ddmmyyyyFormat.parse(end);
+			
+			logger.debug(start + " : " +startDate);
+			logger.debug(end + " : " +endDate);
+			
+			List<Object[]> result = fileHistoryRecordRepo.countStat(domain, start, end);
+		
+			List<JournalType> types = journalTypeRepo.findAll();
+			HashMap<Long, DomainCountTuple> journalTypeMap = new HashMap<Long, DomainCountTuple>();
+			List<DomainCountTuple> returnList = new ArrayList<DomainCountTuple>();
+			
+			for(JournalType t: types) {
+				DomainCountTuple tuple = new DomainCountTuple();
+				tuple.setDomainName(t.getDescription()); 
+				tuple.setCount(0);
+				journalTypeMap.put(t.getId(), tuple);
+				returnList.add(tuple);
+			}
+			
+			for(Object[] row: result) {
+				
+				
+				DomainCountTuple tuple = journalTypeMap.get(((BigDecimal) row[0]).toBigInteger().longValue());
+				if(tuple != null) {
+					logger.debug( ((BigDecimal) row[0]).toString() );
+					logger.debug(" >" + (BigDecimal) row[1]);
+					
+					tuple.setCount(((BigDecimal) row[1]).toBigInteger().intValue());
+				}
+			}
+			
+			return returnList;
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
 	
 	
 }
