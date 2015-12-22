@@ -350,5 +350,5 @@ alter table SMT_FILEHISTORYRECORD
 	foreign key (fileMeta_id)
 	REFERENCES SMT_FILEMETA;
 
-
+create sequence SMT_FILEHISTORYRECORD_seq;
 commit;
