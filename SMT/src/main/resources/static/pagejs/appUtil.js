@@ -31,12 +31,16 @@ Handlebars.registerHelper('formatDate', function(number) {
 	return moment(number).format('DD MMMM YYYY');
 });
 
-Handlebars.registerHelper('txtAreaInput', function(size, label, field, defaultValue, readonly, required) {
+Handlebars.registerHelper('txtAreaInput', function(size, label, field, defaultValue, readonly, required, row) {
 	
 	var aValue = "";
 	
 	if(defaultValue != null) {
 		aValue = defaultValue;
+	}
+	
+	if(row == null) {
+		row = 10;
 	}
 	
 	var mdLabel = 2;
@@ -64,7 +68,7 @@ Handlebars.registerHelper('txtAreaInput', function(size, label, field, defaultVa
 			"<div class='form-group'> \n" +
 			"	<label for='"+ field+"Txt' class='col-md-"+mdLabel+" control-label'>"+label+"</label> \n" +
 			"	<div class='col-md-"+mdTxt+"'> \n" +
-			"	<textarea name='"+field+"Txa'  id='"+field+"Txa' rows='10' data-field='"+field+"'>" +
+			"	<textarea name='"+field+"Txa'  id='"+field+"Txa' rows='"+row+"' data-field='"+field+"'>" +
 			"" + aValue + 
 			"	</textarea>" +
 			"	</div> \n" +

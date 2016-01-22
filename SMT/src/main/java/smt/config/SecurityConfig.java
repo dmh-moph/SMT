@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -20,6 +21,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import smt.auth.service.CustomAuthenticationSuccessHandler;
 import smt.auth.service.CustomUserDetailsService;
 
 
@@ -53,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.formLogin()
 				.loginPage("/login").permitAll()
 				.loginProcessingUrl("/login")
-				.defaultSuccessUrl("/")
+				.successHandler(authenticationSuccessHandler())
 				.and()
 			.logout()
 			 	.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -84,6 +86,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return delegatingAuthenticationEntryPoint;
 	}
 	
+	
+	@Bean
+	public AuthenticationSuccessHandler authenticationSuccessHandler() {
+		return new CustomAuthenticationSuccessHandler();
+		
+	}
 	
 	@Bean 
 	public UserDetailsService userDetailService() {

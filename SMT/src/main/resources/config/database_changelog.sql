@@ -351,4 +351,23 @@ alter table SMT_FILEHISTORYRECORD
 	REFERENCES SMT_FILEMETA;
 
 create sequence SMT_FILEHISTORYRECORD_seq;
+
+
+create table SEC_USER_LOGINHISOTRY (
+  id number(19,0) not null,
+  user_id number(19,0),
+  ip_address varchar2(40),
+  user_agent varchar2(100),
+  search_time date,
+  referrer varchar2(255),
+    primary key (id)
+);
+
+alter table SEC_USER_LOGINHISOTRY
+	add constraint SEC_USER_LOGIN_USERID
+	foreign key (user_id)
+	REFERENCES SEC_USER;
+
+create sequence SEC_USER_LOGINHISOTRY_SEQ;
+
 commit;

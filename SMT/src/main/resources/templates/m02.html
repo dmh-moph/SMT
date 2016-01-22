@@ -186,19 +186,19 @@
 					{{txtInput "full" "เจ้าของผลงาน/ผู้เขียน" "author" model.author "readwrite" "required"}}
 				</div>
 			</div>
-			<div class="row">
+			<div class="row" style="display:none;">
 				<div class="col-md-12">
 					{{txtAreaInput "full" "วัตถุประสงค์" "objective" model.objective "readwrite" "required"}}
 				</div>
 			</div>
-			<div class="row">
+			<div class="row" style="display:none;">
 				<div class="col-md-12">
 					{{txtAreaInput "full" "เนื้อหาโดยสรุป" "summaryContent" model.summaryContent  "readwrite" "required"}}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtAreaInput "full" "คำสำคัญ" "keyword" model.keyword "readwrite" "required"}}
+					{{txtAreaInput "full" "คำสำคัญ" "keyword" model.keyword "readwrite" "required" 5}}
 				</div>
 			</div>
 			<div class="row">
@@ -240,7 +240,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					{{txtAreaInput "full" "แหล่งข้อมูล/เอกสารอ้างอิง" "reference" this.model.reference "readwrite" "required"}}
+					{{txtAreaInput "full" "แหล่งข้อมูล/เอกสารอ้างอิง" "reference" this.model.reference "readwrite" "required" 5}}
 				</div>
 			</div>
 			{{#if model.id}}
@@ -320,7 +320,7 @@
 				    <label for="inputEmail3" class="col-md-4 col-sm-2 control-label">ชื่อ[[${typeTxt}]] (ภาษาไทย)</label>
 				    <div class="col-md-8 col-sm-10">
 				      <input type="text" class="form-control formTxt" id="nameThTxt" 
-							placeholder="ระบุชื่อ[[${typeTxt}]]ที่ต้องการค้นหา (ภาษาไทย)..." data-field="nameTh" value="{{searchModel.nameTh}}"/>
+							placeholder="ระบุชื่อข้อมูลสารสนเทศทางวิชาการที่ต้องการค้นหา (ภาษาไทย)" data-field="nameTh" value="{{searchModel.nameTh}}"/>
 				    </div>
 				</div>
 			</div>
@@ -329,13 +329,13 @@
 				    <label for="inputEmail3" class="col-md-4 col-sm-2 control-label">ชื่อ[[${typeTxt}]] (ภาษาอังกฤษ)</label>
 				    <div class="col-md-8 col-sm-10">
 				      <input type="text" class="form-control formTxt" id="nameEnTxt" 
-							placeholder="ระบุชื่อ[[${typeTxt}]]ที่ต้องการค้นหา (ภาษาอังกฤษ)..." data-field="nameEn" value="{{searchModel.nameEn}}"/>
+							placeholder="ระบุชื่อข้อมูลสารสนเทศทางวิชาการที่ต้องการค้นหา (ภาษาต่างประเทศ)" data-field="nameEn" value="{{searchModel.nameEn}}"/>
 				    </div>
 				</div>
 			</div>
 			<div class="col-md-12">
 					<div class="form-group">
-					    <label for="inputEmail3" class="col-md-4 control-label">ประเภทข้อมูลทางวิชาการ</label>
+					    <label for="inputEmail3" class="col-md-4 control-label">ประเภทข้อมูลสารสนเทศทางวิชาการ</label>
 					    <div class="col-md-8">
 							<select class="form-control formSlt" id="journalTypesSlt" data-field="journalType">
 								{{#each this.journalTypes}}
