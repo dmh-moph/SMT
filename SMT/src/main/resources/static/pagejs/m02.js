@@ -511,8 +511,12 @@ var FormView = Backbone.View.extend({
 		
 		CKEDITOR.replace('objectiveTxa')
 		CKEDITOR.replace('summaryContentTxa');
-		CKEDITOR.replace('keywordTxa');
-		CKEDITOR.replace('referenceTxa');
+		CKEDITOR.replace('keywordTxa', {
+			height : 85
+		});
+		CKEDITOR.replace('referenceTxa', {
+			height : 85
+		});
 		
 		return this;
 	}

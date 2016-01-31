@@ -370,4 +370,6 @@ alter table SEC_USER_LOGINHISOTRY
 
 create sequence SEC_USER_LOGINHISOTRY_SEQ;
 
+alter table smt_journal modify author varchar2(1024);
+
 commit;
